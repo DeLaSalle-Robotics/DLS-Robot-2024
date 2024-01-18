@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.FalconShooterMotorSubsystem;
 import frc.robot.subsystems.ShooterMotorSubsystem;
 
 import java.util.function.DoubleSupplier;
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 /** An example command that uses an example subsystem. */
 public class Shooter extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ShooterMotorSubsystem m_shooter;
+  private final FalconShooterMotorSubsystem m_shooter;
 
   private final DoubleSupplier m_speed;
 
@@ -22,7 +23,7 @@ public class Shooter extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public Shooter(DoubleSupplier speed, ShooterMotorSubsystem subsystem) {
+  public Shooter(DoubleSupplier speed, FalconShooterMotorSubsystem subsystem) {
     m_shooter = subsystem;
     m_speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.

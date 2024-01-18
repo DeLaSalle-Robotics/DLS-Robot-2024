@@ -5,10 +5,12 @@
 package frc.robot;
 
 import frc.robot.commands.FalconShooter;
+import frc.robot.commands.Shooter;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -22,7 +24,7 @@ public class RobotContainer {
   private final FalconShooterMotorSubsystem m_shooterMotor = new FalconShooterMotorSubsystem();
 
   private final XboxController m_joystick = new XboxController(0);
-
+  private Trigger controller_A = new JoystickButton(m_joystick, 1);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -45,6 +47,7 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+    controller_A.onTrue(new Shooter(() -> 0.5, m_shooterMotor));
   }
 
   /**
