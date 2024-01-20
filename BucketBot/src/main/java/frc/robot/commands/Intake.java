@@ -1,32 +1,23 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
-import frc.robot.subsystems.FalconShooterMotorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class Shooter extends Command {
+public class Intake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final FalconShooterMotorSubsystem m_shooter;
+  private final IntakeSubsystem m_Intake;
 
   private final DoubleSupplier m_speed;
 
-  /**
-   * Creates a new Shooter.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public Shooter(DoubleSupplier speed, FalconShooterMotorSubsystem subsystem) {
-    m_shooter = subsystem;
+  public Intake(DoubleSupplier speed, IntakeSubsystem subsystem) {
+    m_Intake = subsystem;
     m_speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_shooter);
+    addRequirements(m_Intake);
   }
 
   // Called when the command is initially scheduled.
@@ -36,13 +27,13 @@ public class Shooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.spin(m_speed.getAsDouble());
+    m_Intake.spin(m_speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooter.spin(0);
+    m_Intake.spin(0);
   }
 
   // Returns true when the command should end.

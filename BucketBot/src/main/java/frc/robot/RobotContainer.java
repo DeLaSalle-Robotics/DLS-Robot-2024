@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.commands.Intake;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,9 +25,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final FalconShooterMotorSubsystem m_shooterMotor = new FalconShooterMotorSubsystem();
+  private final IntakeSubsystem m_IntakeMotor = new IntakeSubsystem();
 
   private final XboxController m_joystick = new XboxController(0);
   private Trigger controller_A = new JoystickButton(m_joystick, 1);
+  private Trigger controller_B = new JoystickButton(m_joystick, 2);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -43,11 +48,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
     controller_A.onTrue(new Shooter(() -> 0.5, m_shooterMotor));
+    controller_B.toggleOnTrue(new Intake(() -> 0.5, m_IntakeMotor));
   }
 
   /**
