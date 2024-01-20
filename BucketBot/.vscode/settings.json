@@ -25,6 +25,5 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests",
-  "java.format.settings.url": "fmt.xml"
+  "java.test.defaultConfig": "WPIlibUnitTests"
 }
