@@ -10,16 +10,20 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  private final CANSparkMax m_IntakeMotor = new CANSparkMax(Constants.FalconShooterConstants.kIntakeMotorID, MotorType.kBrushless);
+  private final CANSparkMax m_IntakeMotor = new CANSparkMax(Constants.Intake.kIntakeMotorID, MotorType.kBrushless);
   /**
-  FIX CHANNEL ASAP
+  Deprecated as channel is not properly set yet, just a warning
    */
   @Deprecated
-  private final DigitalInput m_LimitSwitch = new DigitalInput(0);
+  private final DigitalInput m_LimitSwitch = new DigitalInput(Constants.Intake.kIntakeLimitSwitchID);
 
   public IntakeSubsystem() {
     super();
   }
+  /**
+   * 
+   * @return whether the limit switch is pressed
+   */
   public boolean testLimitSwitch() {
     return m_LimitSwitch.get();
   }
@@ -30,7 +34,10 @@ public class IntakeSubsystem extends SubsystemBase {
           /* one-time action goes here */
         });
   }
-
+  /**
+   * Sets the motor speed
+   * @param speed
+   */
   public void spin(double speed) {
     m_IntakeMotor.set(speed);
   }

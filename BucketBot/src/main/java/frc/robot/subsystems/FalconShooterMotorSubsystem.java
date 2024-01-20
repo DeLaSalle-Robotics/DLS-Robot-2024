@@ -13,8 +13,8 @@ import frc.robot.Constants;
 public class FalconShooterMotorSubsystem extends SubsystemBase {
 
   //private final CANSparkMax m_shooterMotor = new CANSparkMax(Constants.OperatorConstants.kShooterMotorID, MotorType.kBrushless);
-  private final TalonFX m_shooterMotor1 = new TalonFX(Constants.FalconShooterConstants.kShooterMotorID1);
-  private final TalonFX m_shooterMotor2 = new TalonFX(Constants.FalconShooterConstants.kShooterMotorID2);
+  private final TalonFX m_shooterMotor1 = new TalonFX(Constants.Shooter.kShooterMotorID1);
+  private final TalonFX m_shooterMotor2 = new TalonFX(Constants.Shooter.kShooterMotorID2);
 
   /** Creates a new ShooterMotorSubsystem. */
   public FalconShooterMotorSubsystem() {

@@ -10,9 +10,9 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-/** An example command that uses an example subsystem. */
+/** Spins the falcon shooter motor until it is done shooting */
 public class Shooter extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  //@SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final FalconShooterMotorSubsystem m_shooter;
 
   private final DoubleSupplier m_speed;

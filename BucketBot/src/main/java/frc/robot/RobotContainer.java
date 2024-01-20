@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.commands.FalconShooter;
 import frc.robot.commands.Shooter;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
@@ -33,7 +32,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    m_shooterMotor.setDefaultCommand(new FalconShooter(() -> m_joystick.getLeftY(), m_shooterMotor));
+    //m_shooterMotor.setDefaultCommand(new FalconShooter(() -> m_joystick.getLeftY(), m_shooterMotor));
     // Configure the trigger bindings
     configureBindings();
   }
