@@ -37,12 +37,14 @@ public class FalconShooter extends Command {
   @Override
   public void execute() {
     m_shooter.spin(m_speed.getAsDouble());
+    System.out.print("speed: " + m_speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_shooter.spin(0);
+    System.out.print("speed: " + m_speed);
   }
 
   // Returns true when the command should end.

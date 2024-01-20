@@ -48,7 +48,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    controller_A.onTrue(new Shooter(() -> 0.5, m_shooterMotor));
+    controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
     controller_B.toggleOnTrue(new Intake(() -> 0.5, m_IntakeMotor));
   }
 

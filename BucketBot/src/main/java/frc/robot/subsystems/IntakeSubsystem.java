@@ -10,7 +10,7 @@ import frc.robot.Constants;
 public class IntakeSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_IntakeMotor = new CANSparkMax(Constants.FalconShooterConstants.kIntakeMotorID, MotorType.kBrushless);
-  
+
   public IntakeSubsystem() {
     super();
   }

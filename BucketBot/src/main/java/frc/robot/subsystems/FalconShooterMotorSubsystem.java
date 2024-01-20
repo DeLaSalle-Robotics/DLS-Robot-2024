@@ -10,15 +10,23 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+import com.ctre.phoenix6.sim.TalonFXSimState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class FalconShooterMotorSubsystem extends SubsystemBase {
 
   //private final CANSparkMax m_shooterMotor = new CANSparkMax(Constants.OperatorConstants.kShooterMotorID, MotorType.kBrushless);
   private final TalonFX m_shooterMotor1 = new TalonFX(Constants.FalconShooterConstants.kShooterMotorID1);
   private final TalonFX m_shooterMotor2 = new TalonFX(Constants.FalconShooterConstants.kShooterMotorID2);
 
+  private final TalonFXSimState m_simMotor1 = m_shooterMotor1.getSimState();
+  private final TalonFXSimState m_simMotor2 = m_shooterMotor2.getSimState();
+
   /** Creates a new ShooterMotorSubsystem. */
   public FalconShooterMotorSubsystem() {
     super();
+    m_simMotor1.setSupplyVoltage(12);
+    m_simMotor2.setSupplyVoltage(12);
   }
 
   /**
@@ -44,6 +52,11 @@ public class FalconShooterMotorSubsystem extends SubsystemBase {
     */
     m_shooterMotor1.set(speed);
     m_shooterMotor2.set(-speed);
+    
+    m_simMotor1.setRotorVelocity(speed);
+    m_simMotor2.setRotorVelocity(-speed);
+
+    SmartDashboard.putNumber("speed", speed);
   }
 
   /**
