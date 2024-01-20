@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  private final CANSparkMax m_IntakeMotor = new CANSparkMax(Constants.Intake.kIntakeMotorID, MotorType.kBrushless);
   // Declare a SparkMax as the intake motor controller
+  private final CANSparkMax m_IntakeMotor = new CANSparkMax(Constants.Intake.kIntakeMotorID, MotorType.kBrushless);
+
   /**
   Deprecated as channel is not properly set yet, just a warning
    */
@@ -24,6 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     super();
   }
+
   /**
    * 
    * @return whether the limit switch is pressed
@@ -34,8 +36,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
   /**
-   * Sets the motor speed
-   * @param speed The speed(between -1.0 and 1.0)
+   * Sets the intake motor speed
+   * @param speed The speed (between -1.0 and 1.0)
    */
   public void spin(double speed) {
     m_IntakeMotor.set(speed);
@@ -68,5 +70,5 @@ public class IntakeSubsystem extends SubsystemBase {
   // This method will be called once per scheduler run during simulation
   @Override
   public void simulationPeriodic() {}
-  
+
 }

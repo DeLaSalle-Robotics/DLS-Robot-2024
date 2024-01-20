@@ -2,30 +2,36 @@ package frc.robot;
 
 import frc.robot.commands.Shooter;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.commands.Intake;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.commands.Intake;
 
 
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+
+  // Define subsystems and commands
   private final FalconShooterMotorSubsystem m_shooterMotor = new FalconShooterMotorSubsystem();
   private final IntakeSubsystem m_IntakeMotor = new IntakeSubsystem();
 
+  // Define controller and controller buttons
   private final XboxController m_joystick = new XboxController(0);
   private Trigger controller_A = new JoystickButton(m_joystick, 1);
   private Trigger controller_B = new JoystickButton(m_joystick, 2);
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+
+
+  // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
 
-    //m_shooterMotor.setDefaultCommand(new FalconShooter(() -> m_joystick.getLeftY(), m_shooterMotor));
+    // m_shooterMotor.setDefaultCommand(new FalconShooter(() -> m_joystick.getLeftY(), m_shooterMotor));
     // Configure the trigger bindings
     configureBindings();
   }
+
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -41,6 +47,7 @@ public class RobotContainer {
     controller_B.toggleOnTrue(new Intake(() -> 0.5, m_IntakeMotor));
   }
 
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

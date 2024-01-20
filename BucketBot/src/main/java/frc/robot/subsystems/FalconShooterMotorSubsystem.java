@@ -31,8 +31,10 @@ public class FalconShooterMotorSubsystem extends SubsystemBase {
   }
 
 
-  // Spin the motors at the given speed
-  // Speed should be between -1.0 and 1.0
+  /**
+   * Spin the motors at the given speed
+   * @param speed Double between -1.0 and 1.0
+   */
   public void spin(double speed){
 
     // Real motors
