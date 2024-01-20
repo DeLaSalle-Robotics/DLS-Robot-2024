@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
  * Starts the motor spinning until the limit switch detects something
  */
 public class Intake extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final IntakeSubsystem m_Intake;
 
   private final DoubleSupplier m_speed;

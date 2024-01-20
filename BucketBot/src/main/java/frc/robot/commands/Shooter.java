@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 /** Spins the falcon shooter motor until it is done shooting */
 public class Shooter extends Command {
-  //@SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  // @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final FalconShooterMotorSubsystem m_shooter;
 
   private final DoubleSupplier m_speed;
@@ -20,7 +20,8 @@ public class Shooter extends Command {
   /**
    * Creates a new Shooter.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param subsystem
+   *          The subsystem used by this command.
    */
   public Shooter(DoubleSupplier speed, FalconShooterMotorSubsystem subsystem) {
     m_shooter = subsystem;
@@ -31,7 +32,8 @@ public class Shooter extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
