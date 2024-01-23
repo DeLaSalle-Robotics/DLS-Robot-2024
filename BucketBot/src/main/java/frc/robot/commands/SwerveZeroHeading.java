@@ -1,14 +1,18 @@
 package frc.robot.commands;
 
+import frc.robot.subsystems.SwerveSubsystem;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
-/** Spins the falcon shooter motor until it is done shooting */
-public class Shooter extends Command {
-  private final FalconShooterMotorSubsystem m_shooter;
+/** An example command that uses an example subsystem. */
+public class SwerveZeroHeading extends Command {
 
-  private final DoubleSupplier m_speed;
+  private final SwerveSubsystem m_swerve;
 
-  public Shooter() {
+  public SwerveZeroHeading(SwerveSubsystem subsystem) {
+    m_swerve = subsystem;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_swerve);
   }
 
   // Called when the command is initially scheduled.
@@ -18,6 +22,7 @@ public class Shooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_swerve.zeroHeading();
   }
 
   // Called once the command ends or is interrupted.
@@ -28,6 +33,6 @@ public class Shooter extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
