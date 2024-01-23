@@ -5,17 +5,18 @@ import frc.robot.commands.FalconShooter;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.SwerveZeroHeading;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.commands.Intake;
 
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here
+
+  // Define subsystems and commands
   private final FalconShooterMotorSubsystem m_shooterMotor = new FalconShooterMotorSubsystem();
   private final IntakeSubsystem m_IntakeMotor = new IntakeSubsystem();
   private final SwerveSubsystem m_swerve = new SwerveSubsystem();
@@ -26,6 +27,8 @@ public class RobotContainer {
   private Trigger controller_B = new JoystickButton(m_joystick, 2);
   private Trigger controller_X = new JoystickButton(m_joystick, 3);
 
+
+  // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     m_swerve.setDefaultCommand(new SwerveJoystickCmd(
                 m_swerve,
@@ -49,6 +52,7 @@ public class RobotContainer {
     controller_X.onTrue(new SwerveZeroHeading(m_swerve));
   }
 
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
