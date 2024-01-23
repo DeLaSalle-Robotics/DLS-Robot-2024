@@ -14,21 +14,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class RobotContainer {
+public class SwerveRobotContainer {
 
     private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
     private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
-    private JoystickButton joystickButton_2 = new JoystickButton(driverJoytick, 2);
 
-    public RobotContainer() {
+    public SwerveRobotContainer() {
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                 swerveSubsystem,
                 () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
@@ -40,7 +38,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        joystickButton_2.onTrue(SwerveJoystickCmd);
+        
     }   
 
     public Command getAutonomousCommand() {

@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -23,7 +22,6 @@ public class SwerveModule {
     private final TalonFX driveMotor;
     private final CANSparkMax turningMotor;
 
-    private final StatusSignal<Double> driveEncoder;
     private final RelativeEncoder turningEncoder;
 
     private final PIDController turningPidController;
@@ -47,8 +45,6 @@ public class SwerveModule {
 
         turningEncoder = turningMotor.getEncoder();
 
-        driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
-        driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
         turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
         turningEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
@@ -61,7 +57,7 @@ public class SwerveModule {
     public double getDrivePosition() {
         StatusSignal<Double> ss = driveMotor.getPosition();
         double drivePosition = ss.refresh().getValue();
-        return drivePosition * ModuleConstants.kDriveEncoderRPM2MeterPerSec;
+        return drivePosition * ModuleConstants.kDriveEncoderRot2Meter;
     }
 
     public SwerveModulePosition getPosition() {
@@ -75,8 +71,9 @@ public class SwerveModule {
     }
 
     public double getDriveVelocity() {
-        driveEncoder.refresh();
-        return driveEncoder.getValueAsDouble();
+        StatusSignal<Double> ss = driveMotor.getVelocity();
+        double drivePosition = ss.refresh().getValue();
+        return drivePosition * ModuleConstants.kDriveEncoderRPM2MeterPerSec;
     }
 
     public double getTurningVelocity() {
@@ -96,7 +93,7 @@ public class SwerveModule {
         turningEncoder.setPosition(getAbsoluteEncoderRad());
     }
 
-    public SwerveModulePosition getState() {
+    public SwerveModuleState getState() {
         return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
     }
 
