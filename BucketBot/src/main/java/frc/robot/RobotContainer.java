@@ -1,14 +1,14 @@
 package frc.robot;
 
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.FalconShooter;
+
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.SwerveZeroHeading;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.commands.Intake;
-
+import frc.robot.commands.Shooter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -47,7 +47,7 @@ public class RobotContainer {
     whileTrue schedules the command when the button is pressed, and cancels the command when the button is released.
     toggleTrue toggles the command on every press: schedules if not currently scheduled, and cancels if scheduled.
     */
-    controller_A.toggleOnTrue(new FalconShooter(() -> 0.5, m_shooterMotor));
+    controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
     controller_B.toggleOnTrue(new Intake(() -> 0.5, m_IntakeMotor));
     controller_X.onTrue(new SwerveZeroHeading(m_swerve));
   }
