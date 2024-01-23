@@ -1,55 +1,52 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
+import frc.robot.Constants.OIConstants;
 import frc.robot.commands.FalconShooter;
-import frc.robot.commands.Shooter;
+import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.SwerveZeroHeading;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.commands.Intake;
 
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  // The robot's subsystems and commands are defined here
   private final FalconShooterMotorSubsystem m_shooterMotor = new FalconShooterMotorSubsystem();
   private final IntakeSubsystem m_IntakeMotor = new IntakeSubsystem();
+  private final SwerveSubsystem m_swerve = new SwerveSubsystem();
 
+  // setting up Xbox controller
   private final XboxController m_joystick = new XboxController(0);
   private Trigger controller_A = new JoystickButton(m_joystick, 1);
   private Trigger controller_B = new JoystickButton(m_joystick, 2);
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  private Trigger controller_X = new JoystickButton(m_joystick, 3);
 
-    m_shooterMotor.setDefaultCommand(new FalconShooter(() -> m_joystick.getLeftY(), m_shooterMotor));
+  public RobotContainer() {
+    m_swerve.setDefaultCommand(new SwerveJoystickCmd(
+                m_swerve,
+                () -> -m_joystick.getRawAxis(OIConstants.kDriverYAxis),
+                () -> m_joystick.getRawAxis(OIConstants.kDriverXAxis),
+                () -> m_joystick.getRawAxis(OIConstants.kDriverRotAxis),
+                () -> !m_joystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+
     // Configure the trigger bindings
     configureBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureBindings() {
-    controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
+    /*
+    onTrue schedules the command when the button is pressed.
+    whileTrue schedules the command when the button is pressed, and cancels the command when the button is released.
+    toggleTrue toggles the command on every press: schedules if not currently scheduled, and cancels if scheduled.
+    */
+    controller_A.toggleOnTrue(new FalconShooter(() -> 0.5, m_shooterMotor));
     controller_B.toggleOnTrue(new Intake(() -> 0.5, m_IntakeMotor));
+    controller_X.onTrue(new SwerveZeroHeading(m_swerve));
   }
 
   /**
