@@ -3,19 +3,27 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
 
-/** Spins the falcon shooter motor until it is done shooting */
+
 public class Shooter extends Command {
+
+  // Command parameters
+  private final DoubleSupplier m_speed;
   private final FalconShooterMotorSubsystem m_shooter;
 
-  private final DoubleSupplier m_speed;
-
+  /**
+   * Spin the shooter at the given speed.
+   * @param speed Speed to spin the shooter at, between -1.0 and 1.0
+   * @param subsystem FalconShooterMotor subsystem
+   */
   public Shooter(DoubleSupplier speed, FalconShooterMotorSubsystem subsystem) {
     m_speed = speed;
     m_shooter = subsystem;
     addRequirements(m_shooter);
   }
+
 
   // Called when the command is initially scheduled.
   @Override

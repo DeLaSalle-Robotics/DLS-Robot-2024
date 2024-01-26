@@ -6,21 +6,22 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-/**
- * Starts the motor spinning until the limit switch detects something
- */
 public class Intake extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final IntakeSubsystem m_Intake;
 
+  private final IntakeSubsystem m_Intake;
   private final DoubleSupplier m_speed;
 
+  /**
+   * Spin the intake at the given speed until the limit switch detects something.
+   * @param speed Speed to spin the intake at, between -1.0 and 1.0
+   * @param subsystem Intake subsystem
+   */
   public Intake(DoubleSupplier speed, IntakeSubsystem subsystem) {
     m_Intake = subsystem;
     m_speed = speed;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_Intake);
   }
+
 
   // Called when the command is initially scheduled.
   @Override
@@ -37,12 +38,14 @@ public class Intake extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    // The intake stops spinning when the command ends.
     m_Intake.spin(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    // Return value is based on the state of the limit switch
     return m_Intake.testLimitSwitch();
   }
 }

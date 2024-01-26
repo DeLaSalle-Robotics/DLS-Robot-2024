@@ -27,7 +27,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   /**
-   * 
+   * Retrieves the state of the limit switch
    * @return whether the limit switch is pressed
    */
   public boolean testLimitSwitch() {
@@ -36,8 +36,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
   /**
-   * Sets the intake motor speed
-   * @param speed The speed (between -1.0 and 1.0)
+   * Sets the intake motor to the given speed
+   * @param speed Speed of the intake motor, between -1.0 and 1.0
    */
   public void spin(double speed) {
     m_IntakeMotor.set(speed);
