@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,8 +22,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import java.io.File;
 import java.util.function.DoubleSupplier;
+
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -32,32 +35,36 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
-public class SwerveSubsystem extends SubsystemBase{
 
-  /**
-   * Swerve drive object.
-   */
+
+public class SwerveSubsystem extends SubsystemBase {
+
+  // Swerve drive object.
   private final SwerveDrive swerveDrive;
-  /**
-   * Maximum speed of the robot in meters per second, used to limit acceleration.
-   */
+
+  // Maximum speed of the robot in meters per second, used to limit acceleration.
   public double maximumSpeed = Units.feetToMeters(14.5);
+
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
    *
    * @param directory Directory of swerve drive config files.
    */
-  public SwerveSubsystem(File directory){
+  public SwerveSubsystem(File directory) {
+
     // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
-    //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
-    //  The encoder resolution per motor revolution is 1 per motor revolution.
+    // In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
+    // The encoder resolution per motor revolution is 1 per motor revolution.
     double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(12.8);
+
     // Motor conversion factor is (PI * WHEEL DIAMETER IN METERS) / (GEAR RATIO * ENCODER RESOLUTION).
-    //  In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
-    //  The gear ratio is 6.75 motor revolutions per wheel rotation.
-    //  The encoder resolution per motor revolution is 1 per motor revolution.
+    // In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
+    // The gear ratio is 6.75 motor revolutions per wheel rotation.
+    // The encoder resolution per motor revolution is 1 per motor revolution.
     double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
+
+    // Print this data to output
     System.out.println("\"conversionFactor\": {");
     System.out.println("\t\"angle\": " + angleConversionFactor + ",");
     System.out.println("\t\"drive\": " + driveConversionFactor);
@@ -65,19 +72,21 @@ public class SwerveSubsystem extends SubsystemBase{
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
-    try
-    {
+
+    // Creates a SwerveDrive object from the JSON files in deploy/swerve
+    try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed);
       // Alternative method if you don't want to supply the conversion factor via JSON files.
       // swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed, angleConversionFactor, driveConversionFactor);
-    } catch (Exception e)
-    {
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
 
     setupPathPlanner();
   }
+
+
 
   /**
    * Construct the swerve drive.
@@ -89,9 +98,9 @@ public class SwerveSubsystem extends SubsystemBase{
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
   }
 
-  /**
-   * Setup AutoBuilder for PathPlanner.
-   */
+
+
+  /**Setup AutoBuilder for PathPlanner.*/
   public void setupPathPlanner(){
     AutoBuilder.configureHolonomic(
       this::getPose, // Robot pose supplier
@@ -99,20 +108,24 @@ public class SwerveSubsystem extends SubsystemBase{
       this::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
       new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-        new PIDConstants(5.0, 0.0, 0.0),
         // Translation PID constants
+        new PIDConstants(
+          5.0, 
+          0.0, 
+          0.0
+        ),
+        // Rotation PID constants
         new PIDConstants(
           swerveDrive.swerveController.config.headingPIDF.p,
           swerveDrive.swerveController.config.headingPIDF.i,
           swerveDrive.swerveController.config.headingPIDF.d
         ),
-        // Rotation PID constants
-        4.5,
         // Max module speed, in m/s
-        swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
+        4.5,
         // Drive base radius in meters. Distance from robot center to furthest module.
-        new ReplanningConfig()
+        swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
         // Default path replanning config. See the API for the options here
+        new ReplanningConfig()
       ),
       () -> {
         // Boolean supplier that controls when the path will be mirrored for the red alliance
@@ -136,8 +149,8 @@ public class SwerveSubsystem extends SubsystemBase{
     // Load the path you want to follow using its name in the GUI
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
-    if (setOdomToStart)
-    {
+    // Set odometry position to the start of the path, if specified.
+    if (setOdomToStart) {
       resetOdometry(new Pose2d(path.getPoint(0).position, getHeading()));
     }
 
