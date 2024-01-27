@@ -13,20 +13,22 @@ public final class Constants {
                 // CAN IDs of the shooter motors
                 public static final int kShooterMotorID1 = 1;
                 public static final int kShooterMotorID2 = 7;
+
+                // Maximum voltage of the shooter motors
+                public static final double kShooterMaxVolts = 5.0;
         }
         
+
+
         // Intake constants
         public static class Intake {
                 
-                // CAN ID of the intake motor and the intake's limit switch
+                // CAN ID of the intake motor
                 public static final int kIntakeMotorID = 2;
-                @Deprecated // Marked as deprecated as this has not yet been determined
+
+                // DIO pin that the limit switch is connected to
                 public static final int kIntakeLimitSwitchID = 0;
         } 
-
-        // Maximum voltage of the shooter motors
-        // Why is this not in shooter constants?
-        public static final double kShooterMaxVolts = 5.0;
 
 
 
@@ -56,13 +58,13 @@ public final class Constants {
         // Driving constants
         public static final class DriveConstants {
 
-                // Distance between right and left wheels
+                /**Distance between left and right wheels.*/
                 public static final double kTrackWidth = Units.inchesToMeters(21);
 
-                // Distance between front and back wheels
+                /**Distance between front and back wheels.*/
                 public static final double kWheelBase = Units.inchesToMeters(25.5);
 
-                // Kinematics for each swerve module
+                /**Kinematics for each swerve module.*/
                 public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
                         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -112,29 +114,35 @@ public final class Constants {
                 public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -1.816;
                 public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -4.811;
 
-                // Maximum physical speed for the drive motors and turning motors, respectively
+                /**Maximum PHYSICAL speed of the drive motors.*/
                 public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
+                /**Maximum PHYSICAL angular speed of the turning motors.*/
                 public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
-                // Maximum driver speed and acceleration for the drive motors
+                /**Maximum tele-op driving speed of the drive motors.*/
                 public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
+                /**Maximum tele-op acceleration of the drive motors.*/
                 public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
 
-                // Maximum driver speed and acceleration for the turning motors
+                /**Maximum tele-op angular speed of the turning motors.*/
                 public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+                /**Maximum tele-op angular acceleration of the turning motors.*/
                 public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
         }
 
 
+        
         // Autonomous constants
         public static final class AutoConstants {
 
-                // Maximum autonomous speed and acceleration for the drive motors
+                /**Maximum AUTO driving speed of the drive motors.*/
                 public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
+                /**Maximum AUTO acceleration of the drive motors.*/
                 public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 
-                // Maximum autonomous speed and acceleration for the turning motors
+                /**Maximum AUTO angular speed of the turning motors.*/
                 public static final double kMaxAngularSpeedRadiansPerSecond = DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
+                /**Maximum AUTO angular acceleration of the turning motors.*/
                 public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
 
                 public static final double kPXController = 1.5;
@@ -150,7 +158,7 @@ public final class Constants {
 
         public static final class OIConstants {
 
-                // Xbox controller port
+                /**Port of the current controller used for driving.*/
                 public static final int kDriverControllerPort = 0;
 
                 public static final int kDriverYAxis = 1;

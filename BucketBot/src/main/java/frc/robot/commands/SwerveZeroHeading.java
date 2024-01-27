@@ -10,7 +10,7 @@ public class SwerveZeroHeading extends Command {
   private final SwerveSubsystem m_swerve;
 
   /**
-   * Resets the gyro to re-orient the robot on the field due to drift..
+   * Resets the gyro to re-orient the robot on the field due to drift.
    * @param subsystem Swerve subsystem
    */
   public SwerveZeroHeading(SwerveSubsystem subsystem) {
