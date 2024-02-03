@@ -27,6 +27,15 @@ public class RobotContainer {
   private Trigger controller_B = new JoystickButton(m_joystick, 2);
   private Trigger controller_X = new JoystickButton(m_joystick, 3);
 
+  // Unused buttons
+  // private Trigger controller_Y = new JoystickButton(m_joystick, 4);
+  // private Trigger controller_LB = new JoystickButton(m_joystick, 5);
+  // private Trigger controller_RB = new JoystickButton(m_joystick, 6;
+  // private Trigger controller_Share = new JoystickButton(m_joystick, 7);
+  // private Trigger controller_Menu = new JoystickButton(m_joystick, 8);
+  // private Trigger controller_LStick = new JoystickButton(m_joystick, 9); // Left stick click
+  // private Trigger controller_RStick = new JoystickButton(m_joystick, 10); // Right stick click
+
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
