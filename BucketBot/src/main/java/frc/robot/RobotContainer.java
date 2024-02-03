@@ -52,10 +52,10 @@ public class RobotContainer {
     controller_B.toggleOnTrue(new Intake(() -> 0.5, m_IntakeMotor));
     controller_X.onTrue(new SwerveZeroHeading(m_swerve));*/
 
-    controller_A.whileTrue(new Shooter(() -> 0.35, m_shooterMotor));
-    controller_B.whileTrue(new Shooter(() -> 0.4, m_shooterMotor));
-    controller_X.whileTrue(new Shooter(() -> 0.45, m_shooterMotor));
-    controller_Y.whileTrue(new Shooter(() -> 0.5, m_shooterMotor));
+    controller_A.whileTrue(new Shooter(() -> 0.4, () -> 0.6, m_shooterMotor));
+    controller_B.whileTrue(new Shooter(() -> 0.6, () -> 0.4, m_shooterMotor));
+    controller_X.whileTrue(new Shooter(() -> 0.3, () -> 0.7, m_shooterMotor));
+    controller_Y.whileTrue(new Shooter(() -> 0.7, () -> 0.3, m_shooterMotor));
 
   }
 

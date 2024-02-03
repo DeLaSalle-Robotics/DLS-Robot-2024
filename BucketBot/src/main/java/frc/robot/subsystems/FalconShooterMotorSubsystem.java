@@ -33,20 +33,22 @@ public class FalconShooterMotorSubsystem extends SubsystemBase {
 
   /**
    * Spin the motors at the given speed
-   * @param speed Double between -1.0 and 1.0
+   * @param speed1 First motor speed, between -1.0 and 1.0.
+   * @param speed2 Second motor speed, between -1.0 and 1.0.
    */
-  public void spin(double speed){
+  public void spin(double speed1, double speed2){
 
     // Real motors
-    m_shooterMotor1.set(-speed);
-    m_shooterMotor2.set(speed);
+    m_shooterMotor1.set(-speed1);
+    m_shooterMotor2.set(speed2);
     
     // Simulated motors
-    m_simMotor1.setRotorVelocity(speed);
-    m_simMotor2.setRotorVelocity(-speed);
+    m_simMotor1.setRotorVelocity(speed1);
+    m_simMotor2.setRotorVelocity(-speed2);
 
     // Post speed to SmartDashboard
-    SmartDashboard.putNumber("speed", speed);
+    SmartDashboard.putNumber("speed1", speed1);
+    SmartDashboard.putNumber("speed2", speed2);
   }
 
 
