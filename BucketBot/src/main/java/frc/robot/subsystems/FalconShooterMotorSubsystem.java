@@ -38,15 +38,15 @@ public class FalconShooterMotorSubsystem extends SubsystemBase {
   public void spin(double speed){
 
     // Real motors
-    m_shooterMotor1.set(speed);
-    m_shooterMotor2.set(-speed);
+    m_shooterMotor1.set(-speed);
+    m_shooterMotor2.set(speed);
     
     // Simulated motors
     m_simMotor1.setRotorVelocity(speed);
     m_simMotor2.setRotorVelocity(-speed);
 
     // Post speed to SmartDashboard
-    SmartDashboard.putNumber("speed", speed);
+    SmartDashboard.putNumber("Shooter Speed", speed);
   }
 
 

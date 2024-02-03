@@ -71,8 +71,25 @@
   },
   "NetworkTables": {
     "transitory": {
-      "SmartDashboard": {
+      "PathPlanner": {
+        "double[]##v_/PathPlanner/activePath": {
+          "open": true
+        },
+        "double[]##v_/PathPlanner/targetPose": {
+          "open": true
+        },
+        "double[]##v_/PathPlanner/vel": {
+          "open": true
+        },
         "open": true
+      },
+      "SmartDashboard": {
+        "Swerve Drive": {
+          "open": true
+        },
+        "swerve": {
+          "open": true
+        }
       }
     }
   },

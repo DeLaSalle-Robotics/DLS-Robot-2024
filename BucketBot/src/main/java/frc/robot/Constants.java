@@ -60,6 +60,8 @@ public final class Constants {
                 public static final PIDFConfig angleAutoPID   = new PIDFConfig(0.4, 0, 0.01);
 
                 public static final double MAX_ACCELERATION = 2;
+
+                public static final String PathFileName = "Experimental"; // Use this to switch which pathfinder file to run in auto
         }
 
         public static final class Drivebase
