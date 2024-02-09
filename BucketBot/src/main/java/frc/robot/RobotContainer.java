@@ -55,7 +55,7 @@ public class RobotContainer {
     controller_A.whileTrue(new Shooter(() -> 0.4, () -> 0.6, m_shooterMotor));
     controller_B.whileTrue(new Shooter(() -> 0.6, () -> 0.4, m_shooterMotor));
     controller_X.whileTrue(new Shooter(() -> 0.3, () -> 0.7, m_shooterMotor));
-    controller_Y.whileTrue(new Shooter(() -> 0.7, () -> 0.3, m_shooterMotor));
+    controller_Y.whileTrue(new Shooter(() -> 0.5, () -> 0.5, m_shooterMotor));
 
   }
 
