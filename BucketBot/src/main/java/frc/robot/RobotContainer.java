@@ -36,7 +36,7 @@ public class RobotContainer {
   private Trigger controller_X = new JoystickButton(m_joystick, 3);
   private Trigger controller_Y = new JoystickButton(m_joystick, 4);
 
-  // Unused buttons
+  // Unused buttons - these will work fine if you simply uncomment them
   // private Trigger controller_LB = new JoystickButton(m_joystick, 5);
   // private Trigger controller_RB = new JoystickButton(m_joystick, 6;
   // private Trigger controller_Share = new JoystickButton(m_joystick, 7);
@@ -44,7 +44,7 @@ public class RobotContainer {
   // private Trigger controller_LStick = new JoystickButton(m_joystick, 9); // Left stick click
   // private Trigger controller_RStick = new JoystickButton(m_joystick, 10); // Right stick click
 
-  // D-pad buttons
+  // D-pad buttons - these will work fine if you simply uncomment them
   // private Trigger controller_N = new POVButton(m_joystick, 0); // D-pad up
   // private Trigger controller_NE = new POVButton(m_joystick, 45); // D-pad up-right
   // private Trigger controller_E = new POVButton(m_joystick, 90); // D-pad right
