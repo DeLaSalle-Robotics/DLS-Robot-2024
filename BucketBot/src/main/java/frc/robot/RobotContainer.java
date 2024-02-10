@@ -28,7 +28,7 @@ public class RobotContainer {
   private final NEOShooterMotorSubsystem m_NeoShooterMotorSubsystem = new NEOShooterMotorSubsystem();
 
   // Declare Xbox Controller
-  private final XboxController m_joystick = new XboxController(0);
+  private final XboxController m_joystick = new XboxController(OIConstants.kDriverControllerPort);
 
   // Button declarations
   private Trigger controller_A = new JoystickButton(m_joystick, 1);
@@ -38,7 +38,7 @@ public class RobotContainer {
 
   // Unused buttons - these will work fine if you simply uncomment them
   // private Trigger controller_LB = new JoystickButton(m_joystick, 5);
-  // private Trigger controller_RB = new JoystickButton(m_joystick, 6;
+  // private Trigger controller_RB = new JoystickButton(m_joystick, 6);
   // private Trigger controller_Share = new JoystickButton(m_joystick, 7);
   // private Trigger controller_Menu = new JoystickButton(m_joystick, 8);
   // private Trigger controller_LStick = new JoystickButton(m_joystick, 9); // Left stick click
