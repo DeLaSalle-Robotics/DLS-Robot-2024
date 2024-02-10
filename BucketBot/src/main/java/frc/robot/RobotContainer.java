@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+// import edu.wpi.first.wpilibj2.command.button.POVButton; // Use this for D-pad button mapping
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -34,6 +35,7 @@ public class RobotContainer {
   private Trigger controller_B = new JoystickButton(m_joystick, 2);
   private Trigger controller_X = new JoystickButton(m_joystick, 3);
   private Trigger controller_Y = new JoystickButton(m_joystick, 4);
+
   // Unused buttons
   // private Trigger controller_LB = new JoystickButton(m_joystick, 5);
   // private Trigger controller_RB = new JoystickButton(m_joystick, 6;
@@ -41,6 +43,32 @@ public class RobotContainer {
   // private Trigger controller_Menu = new JoystickButton(m_joystick, 8);
   // private Trigger controller_LStick = new JoystickButton(m_joystick, 9); // Left stick click
   // private Trigger controller_RStick = new JoystickButton(m_joystick, 10); // Right stick click
+
+  // D-pad buttons
+  // private Trigger controller_N = new POVButton(m_joystick, 0); // D-pad up
+  // private Trigger controller_NE = new POVButton(m_joystick, 45); // D-pad up-right
+  // private Trigger controller_E = new POVButton(m_joystick, 90); // D-pad right
+  // private Trigger controller_SE = new POVButton(m_joystick, 135); // D-pad down-right
+  // private Trigger controller_S = new POVButton(m_joystick, 180); // D-pad down
+  // private Trigger controller_SW = new POVButton(m_joystick, 225); // D-pad down-left
+  // private Trigger controller_W = new POVButton(m_joystick, 270); // D-pad left
+  // private Trigger controller_NW = new POVButton(m_joystick, 315); // D-pad up-left
+
+  /* Additional notes:
+    The joysticks (as well as LT and RT, since they have analog input) are linked to a different axis ID, listed below
+    0 - Left Stick X
+    1 - Left Stick Y*
+    2 - Left Trigger (LT)**
+    3 - Right Trigger (RT)**
+    4 - Right Stick X
+    5 - Right Stick Y*
+
+    These can each be retrieved by writing:
+    m_joystick.getRawAxis(axis);
+
+    * For y-axis, the value increases when moving the stick down, and decreases when moving the stick up
+    ** This value cannot be below zero
+  */
 
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
