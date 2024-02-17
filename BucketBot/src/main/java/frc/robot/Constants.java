@@ -11,8 +11,8 @@ public final class Constants {
         public static class Shooter {
 
                 // CAN IDs of the shooter motors
-                public static final int kShooterMotorID1 = 9; // Previously 1
-                public static final int kShooterMotorID2 = 10; // Previously 7
+                public static final int kShooterMotorID1 = 13; // Previously 1
+                public static final int kShooterMotorID2 = 14; // Previously 7
 
                 // Maximum voltage of the shooter motors
                 public static final double kShooterMaxVolts = 5.0;
@@ -24,7 +24,7 @@ public final class Constants {
         public static class Intake {
                 
                 // CAN ID of the intake motor
-                public static final int kIntakeMotorID = 11; // Previously 2
+                public static final int kIntakeMotorID = 15; // Previously 2
 
                 // DIO pin that the limit switch is connected to
                 public static final int kIntakeLimitSwitchID = 0;
@@ -59,10 +59,10 @@ public final class Constants {
         public static final class DriveConstants {
 
                 /**Distance between left and right wheels.*/
-                public static final double kTrackWidth = Units.inchesToMeters(21);
+                public static final double kTrackWidth = Units.inchesToMeters(20.25);
 
                 /**Distance between front and back wheels.*/
-                public static final double kWheelBase = Units.inchesToMeters(25.5);
+                public static final double kWheelBase = Units.inchesToMeters(20.25);
 
                 /**Kinematics for each swerve module.*/
                 public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
@@ -73,16 +73,16 @@ public final class Constants {
                 );
 
                 // CAN IDs of each module's drive motor
-                public static final int kFrontLeftDriveMotorPort = 8;
-                public static final int kBackLeftDriveMotorPort = 2;
-                public static final int kFrontRightDriveMotorPort = 6;
-                public static final int kBackRightDriveMotorPort = 4;
+                public static final int kFrontLeftDriveMotorPort = 5;
+                public static final int kBackLeftDriveMotorPort = 3;
+                public static final int kFrontRightDriveMotorPort = 7;
+                public static final int kBackRightDriveMotorPort = 1;
 
                 // CAN IDs of each module's turning motor
-                public static final int kFrontLeftTurningMotorPort = 7;
-                public static final int kBackLeftTurningMotorPort = 1;
-                public static final int kFrontRightTurningMotorPort = 5;
-                public static final int kBackRightTurningMotorPort = 3;
+                public static final int kFrontLeftTurningMotorPort = 6;
+                public static final int kBackLeftTurningMotorPort = 4;
+                public static final int kFrontRightTurningMotorPort = 8;
+                public static final int kBackRightTurningMotorPort = 2;
 
                 // Whether or not each module's turning encoder is reversed
                 public static final boolean kFrontLeftTurningEncoderReversed = true;
@@ -97,10 +97,10 @@ public final class Constants {
                 public static final boolean kBackRightDriveEncoderReversed = false;
 
                 // CAN IDs of each module's absolute encoder
-                public static final int kFrontLeftDriveAbsoluteEncoderPort = 0;
-                public static final int kBackLeftDriveAbsoluteEncoderPort = 2;
-                public static final int kFrontRightDriveAbsoluteEncoderPort = 1;
-                public static final int kBackRightDriveAbsoluteEncoderPort = 3;
+                public static final int kFrontLeftDriveAbsoluteEncoderPort = 11;
+                public static final int kBackLeftDriveAbsoluteEncoderPort = 10;
+                public static final int kFrontRightDriveAbsoluteEncoderPort = 12;
+                public static final int kBackRightDriveAbsoluteEncoderPort = 9;
 
                 // Whether or not each module's absolute encoder is reversed
                 public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;

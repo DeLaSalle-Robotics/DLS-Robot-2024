@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
+// import frc.robot.Constants;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+// import com.revrobotics.CANSparkMax;
+// import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,13 +13,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class NEOShooterMotorSubsystem extends SubsystemBase {
 
   // Declare NEO controller
-  private final CANSparkMax m_NEOShooterMotor = new CANSparkMax(Constants.Shooter.kShooterMotorID1, MotorType.kBrushless);
+  // private final CANSparkMax m_NEOShooterMotor = new CANSparkMax(Constants.Shooter.kShooterMotorID1, MotorType.kBrushless);
   
 
   // NEOShooterMotorSubsystem constructor
   public NEOShooterMotorSubsystem() {
     super();
-    m_NEOShooterMotor.setSmartCurrentLimit(5);
+    // m_NEOShooterMotor.setSmartCurrentLimit(5);
     SmartDashboard.putNumber("Speed", 0);
   }
 
@@ -31,7 +31,7 @@ public class NEOShooterMotorSubsystem extends SubsystemBase {
   public void spin(double speed){
 
     // Real motors
-    m_NEOShooterMotor.set(speed);
+    // m_NEOShooterMotor.set(speed);
 
     // Post speed to SmartDashboard
     // SmartDashboard.putNumber("speed", speed);
