@@ -5,28 +5,19 @@
 
 package frc.robot.subsystems;
 
-import java.io.File;
-import java.util.Optional;
-
 import frc.robot.Robot;
-import frc.robot.subsystems.SwerveSubsystem;
 
-import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.estimation.TargetModel;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
-import org.photonvision.simulation.VisionTargetSim;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -39,7 +30,7 @@ public class VisionSubsystem extends SubsystemBase {
   // Vision simulator
   private final VisionSystemSim visionSim = new VisionSystemSim("john");
 
-  // Create the camera
+  // Create the simulated camera
   private final PhotonCamera camera = new PhotonCamera("jane");
   private final PhotonCameraSim vs_camera;
 
@@ -52,6 +43,8 @@ public class VisionSubsystem extends SubsystemBase {
 
   // Swerve subsystem to be passed through the constructor
   private final SwerveSubsystem m_swerveSubsystem;
+
+
 
   // VisionSubsystem constructor
   public VisionSubsystem(SwerveSubsystem swerve) {
@@ -84,7 +77,11 @@ public class VisionSubsystem extends SubsystemBase {
     visionSim.addCamera(vs_camera, vs_camTranslation);
   }
 
-  // Default subsystem methods
+
+  public PhotonPipelineResult getLatestResult(){
+    return null;
+  }
+
 
 
   public Command exampleMethodCommand() {
@@ -115,6 +112,8 @@ public class VisionSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     visionSim.update(m_swerveSubsystem.getPose());
   }
+
+
 
   public Field2d getSimDebugField() {
     if (!Robot.isSimulation()) return null;
