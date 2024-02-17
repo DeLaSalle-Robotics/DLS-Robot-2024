@@ -5,16 +5,84 @@
 
 package frc.robot.subsystems;
 
+import java.io.File;
+import java.util.Optional;
+
+import frc.robot.Robot;
+import frc.robot.subsystems.SwerveSubsystem;
+
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.estimation.TargetModel;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.simulation.VisionTargetSim;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class ExampleSubsystem extends SubsystemBase {
+public class VisionSubsystem extends SubsystemBase {
 
+  // Vision simulator
+  private final VisionSystemSim visionSim = new VisionSystemSim("john");
 
-  // ExampleSubsystem constructor
-  public ExampleSubsystem() {}
+  // Create the camera
+  private final PhotonCamera camera = new PhotonCamera("jane");
+  private final PhotonCameraSim vs_camera;
 
+  // Simulation camera properties
+  private final SimCameraProperties vs_camProperties = new SimCameraProperties();
+
+  // April tag model and field layout
+  private final TargetModel vs_targetModel = TargetModel.kAprilTag36h11;
+  private final AprilTagFieldLayout vs_layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+  // Swerve subsystem to be passed through the constructor
+  private final SwerveSubsystem m_swerveSubsystem;
+
+  // VisionSubsystem constructor
+  public VisionSubsystem(SwerveSubsystem swerve) {
+
+    // Define swerve subsystem
+    m_swerveSubsystem = swerve;
+
+    // Add april tags from the april tag layout
+    visionSim.addAprilTags(vs_layout);
+
+    // Set resolution, FOV, calibration errors, FPS, and average latency
+    vs_camProperties.setCalibration(960, 720, Rotation2d.fromDegrees(74.8));
+    vs_camProperties.setCalibError(0.146, 0.0486);
+    vs_camProperties.setFPS(45);
+    vs_camProperties.setAvgLatencyMs(310);
+
+    // Add the properties to the simulated camera
+    vs_camera = new PhotonCameraSim(camera, vs_camProperties);
+
+    // Allow the simulated camera to draw a wireframe visualization of the field to the camera streams
+    // This is very resource intensive and reccomended to be left off
+    vs_camera.enableDrawWireframe(true);
+
+    // Position and rotation of the camera relative to the robot pose
+    Translation3d vs_camPosition = new Translation3d(0.0, 0.0, 0.0);
+    Rotation3d vs_camRotation = new Rotation3d(0.0, 0.0, 0.0); // Note that this is in radians - use Math.toRadians to enter degree values
+    Transform3d vs_camTranslation = new Transform3d(vs_camPosition, vs_camRotation);
+
+    // Add the camera to the vision simulator
+    visionSim.addCamera(vs_camera, vs_camTranslation);
+  }
 
   // Default subsystem methods
 
@@ -37,11 +105,20 @@ public class ExampleSubsystem extends SubsystemBase {
 
   // This method will be called once per scheduler run
   @Override
-  public void periodic() {}
+  public void periodic() {
+
+  }
 
 
   // This method will be called once per scheduler run during simulation
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    visionSim.update(m_swerveSubsystem.getPose());
+  }
+
+  public Field2d getSimDebugField() {
+    if (!Robot.isSimulation()) return null;
+    return visionSim.getDebugField();
+  }
 
 }

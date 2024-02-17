@@ -1,62 +1,28 @@
 {
-  "HALProvider": {
-    "Other Devices": {
-      "SPARK MAX [2]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[1]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[1]/Fwd Limit": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[1]/Rev Limit": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[1]/Rotor Sensor": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[7]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[7]/Fwd Limit": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[7]/Rev Limit": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[7]/Rotor Sensor": {
-        "header": {
-          "open": true
-        }
-      }
-    }
-  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro",
+      "/SmartDashboard/VisionSystemSim-john/Sim Field": "Field2d",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "Robot": {
+          "style": "Box/Image"
+        },
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/VisionSystemSim-john/Sim Field": {
         "bottom": 1476,
         "height": 8.210550308227539,
         "left": 150,
@@ -70,7 +36,28 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
     "transitory": {
+      "CameraPublisher": {
+        "jane-processed": {
+          "open": true,
+          "string[]##v_/CameraPublisher/jane-processed/streams": {
+            "open": true
+          }
+        },
+        "jane-raw": {
+          "open": true,
+          "string[]##v_/CameraPublisher/jane-raw/streams": {
+            "open": true
+          }
+        },
+        "open": true
+      },
       "PathPlanner": {
         "double[]##v_/PathPlanner/activePath": {
           "open": true
@@ -87,13 +74,35 @@
         "Swerve Drive": {
           "open": true
         },
+        "VisionSystemSim-john": {
+          "Sim Field": {
+            "double[]##v_/SmartDashboard/VisionSystemSim-john/Sim Field/visibleTargetPoses": {
+              "open": true
+            },
+            "open": true
+          },
+          "open": true
+        },
+        "open": true,
         "swerve": {
           "open": true
         }
+      },
+      "photonvision": {
+        "jane": {
+          "double[]##v_/photonvision/jane/targetPose": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
       }
     }
   },
   "NetworkTables Info": {
     "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }

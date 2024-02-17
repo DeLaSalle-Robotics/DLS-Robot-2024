@@ -5,12 +5,14 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
 
 import java.io.File;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
@@ -21,8 +23,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
 
-  // The robot's subsystems and commands are defined here...
+  // Make sure to define swerve subsystem BEFORE vision subsystem
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+  private final VisionSubsystem m_Vision = new VisionSubsystem(drivebase);
 
   // Define subsystems and commands
   private final FalconShooterMotorSubsystem m_shooterMotor = new FalconShooterMotorSubsystem();
@@ -115,4 +118,5 @@ public class RobotContainer {
   {
     drivebase.setMotorBrake(brake);
   }
+
 }
