@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FalconShooterMotorSubsystem extends SubsystemBase {
 
+  /*
   //private final CANSparkMax m_shooterMotor = new CANSparkMax(Constants.OperatorConstants.kShooterMotorID, MotorType.kBrushless);
   // Declare Falcon controllers
   private final TalonFX m_shooterMotor1 = new TalonFX(Constants.Shooter.kShooterMotorID1);
@@ -21,13 +22,14 @@ public class FalconShooterMotorSubsystem extends SubsystemBase {
   private final TalonFXSimState m_simMotor1 = m_shooterMotor1.getSimState();
   private final TalonFXSimState m_simMotor2 = m_shooterMotor2.getSimState();
 
-  
+  */
   // FalconShooterMotorSubsystem constructor
   public FalconShooterMotorSubsystem() {
+    /*
     super();
     // Simulate the battery supply voltage
     m_simMotor1.setSupplyVoltage(12);
-    m_simMotor2.setSupplyVoltage(12);
+    */
   }
 
 
@@ -37,6 +39,7 @@ public class FalconShooterMotorSubsystem extends SubsystemBase {
    */
   public void spin(double speed){
 
+    /*
     // Real motors
     m_shooterMotor1.set(-speed);
     m_shooterMotor2.set(speed);
@@ -47,6 +50,7 @@ public class FalconShooterMotorSubsystem extends SubsystemBase {
 
     // Post speed to SmartDashboard
     SmartDashboard.putNumber("Shooter Speed", speed);
+    */
   }
 
 

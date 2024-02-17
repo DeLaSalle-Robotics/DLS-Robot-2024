@@ -8,7 +8,7 @@ package frc.robot.subsystems;
 import frc.robot.Robot;
 
 import org.photonvision.PhotonCamera;
-import org.photonvision.estimation.TargetModel;
+// import org.photonvision.estimation.TargetModel;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
@@ -38,7 +38,7 @@ public class VisionSubsystem extends SubsystemBase {
   private final SimCameraProperties vs_camProperties = new SimCameraProperties();
 
   // April tag model and field layout
-  private final TargetModel vs_targetModel = TargetModel.kAprilTag36h11;
+  // private final TargetModel vs_targetModel = TargetModel.kAprilTag36h11;
   private final AprilTagFieldLayout vs_layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
   // Swerve subsystem to be passed through the constructor
@@ -69,7 +69,7 @@ public class VisionSubsystem extends SubsystemBase {
     vs_camera.enableDrawWireframe(true);
 
     // Position and rotation of the camera relative to the robot pose
-    Translation3d vs_camPosition = new Translation3d(0.0, 0.0, 0.0);
+    Translation3d vs_camPosition = new Translation3d(0.0, 0.0, 0.5);
     Rotation3d vs_camRotation = new Rotation3d(0.0, 0.0, 0.0); // Note that this is in radians - use Math.toRadians to enter degree values
     Transform3d vs_camTranslation = new Transform3d(vs_camPosition, vs_camRotation);
 

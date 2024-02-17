@@ -8,8 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class Intake extends Command {
 
+  /*
   private final IntakeSubsystem m_Intake;
   private final DoubleSupplier m_speed;
+  */
 
   /**
    * Spin the intake at the given speed until the limit switch detects something.
@@ -17,9 +19,11 @@ public class Intake extends Command {
    * @param subsystem Intake subsystem
    */
   public Intake(DoubleSupplier speed, IntakeSubsystem subsystem) {
+    /*
     m_Intake = subsystem;
     m_speed = speed;
     addRequirements(m_Intake);
+    */
   }
 
 
@@ -32,20 +36,21 @@ public class Intake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Intake.spin(m_speed.getAsDouble());
+    //m_Intake.spin(m_speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     // The intake stops spinning when the command ends.
-    m_Intake.spin(0);
+    //m_Intake.spin(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     // Return value is based on the state of the limit switch
-    return m_Intake.testLimitSwitch();
+    //return m_Intake.testLimitSwitch();
+    return false;
   }
 }
