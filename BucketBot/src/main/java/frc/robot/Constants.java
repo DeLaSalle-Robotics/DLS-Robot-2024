@@ -45,7 +45,7 @@ public final class Constants {
                 public static final int kDriverRotAxis = 4;
                 public static final int kDriverFieldOrientedButtonIdx = 1;
 
-                public static final double kDeadband = 0.05;
+                public static final double kDeadband = 0.1;
         }
 
 
@@ -69,6 +69,8 @@ public final class Constants {
 
                 // Hold time on motor brakes when disabled
                 public static final double WHEEL_LOCK_TIME = 10; // seconds
+
+                public static final double maxSpeed = 0.1;
         }
 
         public static class OperatorConstants
