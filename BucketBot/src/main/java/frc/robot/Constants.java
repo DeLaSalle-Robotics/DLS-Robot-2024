@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation3d;
 // import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 // import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -81,5 +82,23 @@ public final class Constants {
                 public static final double LEFT_Y_DEADBAND  = 0.1;
                 public static final double RIGHT_X_DEADBAND = 0.1;
                 public static final double TURN_CONSTANT    = 6;
+        }
+
+        public static class VisionConstants
+        {
+                // Simulated camera properties, based mostly on real camera
+
+                public static final int resWidth = 960;
+                public static final int resHeight = 720;
+                public static final double fovDiagDegrees = 74.8;
+
+                public static final double calibErrorPx = 0.146;
+                public static final double calibErrorStdDev = 0.0486;
+
+                public static final double fps = 45.0;
+                public static final double avgLatencyMs = 310.0;
+
+                public static final Translation3d cameraPosition = new Translation3d(0.0, 0.0, 0.5);
+                public static final Rotation3d cameraRotation = new Rotation3d(0.0, 0.0, 0.0);
         }
 }

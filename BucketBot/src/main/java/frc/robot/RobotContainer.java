@@ -96,8 +96,12 @@ public class RobotContainer {
     whileTrue schedules the command when the button is pressed, and cancels the command when the button is released.
     toggleTrue toggles the command on every press: schedules if not currently scheduled, and cancels if scheduled.
     */
-    controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
-    controller_B.toggleOnTrue(new Intake(() -> 0.5, m_intake));
+    // controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
+    // controller_B.toggleOnTrue(new Intake(() -> 0.5, m_intake));
+
+    // Very untested command that re-orients the robot to the field
+    // controller_A.whileTrue(Commands.run(() -> m_vision.orientRobot()));
+
     controller_X.whileTrue(Commands.run(() -> m_swerve.zeroGyro()));
 
     new JoystickButton(m_joystick, 1).onTrue((new InstantCommand(m_swerve::zeroGyro)));

@@ -5,17 +5,25 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 
+import java.util.List;
+
 import org.photonvision.PhotonCamera;
-// import org.photonvision.estimation.TargetModel;
+import org.photonvision.PhotonUtils;
+import org.photonvision.estimation.TargetModel;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -28,10 +36,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
 
-  // Vision simulator
+  /** Vision simulator */
   private final VisionSystemSim visionSim = new VisionSystemSim("john");
 
-  // Create the simulated camera
+  /** Camera simulator */
   private final PhotonCamera camera = new PhotonCamera("jane");
   private final PhotonCameraSim vs_camera;
 
@@ -45,43 +53,81 @@ public class VisionSubsystem extends SubsystemBase {
   // Swerve subsystem to be passed through the constructor
   private final SwerveSubsystem m_swerveSubsystem;
 
+  // List of camera targets, see periodic/simulationPeriodic
+  private List<PhotonTrackedTarget> targetList;
+
+  // Position and orientation of the camera, robot-relative
+  private final Transform3d vs_camTranslation;
+
 
 
   // VisionSubsystem constructor
   public VisionSubsystem(SwerveSubsystem swerve) {
 
-    // Define swerve subsystem
+    // Define swerve subsystem, we need methods from it for vision to work
     m_swerveSubsystem = swerve;
 
     // Add april tags from the april tag layout
     visionSim.addAprilTags(vs_layout);
 
-    // Set resolution, FOV, calibration errors, FPS, and average latency
-    vs_camProperties.setCalibration(960, 720, Rotation2d.fromDegrees(74.8));
-    vs_camProperties.setCalibError(0.146, 0.0486);
-    vs_camProperties.setFPS(45);
-    vs_camProperties.setAvgLatencyMs(310);
+    // Set resolution and FOV calibration errors, FPS, and average latency
+    vs_camProperties.setCalibration(
+      VisionConstants.resWidth,
+      VisionConstants.resHeight, 
+      Rotation2d.fromDegrees(VisionConstants.fovDiagDegrees)
+    );
+
+    // Set calibration errors
+    vs_camProperties.setCalibError(
+      VisionConstants.calibErrorPx, 
+      VisionConstants.calibErrorStdDev
+    );
+
+    // Set FPS and average latency
+    vs_camProperties.setFPS(VisionConstants.fps);
+    vs_camProperties.setAvgLatencyMs(VisionConstants.avgLatencyMs);
 
     // Add the properties to the simulated camera
     vs_camera = new PhotonCameraSim(camera, vs_camProperties);
 
     // Allow the simulated camera to draw a wireframe visualization of the field to the camera streams
     // This is very resource intensive and reccomended to be left off
-    vs_camera.enableDrawWireframe(true);
+    vs_camera.enableDrawWireframe(false);
 
     // Position and rotation of the camera relative to the robot pose
-    Translation3d vs_camPosition = new Translation3d(0.0, 0.0, 0.5);
-    Rotation3d vs_camRotation = new Rotation3d(0.0, 0.0, 0.0); // Note that this is in radians - use Math.toRadians to enter degree values
-    Transform3d vs_camTranslation = new Transform3d(vs_camPosition, vs_camRotation);
+    Translation3d vs_camPosition = VisionConstants.cameraPosition;
+    Rotation3d vs_camRotation = VisionConstants.cameraRotation; // Note that this is in radians - use Math.toRadians to enter degree values
+    vs_camTranslation = new Transform3d(vs_camPosition, vs_camRotation);
 
     // Add the camera to the vision simulator
     visionSim.addCamera(vs_camera, vs_camTranslation);
   }
 
 
-  public PhotonPipelineResult getLatestResult(){
-    return null;
+  public void orientRobot(){
+
+    // Define latest camera result
+    PhotonPipelineResult result = camera.getLatestResult();
+
+    // If a target does not exist, cancel the operation
+    if (result.hasTargets()) {
+
+      // Define the best target
+      PhotonTrackedTarget target = result.getBestTarget();
+
+      // Estimate robot pose
+      Pose3d estRobotPose = PhotonUtils.estimateFieldToRobotAprilTag(
+        target.getBestCameraToTarget(),
+        vs_layout.getTagPose(target.getFiducialId()).get(),
+        vs_camTranslation
+      );
+
+      // Set robot pose
+      m_swerveSubsystem.resetOdometry(estRobotPose.toPose2d());
+    }
+
   }
+
 
 
 

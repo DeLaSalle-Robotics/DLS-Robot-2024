@@ -69,7 +69,8 @@
           "string[]##v_/CameraPublisher/jane-raw/streams": {
             "open": true
           }
-        }
+        },
+        "open": true
       },
       "PathPlanner": {
         "double[]##v_/PathPlanner/activePath": {
@@ -87,6 +88,9 @@
           "double[]##v_/SmartDashboard/Field/Robot": {
             "open": true
           },
+          "double[]##v_/SmartDashboard/Field/XModules": {
+            "open": true
+          },
           "open": true
         },
         "Swerve Drive": {
@@ -94,15 +98,23 @@
         },
         "VisionSystemSim-john": {
           "Sim Field": {
+            "double[]##v_/SmartDashboard/VisionSystemSim-john/Sim Field/Robot": {
+              "open": true
+            },
             "double[]##v_/SmartDashboard/VisionSystemSim-john/Sim Field/visibleTargetPoses": {
               "open": true
             },
             "open": true
-          },
-          "open": true
+          }
         },
         "open": true,
         "swerve": {
+          "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
+            "open": true
+          },
+          "double[]##v_/SmartDashboard/swerve/measuredStates": {
+            "open": true
+          },
           "open": true
         }
       },
@@ -110,8 +122,7 @@
         "jane": {
           "double[]##v_/photonvision/jane/targetPose": {
             "open": true
-          },
-          "open": true
+          }
         },
         "open": true
       }
