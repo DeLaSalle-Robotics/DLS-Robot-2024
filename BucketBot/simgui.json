@@ -69,8 +69,7 @@
           "string[]##v_/CameraPublisher/jane-raw/streams": {
             "open": true
           }
-        },
-        "open": true
+        }
       },
       "PathPlanner": {
         "double[]##v_/PathPlanner/activePath": {
@@ -81,8 +80,7 @@
         },
         "double[]##v_/PathPlanner/vel": {
           "open": true
-        },
-        "open": true
+        }
       },
       "SmartDashboard": {
         "Field": {

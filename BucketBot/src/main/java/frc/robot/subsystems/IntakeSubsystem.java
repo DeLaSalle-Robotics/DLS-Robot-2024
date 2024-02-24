@@ -18,7 +18,6 @@ public class IntakeSubsystem extends SubsystemBase {
   /**
   Deprecated as channel is not properly set yet, just a warning
    */
-  @Deprecated
   //private final DigitalInput m_LimitSwitch = new DigitalInput(Constants.Intake.kIntakeLimitSwitchID);
 
   // IntakeSubsystem constructor
