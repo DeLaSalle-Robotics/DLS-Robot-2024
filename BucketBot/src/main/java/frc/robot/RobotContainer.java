@@ -72,7 +72,7 @@ public class RobotContainer {
     Command driveFieldOrientedAnglularVelocity = m_swerve.driveCommand(
         () -> MathUtil.applyDeadband(m_joystick.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> m_joystick.getRightX());
+        () -> MathUtil.applyDeadband(m_joystick.getRightX(), OperatorConstants.RIGHT_X_DEADBAND));
 
     // Command driveFieldOrientedDirectAngleSim = m_swerve.simDriveCommand(
     //     () -> MathUtil.applyDeadband(m_joystick.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
