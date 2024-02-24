@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+// 6 inches up, 6 inches to the side for testing
 
 public class VisionSubsystem extends SubsystemBase {
 

@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -37,6 +38,9 @@ public class RobotContainer {
   private Trigger controller_B = new JoystickButton(m_joystick, 2);
   private Trigger controller_X = new JoystickButton(m_joystick, 3);
 
+  // Define the default drive command outside of constructor to potentially circumvent field oriented issues???
+  Command driveFieldOrientedAnglularVelocity;
+
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -69,7 +73,7 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation 
     // right stick controls the angular velocity of the robot
-    Command driveFieldOrientedAnglularVelocity = m_swerve.driveCommand(
+    driveFieldOrientedAnglularVelocity = m_swerve.driveCommand(
         () -> MathUtil.applyDeadband(m_joystick.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> MathUtil.applyDeadband(m_joystick.getRightX(), OperatorConstants.RIGHT_X_DEADBAND));
@@ -79,8 +83,8 @@ public class RobotContainer {
     //     () -> MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
     //     () -> m_joystick.getRightX());
 
-    m_swerve.setDefaultCommand(
-        !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedAnglularVelocity);
+    // m_swerve.setDefaultCommand(
+    //     !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedAnglularVelocity);
 
     // Configure the trigger bindings
     configureBindings();
@@ -94,7 +98,7 @@ public class RobotContainer {
     */
     controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
     controller_B.toggleOnTrue(new Intake(() -> 0.5, m_intake));
-    controller_X.onTrue(Commands.run(() -> m_swerve.zeroGyro()));
+    controller_X.whileTrue(Commands.run(() -> m_swerve.zeroGyro()));
 
     new JoystickButton(m_joystick, 1).onTrue((new InstantCommand(m_swerve::zeroGyro)));
   }
@@ -112,7 +116,7 @@ public class RobotContainer {
 
   public void setDriveMode()
   {
-    //drivebase.setDefaultCommand();
+    m_swerve.setDefaultCommand(driveFieldOrientedAnglularVelocity);
   }
 
   public void setMotorBrake(boolean brake)
