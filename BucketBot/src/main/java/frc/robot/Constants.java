@@ -11,8 +11,8 @@ public final class Constants {
         public static class Shooter {
 
                 // CAN IDs of the shooter motors
-                public static final int kShooterMotorID1 = 1;
-                public static final int kShooterMotorID2 = 7;
+                public static final int kShooterMotorID1 = 7;
+                public static final int kShooterMotorID2 = 2;
 
                 // Maximum voltage of the shooter motors
                 public static final double kShooterMaxVolts = 5.0;
@@ -24,7 +24,7 @@ public final class Constants {
         public static class Intake {
                 
                 // CAN ID of the intake motor
-                public static final int kIntakeMotorID = 2;
+                public static final int kIntakeMotorID = 75;
 
                 // DIO pin that the limit switch is connected to
                 public static final int kIntakeLimitSwitchID = 0;

@@ -9,6 +9,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -37,7 +38,8 @@ public class RobotContainer {
                 () -> m_joystick.getRawAxis(OIConstants.kDriverXAxis),
                 () -> m_joystick.getRawAxis(OIConstants.kDriverRotAxis),
                 () -> !m_joystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));*/
-
+    //m_shooterMotor.setDefaultCommand(new Shooter(() -> m_joystick.getLeftY(), () -> m_joystick.getRightY(), m_shooterMotor));
+    m_shooterMotor.setDefaultCommand(new Shooter(() -> MathUtil.applyDeadband(m_joystick.getLeftY(), 0.1), () -> MathUtil.applyDeadband(m_joystick.getRightY(), 0.1), m_shooterMotor));
     // Configure the trigger bindings
     configureBindings();
   }
