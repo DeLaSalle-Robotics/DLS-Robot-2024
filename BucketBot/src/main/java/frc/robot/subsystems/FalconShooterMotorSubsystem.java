@@ -1,13 +1,7 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
-
-import com.ctre.phoenix6.sim.TalonFXSimState;
-import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class FalconShooterMotorSubsystem extends SubsystemBase {
