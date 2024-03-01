@@ -98,6 +98,10 @@ public final class Constants {
                 public static final double fps = 45.0;
                 public static final double avgLatencyMs = 310.0;
 
+                // For position (relative to the robot):
+                // X: Forward/Backward
+                // Y: Left/Right
+                // Z: Up/Down
                 public static final Translation3d cameraPosition = new Translation3d(0.0, 0.0, 0.5);
                 public static final Rotation3d cameraRotation = new Rotation3d(0.0, 0.0, 0.0);
         }

@@ -5,7 +5,6 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 
@@ -13,7 +12,6 @@ import java.util.List;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
-import org.photonvision.estimation.TargetModel;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
@@ -22,12 +20,12 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -104,6 +102,11 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
 
+  /**
+   * <b>This is unfinished nor is it tested and probably should not be used.</b>
+   * <p>Re-orient the robot based on april tags.
+   */
+  @Deprecated
   public void orientRobot(){
 
     // Define latest camera result
@@ -126,6 +129,35 @@ public class VisionSubsystem extends SubsystemBase {
       m_swerveSubsystem.resetOdometry(estRobotPose.toPose2d());
     }
 
+  }
+
+
+  public void watchAprilTag(int aprilTagID){
+    
+    // Find the specified april tag
+    Pose3d tagPose = vs_layout.getTagPose(aprilTagID).get();
+
+    // Get the rotation to the april tag
+    Rotation2d rotationToTag = PhotonUtils.getYawToPose(m_swerveSubsystem.getPose(), tagPose.toPose2d());
+
+    // Set heading to the specified tag
+    m_swerveSubsystem.simDriveCommand(
+      () -> 0.0, 
+      () -> 0.0, 
+      () -> rotationToTag.getRotations()
+    );
+
+  }
+
+  
+
+
+  /**
+   * Passes SwerveSubsystem. Used specifically for the WatchTarget command.
+   * @return SwerveSubsystem.
+   */
+  public SwerveSubsystem giveSwerve(){
+    return m_swerveSubsystem;
   }
 
 
