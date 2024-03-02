@@ -1,14 +1,10 @@
 package frc.robot;
 
-import frc.robot.Constants.OIConstants;
-
-import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.SwerveZeroHeading;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.commands.Intake;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.Shooter;
+import frc.robot.commands.Climber;
+import frc.robot.commands.ClimberManual;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,7 +15,8 @@ public class RobotContainer {
 
   // Define subsystems and commands
   private final FalconShooterMotorSubsystem m_shooterMotor = new FalconShooterMotorSubsystem();
-  private final IntakeSubsystem m_IntakeMotor = new IntakeSubsystem();
+  //private final IntakeSubsystem m_IntakeMotor = new IntakeSubsystem();
+  private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
   //private final SwerveSubsystem m_swerve = new SwerveSubsystem();
 
   // setting up Xbox controller
@@ -39,7 +36,14 @@ public class RobotContainer {
                 () -> m_joystick.getRawAxis(OIConstants.kDriverRotAxis),
                 () -> !m_joystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));*/
     //m_shooterMotor.setDefaultCommand(new Shooter(() -> m_joystick.getLeftY(), () -> m_joystick.getRightY(), m_shooterMotor));
-    m_shooterMotor.setDefaultCommand(new Shooter(() -> MathUtil.applyDeadband(m_joystick.getLeftY(), 0.1), () -> MathUtil.applyDeadband(m_joystick.getRightY(), 0.1), m_shooterMotor));
+    // m_shooterMotor.setDefaultCommand(new Shooter(() -> MathUtil.applyDeadband(m_joystick.getLeftY(), 0.1), () -> MathUtil.applyDeadband(m_joystick.getRightY(), 0.1), m_shooterMotor));
+    
+    m_ClimberSubsystem.setDefaultCommand(new ClimberManual(
+      () -> MathUtil.applyDeadband(m_joystick.getLeftY(), 0.1),
+      () -> MathUtil.applyDeadband(m_joystick.getRightY(), 0.1),
+      m_ClimberSubsystem));
+
+      
     // Configure the trigger bindings
     configureBindings();
   }
@@ -54,10 +58,12 @@ public class RobotContainer {
     controller_B.toggleOnTrue(new Intake(() -> 0.5, m_IntakeMotor));
     controller_X.onTrue(new SwerveZeroHeading(m_swerve));*/
 
-    controller_A.whileTrue(new Shooter(() -> 0.4, () -> 0.6, m_shooterMotor));
-    controller_B.whileTrue(new Shooter(() -> 0.6, () -> 0.4, m_shooterMotor));
-    controller_X.whileTrue(new Shooter(() -> 0.3, () -> 0.7, m_shooterMotor));
-    controller_Y.whileTrue(new Shooter(() -> 0.5, () -> 0.5, m_shooterMotor));
+    // controller_A.whileTrue(new Shooter(() -> 0.4, () -> 0.6, m_shooterMotor));
+    // controller_B.whileTrue(new Shooter(() -> 0.6, () -> 0.4, m_shooterMotor));
+    // controller_X.whileTrue(new Shooter(() -> 0.3, () -> 0.7, m_shooterMotor));
+    // controller_Y.whileTrue(new Shooter(() -> 0.5, () -> 0.5, m_shooterMotor));
+
+    controller_X.toggleOnTrue(new Climber(m_ClimberSubsystem));
 
   }
 

@@ -11,11 +11,41 @@ public final class Constants {
         public static class Shooter {
 
                 // CAN IDs of the shooter motors
-                public static final int kShooterMotorID1 = 7;
-                public static final int kShooterMotorID2 = 2;
+                public static final int kShooterMotorID1 = 10;
+                public static final int kShooterMotorID2 = 12;
 
                 // Maximum voltage of the shooter motors
                 public static final double kShooterMaxVolts = 5.0;
+        }
+
+        public static class Climber {
+
+                // CAN IDs of the climber motors
+                public static final int kExtenderMotorID = 2;
+                public static final int kClimberMotorID = 7;
+
+                public static final double kExtenderMotorVelocityRPM = 900.0;
+                public static final double kClimberMotorVelocityRPM = 1440.0;
+
+                public static final double kClimberFeedForwardUp = -0.2; // -0.244
+                public static final double kClimberFeedForwardDown = 0.244;
+                
+                public static final double kExtenderFeedForwardUp = 0.06;
+                public static final double kExtenderFeedForwardDown = -0.1;
+
+                public static final double kPExtenderDown = 0.00001;
+                public static final double kPClimberDown = 0.00002;
+
+                public static final double kPExtenderUp = 0.00001;
+                public static final double kPClimberUp = 0.00001;
+
+                // Endpoints for extender motor
+                public static final double kExtenderEndpointUp = -44.0;
+                public static final double kExtenderEndpointDown = -119.0;
+
+                // Endpoints for climber motor
+                public static final double kClimberEndpointUp = 2.1;
+                public static final double kClimberEndpointDown = 122.0;
         }
         
 
