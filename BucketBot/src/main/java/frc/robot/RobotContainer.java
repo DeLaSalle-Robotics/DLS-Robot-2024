@@ -37,7 +37,7 @@ public class RobotContainer {
 
   // Controller buttons:
 
-  // private Trigger controller_A = new JoystickButton(m_joystick, 1);
+  private Trigger controller_A = new JoystickButton(m_joystick, 1);
   // private Trigger controller_B = new JoystickButton(m_joystick, 2);
   private Trigger controller_X = new JoystickButton(m_joystick, 3);
   private Trigger controller_Y = new JoystickButton(m_joystick, 4);
@@ -123,7 +123,7 @@ public class RobotContainer {
     // controller_B.toggleOnTrue(new Intake(() -> 0.5, m_intake));
 
     // Very untested command that re-orients the robot to the field
-    // controller_A.whileTrue(Commands.run(() -> m_vision.orientRobot()));
+    controller_A.whileTrue(Commands.run(() -> m_vision.orientRobot()));
 
     
 
