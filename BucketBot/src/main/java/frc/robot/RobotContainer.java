@@ -6,12 +6,12 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.WatchTarget;
-import frc.robot.commands.SwapDriveMode;
 import java.io.File;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -61,8 +61,6 @@ public class RobotContainer {
   // private Trigger controller_dpad_NW = new POVButton(m_joystick, 315);
 
 
-  // Define the default drive command outside of constructor to potentially circumvent field oriented issues???
-  Command driveFieldOrientedAnglularVelocity;
 
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
@@ -96,18 +94,26 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation 
     // right stick controls the angular velocity of the robot
-    driveFieldOrientedAnglularVelocity = m_swerve.driveCommand(
+    Command driveFieldOrientedAnglularVelocity = m_swerve.driveCommand(
         () -> -MathUtil.applyDeadband(m_joystick.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> -MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> -MathUtil.applyDeadband(m_joystick.getRightX(), OperatorConstants.RIGHT_X_DEADBAND));
+        () -> -MathUtil.applyDeadband(m_joystick.getRightX(), OperatorConstants.RIGHT_X_DEADBAND),
+        () -> m_joystick.getRightBumper());
+
+    Command driveFieldOrientedWatchTarget = m_swerve.driveCommand(
+      () -> -MathUtil.applyDeadband(m_joystick.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+      () -> -MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+      null,
+      null
+    );
 
     // Command driveFieldOrientedDirectAngleSim = m_swerve.simDriveCommand(
     //     () -> MathUtil.applyDeadband(m_joystick.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
     //     () -> MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
     //     () -> m_joystick.getRightX());
 
-    // m_swerve.setDefaultCommand(
-    //     !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedAnglularVelocity);
+    m_swerve.setDefaultCommand(
+         !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedAnglularVelocity);
 
     // Configure the trigger bindings
     configureBindings();
@@ -128,7 +134,7 @@ public class RobotContainer {
     
 
     controller_X.onTrue((new InstantCommand(m_swerve::zeroGyro)));
-    controller_RB.whileTrue(new SwapDriveMode(m_swerve)); // Cannot confirm if this works in real life
+    // controller_RB.whileTrue(new SwapDriveMode(m_swerve)); // Cannot confirm if this works in real life
 
     
 
@@ -149,7 +155,7 @@ public class RobotContainer {
 
   public void setDriveMode()
   {
-    m_swerve.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // m_swerve.setDefaultCommand(driveFieldOrientedAnglularVelocity);
   }
 
   public void setMotorBrake(boolean brake)

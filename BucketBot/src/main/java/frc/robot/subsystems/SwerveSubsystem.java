@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import java.io.File;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import swervelib.SwerveController;
@@ -191,7 +192,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param headingY     Heading Y to calculate angle of the joystick.
    * @return Drive command.
    */
-  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX, DoubleSupplier headingY){
+  /* public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX, DoubleSupplier headingY){
     // swerveDrive.setHeadingCorrection(true); // Normally you would want heading correction for this kind of control.
     return run(() -> {
       double xInput = Math.pow(translationX.getAsDouble(), 3); // Smooth controll out
@@ -206,7 +207,7 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveDrive.getMaximumVelocity()));
       }
     );
-  }
+  } */
 
   /**
    * Command to drive the robot using translative values and heading as a setpoint.
@@ -238,7 +239,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param angularRotationX Angular velocity of the robot to set. Cubed for smoother controls.
    * @return Drive command.
    */
-  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX){
+  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX, BooleanSupplier fieldOriented){
     return run(() -> {
       // Make the robot move
       swerveDrive.drive(
@@ -247,7 +248,7 @@ public class SwerveSubsystem extends SubsystemBase {
           Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()
         ),
         Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
-        true,
+        !fieldOriented.getAsBoolean(),
         false
         );
       }
@@ -276,6 +277,9 @@ public class SwerveSubsystem extends SubsystemBase {
       false // Open loop is disabled since it shouldn't be used most of the time.
     );
   }
+
+
+  
 
   /**
    * Drive the robot given a chassis field oriented velocity.
