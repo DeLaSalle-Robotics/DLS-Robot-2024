@@ -25,7 +25,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -141,10 +140,11 @@ public class VisionSubsystem extends SubsystemBase {
     Rotation2d rotationToTag = PhotonUtils.getYawToPose(m_swerveSubsystem.getPose(), tagPose.toPose2d());
 
     // Set heading to the specified tag
-    m_swerveSubsystem.simDriveCommand(
+    m_swerveSubsystem.driveCommand(
       () -> 0.0, 
       () -> 0.0, 
-      () -> rotationToTag.getRotations()
+      () -> rotationToTag.getRotations(),
+      () -> false
     );
 
   }
@@ -152,13 +152,9 @@ public class VisionSubsystem extends SubsystemBase {
   
 
 
-  /**
-   * Passes SwerveSubsystem. Used specifically for the WatchTarget command.
-   * @return SwerveSubsystem.
-   */
-  public SwerveSubsystem giveSwerve(){
-    return m_swerveSubsystem;
-  }
+ public PhotonCamera getPhotonCamera(){
+    return camera;
+ }
 
 
 

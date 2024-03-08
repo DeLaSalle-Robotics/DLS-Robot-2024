@@ -61,6 +61,9 @@ public class RobotContainer {
   // private Trigger controller_dpad_NW = new POVButton(m_joystick, 315);
 
 
+  Command driveFieldOrientedWatchTarget;
+
+
 
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
@@ -100,11 +103,10 @@ public class RobotContainer {
         () -> -MathUtil.applyDeadband(m_joystick.getRightX(), OperatorConstants.RIGHT_X_DEADBAND),
         () -> m_joystick.getRightBumper());
 
-    Command driveFieldOrientedWatchTarget = m_swerve.driveCommand(
+    driveFieldOrientedWatchTarget = m_swerve.driveAutoAimCommand(
       () -> -MathUtil.applyDeadband(m_joystick.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
       () -> -MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-      null,
-      null
+      m_vision.getPhotonCamera()
     );
 
     // Command driveFieldOrientedDirectAngleSim = m_swerve.simDriveCommand(
@@ -112,8 +114,7 @@ public class RobotContainer {
     //     () -> MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
     //     () -> m_joystick.getRightX());
 
-    m_swerve.setDefaultCommand(
-         !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedAnglularVelocity);
+    m_swerve.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     // Configure the trigger bindings
     configureBindings();
@@ -128,8 +129,7 @@ public class RobotContainer {
     // controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
     // controller_B.toggleOnTrue(new Intake(() -> 0.5, m_intake));
 
-    // Very untested command that re-orients the robot to the field
-    controller_A.whileTrue(Commands.run(() -> m_vision.orientRobot()));
+    controller_A.whileTrue(driveFieldOrientedWatchTarget);
 
     
 

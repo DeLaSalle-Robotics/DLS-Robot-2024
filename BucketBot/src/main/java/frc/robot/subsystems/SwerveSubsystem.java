@@ -26,8 +26,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import java.io.File;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -278,7 +283,49 @@ public class SwerveSubsystem extends SubsystemBase {
     );
   }
 
+  /**
+   * Command to drive the robot using translative values and heading as angular velocity.
+   *
+   * @param translationX Translation in the X direction. Cubed for smoother controls.
+   * @param translationY Translation in the Y direction. Cubed for smoother controls.
+   * @param camera Photon camera.
+   * @return Drive command.
+   */
+  public Command driveAutoAimCommand(DoubleSupplier translationX, DoubleSupplier translationY, PhotonCamera camera){
+    return run(() -> {
+      PhotonPipelineResult result = camera.getLatestResult();
+      double rotationRate = 0;
 
+      // Look for a specific target ID and calculate rotation rate to look at target
+      // It calculates the rotation rate by taking the difference between the center of the camera and center of the target
+      // This is called the error. The error is converted to an angular rate by multiplying it by a scalar
+      // This makes a P controller(of a PID controller)
+      // If the specified target is not detected the rotation rate is set to 0
+      List<PhotonTrackedTarget> targetsInView = result.getTargets();
+      for (PhotonTrackedTarget photonTrackedTarget : targetsInView) {
+        // Only point to target 4
+        if(photonTrackedTarget.getFiducialId() == 4){
+          System.out.println(photonTrackedTarget.getYaw());
+          double targetAngle = 0;
+          double angleError = photonTrackedTarget.getYaw() - targetAngle;
+          rotationRate = 0.05 * angleError;
+        }
+      }
+      if(rotationRate == 0){
+        System.out.println("Target 4 not found");
+      }
+      
+      swerveDrive.drive(
+        new Translation2d(
+          Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity(),
+          Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()
+        ),
+        rotationRate,
+        true,
+        false
+      );
+    });
+  }
   
 
   /**
