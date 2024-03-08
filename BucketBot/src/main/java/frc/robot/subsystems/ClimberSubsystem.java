@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +21,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_extenderMotor = new CANSparkMax(Constants.Climber.kExtenderMotorID, MotorType.kBrushless);
   private final TalonFX m_climberMotor = new TalonFX(Constants.Climber.kClimberMotorID);
+  private final DigitalInput m_limitSwitch = new DigitalInput(0);
 
   // ExampleSubsystem constructor
   public ClimberSubsystem() {
@@ -78,6 +80,15 @@ public class ClimberSubsystem extends SubsystemBase {
    */
   public double getClimberVelocity(){
     return m_climberMotor.getVelocity().getValueAsDouble() * 60;
+  }
+
+
+  /**
+   * Returns the state of the climber limit switch.
+   * @return The state of the limit switch.
+   */
+  public boolean getSwitchState(){
+    return m_limitSwitch.get();
   }
 
 
