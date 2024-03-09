@@ -46,10 +46,9 @@ public class RobotContainer {
     //m_shooterMotor.setDefaultCommand(new Shooter(() -> m_joystick.getLeftY(), () -> m_joystick.getRightY(), m_shooterMotor));
     // m_shooterMotor.setDefaultCommand(new Shooter(() -> MathUtil.applyDeadband(m_joystick.getLeftY(), 0.1), () -> MathUtil.applyDeadband(m_joystick.getRightY(), 0.1), m_shooterMotor));
     
-    /*m_ClimberSubsystem.setDefaultCommand(new ClimberTest(
-      () -> MathUtil.applyDeadband(m_joystick.getLeftY(), 0.1),
-      () -> MathUtil.applyDeadband(m_joystick.getRightY(), 0.1),
-      m_ClimberSubsystem));*/
+    m_ClimberSubsystem.setDefaultCommand(new ClimberTest(
+      () -> MathUtil.applyDeadband(m_joystick.getLeftY() * -0.75, 0.1),
+      m_ClimberSubsystem));
       
     // Configure the trigger bindings
     configureBindings();
@@ -65,13 +64,16 @@ public class RobotContainer {
     // Tele-op bindings
     if(RobotState.isTeleop()){
 
+      // Move the climber motors up or down
+      controller_dpad_N.whileTrue(new ClimberManual(true, m_ClimberSubsystem));
+      controller_dpad_S.whileTrue(new ClimberManual(false, m_ClimberSubsystem));
 
     // Test mode bindings
     } else if(RobotState.isTest()){
       
       // Move the climber motors up or down
       controller_dpad_N.whileTrue(new ClimberTest(() -> 0.2, m_ClimberSubsystem));
-      controller_dpad_S.whileFalse(new ClimberTest(() -> -0.2, m_ClimberSubsystem));
+      controller_dpad_S.whileTrue(new ClimberTest(() -> -0.35, m_ClimberSubsystem));
       
       // Swap which climber motor is active
       controller_Y.onTrue(new ClimberSwap(m_ClimberSubsystem));

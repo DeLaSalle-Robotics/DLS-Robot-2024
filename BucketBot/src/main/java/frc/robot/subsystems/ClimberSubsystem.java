@@ -10,7 +10,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,9 +25,14 @@ import frc.robot.Constants;
 
 public class ClimberSubsystem extends SubsystemBase {
 
+  /** NEO that controls extension, controlled by a SparkMax. */
   private final CANSparkMax m_extenderMotor = new CANSparkMax(Constants.Climber.kExtenderMotorID, MotorType.kBrushless);
+  /** TalonFX that controls climbing. */
   private final TalonFX m_climberMotor = new TalonFX(Constants.Climber.kClimberMotorID);
   private final DigitalInput m_limitSwitch = new DigitalInput(Constants.Climber.kLimitSwitchID);
+
+  private final PIDController m_extenderPID = new PIDController(0.1, 0.0, 0.0);
+  private final PIDController m_climberPID = new PIDController(0.1, 0.0, 0.0);
 
   // ExampleSubsystem constructor
   public ClimberSubsystem() {
@@ -35,56 +42,65 @@ public class ClimberSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("kPExtenderUp", Constants.Climber.kPExtenderUp);
     SmartDashboard.putNumber("kPClimberUp", Constants.Climber.kPClimberUp);
 
-    // Set soft limits of the extender motor to not allow it to extend further until it reaches the limit switch
-    m_extenderMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    m_extenderMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    m_extenderMotor.getEncoder().setPosition(0.0);
-    m_extenderMotor.setSoftLimit(SoftLimitDirection.kForward, 0.0f);
-    m_extenderMotor.setSoftLimit(SoftLimitDirection.kReverse, -Constants.Climber.kExtenderDistance);
-
     // Invert climber motor
     m_climberMotor.setInverted(true);
+
+    // Send the currently active motor to SmartDashboard for test mode
+    SmartDashboard.putBoolean("Using Extender", true);
+
+    // Reset the position of the climber motor encoder on startup when using Teleop
+    if(RobotState.isTeleop()){
+      m_climberMotor.setPosition(0.0);
+    }
   }
 
 
   /**
    * Spin the extender and climber motors at separate speeds.
-   * @param speed1 Speed of the extender motor
-   * @param speed2 Speed of the climber motor
+   * @param eSpeed Speed of the extender motor
+   * @param cSpeed Speed of the climber motor
    */
-  public void spinMotors(double speed1, double speed2){
+  public void spinMotors(double eSpeed, double cSpeed){
     
     // Set speeds of each motor
-    m_extenderMotor.set(speed1);
-    m_climberMotor.set(speed2);
+    m_extenderMotor.set(eSpeed);
+    m_climberMotor.set(cSpeed);
 
     // Send the positions of the motors to SmartDashboard
     SmartDashboard.putNumber("Extender Motor", m_extenderMotor.getEncoder().getPosition());
     SmartDashboard.putNumber("Climber Motor", m_climberMotor.getPosition().getValueAsDouble());
 
     // Send the speeds of the motors to SmartDashboard
-    SmartDashboard.putNumber("Extender Speed", speed1);
-    SmartDashboard.putNumber("Climber Speed", speed2);
+    SmartDashboard.putNumber("Extender Speed", eSpeed);
+    SmartDashboard.putNumber("Climber Speed", cSpeed);
+  }
 
-    // Send the currently active motor to SmartDashboard for test mode
-    SmartDashboard.putBoolean("Using Extender", true);
+
+  /**
+   * Spin both motors to a set position.
+   * @param ePos Extender position, in centimeters.
+   * @param cPos Climber position, in centimeters.
+   */
+  public void spinMotorsTo(double ePos, double cPos){
+    m_extenderMotor.set(m_extenderPID.calculate(getExtenderPosition(), ePos));
+    m_climberMotor.set(m_climberPID.calculate(getClimberPosition(), cPos));
   }
 
 
   /**
    * Returns the position of the extender motor
-   * @return Position of the extender motor in rotations
+   * @return Position of the extender motor in centimeters
    */
   public double getExtenderPosition(){
-    return m_extenderMotor.getEncoder().getPosition();
+    return m_extenderMotor.getEncoder().getPosition() * Constants.Climber.kExtenderCmPerRotation;
   }
 
   /**
    * Returns the position of the climber motor
-   * @return Position of the climber motor in rotations
+   * @return Position of the climber motor in centimeters
    */
   public double getClimberPosition(){
-    return m_climberMotor.getPosition().getValueAsDouble();
+    return m_climberMotor.getPosition().getValueAsDouble() * Constants.Climber.kClimberCmPerRotation;
   }
 
   /**
@@ -128,11 +144,23 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
 
-  public void setSoftLimits(){
-    m_extenderMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Climber.kExtenderDistance);
-    m_extenderMotor.setSoftLimit(SoftLimitDirection.kReverse, 0.0f);
+  /**
+   * Resets the extender motor encoder to zero.
+   */
+  public void resetExtenderEncoder(){
     m_extenderMotor.getEncoder().setPosition(0.0);
   }
+
+
+  /**
+   * Resets the climb motor encoder to zero.
+   */
+  public void resetClimberEncoder(){
+    m_climberMotor.setPosition(0.0);
+  }
+
+
+
 
 
 

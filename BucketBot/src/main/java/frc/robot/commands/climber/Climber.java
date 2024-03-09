@@ -37,7 +37,7 @@ public class Climber extends Command {
 
     // Read limit switch
     if(m_Climber.getSwitchState()){
-      m_Climber.setSoftLimits();
+      
     }
 
     // Get motor velocities

@@ -2,6 +2,7 @@ package frc.robot.commands.climber;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimberSubsystem;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -9,15 +10,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ClimberManual extends Command {
 
   private final ClimberSubsystem m_Climber;
-  private final boolean m_moveUp;
+  private final boolean m_MovingUp;
 
-  /**
-   * Move the climber up or down, depending on the starting position.
-   * @param subsystem Climber subsystem
-   */
-  public ClimberManual(boolean moveUp, ClimberSubsystem subsystem) {
-    m_Climber = subsystem;
-    m_moveUp = moveUp;
+  public ClimberManual(boolean movingUp, ClimberSubsystem climber) {
+    m_Climber = climber;
+    m_MovingUp = movingUp;
     addRequirements(m_Climber);
   }
 
@@ -32,45 +29,29 @@ public class ClimberManual extends Command {
   @Override
   public void execute() {
 
-    // Get motor velocities
-    double extenderVelocity = m_Climber.getExtenderVelocity();
-    double climberVelocity = m_Climber.getClimberVelocity();
-
-    // Calculate errors
-    double extenderError = 0.0;
-    double climberError = 0.0;
-    if (m_moveUp){
-      extenderError = Constants.Climber.kExtenderMotorVelocityRPM - extenderVelocity;
-      climberError = -Constants.Climber.kClimberMotorVelocityRPM - climberVelocity;
-    } else {
-      extenderError = -Constants.Climber.kExtenderMotorVelocityRPM - extenderVelocity;
-      climberError = Constants.Climber.kClimberMotorVelocityRPM - climberVelocity;
-    }
- 
-    SmartDashboard.putNumber("extenderError", extenderError);
-    SmartDashboard.putNumber("climberError", climberError);
-
-    // Retrieve kP values
-    double kPExtenderDown = SmartDashboard.getNumber("kPExtenderDown", Constants.Climber.kPExtenderDown);
-    double kPClimberDown = SmartDashboard.getNumber("kPClimberDown", Constants.Climber.kPClimberDown);
-    double kPExtenderUp = SmartDashboard.getNumber("kPExtenderUp", Constants.Climber.kPExtenderUp);
-    double kPClimberUp = SmartDashboard.getNumber("kPClimberUp", Constants.Climber.kPClimberUp);
-
-    // Set motor velocities
-    if (m_moveUp){
-      // Move up
-      m_Climber.spinMotors(
-        Constants.Climber.kExtenderFeedForwardUp + (kPExtenderUp * extenderError), 
-        Constants.Climber.kClimberFeedForwardUp - (kPClimberUp * climberError)
-      );
-    } else {
-      // Move down
-      m_Climber.spinMotors(
-        Constants.Climber.kExtenderFeedForwardDown - (kPExtenderDown * extenderError), 
-        Constants.Climber.kClimberFeedForwardDown + (kPClimberDown * climberError)
-      );
+    // If the limit switch is hit, reset the extender encoder
+    if(m_Climber.getSwitchState()){
+      m_Climber.resetExtenderEncoder();
     }
 
+
+
+    // If moving in reverse and the extender is at position 0, don't move
+    if(!m_MovingUp && m_Climber.getExtenderPosition() <= 0){
+      m_Climber.spinMotors(0.0, 0.0);
+
+    // If moving forward and the extender has exceeded the endpoint, don't move
+    } else if (m_MovingUp && m_Climber.getExtenderPosition() >= Constants.Climber.kExtenderDistanceCm){
+      m_Climber.spinMotors(0.0, 0.0);
+
+    // Otherwise, move
+    } else {
+      double direction = m_MovingUp? 1.0 : -1.0;
+      m_Climber.spinMotorsTo(
+        MathUtil.clamp(m_Climber.getExtenderPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kExtenderDistanceCm),
+        MathUtil.clamp(m_Climber.getClimberPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kClimberDistanceCm)
+      );
+    }
 
   }
 

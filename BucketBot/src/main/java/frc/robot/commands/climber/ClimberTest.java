@@ -13,7 +13,7 @@ public class ClimberTest extends Command {
 
   private final ClimberSubsystem m_Climber;
 
-  private final double m_speed;
+  private final DoubleSupplier m_speed;
 
 
   /**
@@ -24,7 +24,7 @@ public class ClimberTest extends Command {
    */
   public ClimberTest(DoubleSupplier speed, ClimberSubsystem climber) {
     m_Climber = climber;
-    m_speed = speed.getAsDouble();
+    m_speed = speed;
     addRequirements(m_Climber);
   }
 
@@ -39,21 +39,23 @@ public class ClimberTest extends Command {
   @Override
   public void execute() {
     
+    double speed = m_speed.getAsDouble();
+
     // Extender motor
     if(SmartDashboard.getBoolean("Using Extender", true)){
 
       // Moving down and limit switch is down
-      if(m_speed < 0 && m_Climber.getSwitchState()){
+      if(speed < 0 && m_Climber.getSwitchState()){
         m_Climber.spinMotors(0.0, 0.0);
 
       // Else
       } else {
-        m_Climber.spinMotors(m_speed, 0.0);
+        m_Climber.spinMotors(speed, 0.0);
       }
 
     // Climb motor
     } else {
-      m_Climber.spinMotors(0.0, m_speed);
+      m_Climber.spinMotors(0.0, speed);
     }
   }
 
