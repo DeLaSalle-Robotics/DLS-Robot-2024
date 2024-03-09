@@ -17,12 +17,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 
+// neo pulls down
+// falcon controls climbing
+
 
 public class ClimberSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_extenderMotor = new CANSparkMax(Constants.Climber.kExtenderMotorID, MotorType.kBrushless);
   private final TalonFX m_climberMotor = new TalonFX(Constants.Climber.kClimberMotorID);
-  private final DigitalInput m_limitSwitch = new DigitalInput(0);
+  private final DigitalInput m_limitSwitch = new DigitalInput(Constants.Climber.kLimitSwitchID);
 
   // ExampleSubsystem constructor
   public ClimberSubsystem() {
@@ -38,6 +41,9 @@ public class ClimberSubsystem extends SubsystemBase {
     m_extenderMotor.getEncoder().setPosition(0.0);
     m_extenderMotor.setSoftLimit(SoftLimitDirection.kForward, 0.0f);
     m_extenderMotor.setSoftLimit(SoftLimitDirection.kReverse, -Constants.Climber.kExtenderDistance);
+
+    // Invert climber motor
+    m_climberMotor.setInverted(true);
   }
 
 
@@ -47,14 +53,21 @@ public class ClimberSubsystem extends SubsystemBase {
    * @param speed2 Speed of the climber motor
    */
   public void spinMotors(double speed1, double speed2){
+    
+    // Set speeds of each motor
     m_extenderMotor.set(speed1);
     m_climberMotor.set(speed2);
 
+    // Send the positions of the motors to SmartDashboard
     SmartDashboard.putNumber("Extender Motor", m_extenderMotor.getEncoder().getPosition());
     SmartDashboard.putNumber("Climber Motor", m_climberMotor.getPosition().getValueAsDouble());
 
+    // Send the speeds of the motors to SmartDashboard
     SmartDashboard.putNumber("Extender Speed", speed1);
     SmartDashboard.putNumber("Climber Speed", speed2);
+
+    // Send the currently active motor to SmartDashboard for test mode
+    SmartDashboard.putBoolean("Using Extender", true);
   }
 
 
@@ -97,6 +110,21 @@ public class ClimberSubsystem extends SubsystemBase {
    */
   public boolean getSwitchState(){
     return m_limitSwitch.get();
+  }
+
+
+  /**
+   * Swaps the currently active motor in test mode.
+   * <p><b>This is only used in test mode.</b>
+   */
+  public void swapActiveMotor(){
+    
+    // Simple boolean swap code
+    if(SmartDashboard.getBoolean("Using Extender", true)){
+      SmartDashboard.putBoolean("Using Extender", false);
+    } else {
+      SmartDashboard.putBoolean("Using Extender", true);
+    }
   }
 
 

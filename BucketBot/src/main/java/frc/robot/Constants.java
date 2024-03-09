@@ -24,20 +24,28 @@ public final class Constants {
                 public static final int kExtenderMotorID = 2;
                 public static final int kClimberMotorID = 7;
 
+                // DIO pin of the limit switch
+                public static final int kLimitSwitchID = 0;
+
+                // Target velocity of each climber motor
                 public static final double kExtenderMotorVelocityRPM = 900.0;
                 public static final double kClimberMotorVelocityRPM = 1440.0;
 
-                public static final double kClimberFeedForwardUp = -0.2; // -0.244
-                public static final double kClimberFeedForwardDown = 0.244;
-                
+                // Feed forward of the extender motor
                 public static final double kExtenderFeedForwardUp = 0.06;
                 public static final double kExtenderFeedForwardDown = -0.1;
 
-                public static final double kPExtenderDown = 0.00001;
-                public static final double kPClimberDown = 0.00002;
+                // Feed forward of the climb motor
+                public static final double kClimberFeedForwardUp = -0.2; // -0.244
+                public static final double kClimberFeedForwardDown = 0.244;
 
+                // kP of the extender motor
+                public static final double kPExtenderDown = 0.00001;
                 public static final double kPExtenderUp = 0.00001;
+
+                // kP of the climb  motor
                 public static final double kPClimberUp = 0.00001;
+                public static final double kPClimberDown = 0.00002;
 
                 // Endpoints for extender motor
                 public static final double kExtenderEndpointUp = -44.0;
@@ -59,6 +67,7 @@ public final class Constants {
                 public static final int kIntakeMotorID = 75;
 
                 // DIO pin that the limit switch is connected to
+                // May need to change this if we end up using multiple limit switches
                 public static final int kIntakeLimitSwitchID = 0;
         } 
 

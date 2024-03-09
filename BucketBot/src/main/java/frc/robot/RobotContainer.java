@@ -3,13 +3,18 @@ package frc.robot;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.Shooter;
-import frc.robot.commands.Climber;
-import frc.robot.commands.ClimberManual;
+import frc.robot.commands.climber.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotState;
+import frc.robot.Robot;
 
 public class RobotContainer {
 
@@ -26,6 +31,9 @@ public class RobotContainer {
   private Trigger controller_X = new JoystickButton(m_joystick, 3);
   private Trigger controller_Y = new JoystickButton(m_joystick, 4);
 
+  private Trigger controller_dpad_N = new POVButton(m_joystick, 0);
+  private Trigger controller_dpad_S = new POVButton(m_joystick, 180);
+
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -38,11 +46,10 @@ public class RobotContainer {
     //m_shooterMotor.setDefaultCommand(new Shooter(() -> m_joystick.getLeftY(), () -> m_joystick.getRightY(), m_shooterMotor));
     // m_shooterMotor.setDefaultCommand(new Shooter(() -> MathUtil.applyDeadband(m_joystick.getLeftY(), 0.1), () -> MathUtil.applyDeadband(m_joystick.getRightY(), 0.1), m_shooterMotor));
     
-    m_ClimberSubsystem.setDefaultCommand(new ClimberManual(
+    /*m_ClimberSubsystem.setDefaultCommand(new ClimberTest(
       () -> MathUtil.applyDeadband(m_joystick.getLeftY(), 0.1),
       () -> MathUtil.applyDeadband(m_joystick.getRightY(), 0.1),
-      m_ClimberSubsystem));
-
+      m_ClimberSubsystem));*/
       
     // Configure the trigger bindings
     configureBindings();
@@ -54,16 +61,22 @@ public class RobotContainer {
     whileTrue schedules the command when the button is pressed, and cancels the command when the button is released.
     toggleTrue toggles the command on every press: schedules if not currently scheduled, and cancels if scheduled.
     */
-    /*controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
-    controller_B.toggleOnTrue(new Intake(() -> 0.5, m_IntakeMotor));
-    controller_X.onTrue(new SwerveZeroHeading(m_swerve));*/
 
-    // controller_A.whileTrue(new Shooter(() -> 0.4, () -> 0.6, m_shooterMotor));
-    // controller_B.whileTrue(new Shooter(() -> 0.6, () -> 0.4, m_shooterMotor));
-    // controller_X.whileTrue(new Shooter(() -> 0.3, () -> 0.7, m_shooterMotor));
-    // controller_Y.whileTrue(new Shooter(() -> 0.5, () -> 0.5, m_shooterMotor));
+    // Tele-op bindings
+    if(RobotState.isTeleop()){
 
-    controller_X.toggleOnTrue(new Climber(m_ClimberSubsystem));
+
+    // Test mode bindings
+    } else if(RobotState.isTest()){
+      
+      // Move the climber motors up or down
+      controller_dpad_N.whileTrue(new ClimberTest(() -> 0.2, m_ClimberSubsystem));
+      controller_dpad_S.whileFalse(new ClimberTest(() -> -0.2, m_ClimberSubsystem));
+      
+      // Swap which climber motor is active
+      controller_Y.onTrue(new ClimberSwap(m_ClimberSubsystem));
+  
+    }
 
   }
 
