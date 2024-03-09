@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -30,6 +31,13 @@ public class ClimberSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("kPClimberDown", Constants.Climber.kPClimberDown);
     SmartDashboard.putNumber("kPExtenderUp", Constants.Climber.kPExtenderUp);
     SmartDashboard.putNumber("kPClimberUp", Constants.Climber.kPClimberUp);
+
+    // Set soft limits of the extender motor to not allow it to extend further until it reaches the limit switch
+    m_extenderMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    m_extenderMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    m_extenderMotor.getEncoder().setPosition(0.0);
+    m_extenderMotor.setSoftLimit(SoftLimitDirection.kForward, 0.0f);
+    m_extenderMotor.setSoftLimit(SoftLimitDirection.kReverse, -Constants.Climber.kExtenderDistance);
   }
 
 
@@ -89,6 +97,13 @@ public class ClimberSubsystem extends SubsystemBase {
    */
   public boolean getSwitchState(){
     return m_limitSwitch.get();
+  }
+
+
+  public void setSoftLimits(){
+    m_extenderMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Climber.kExtenderDistance);
+    m_extenderMotor.setSoftLimit(SoftLimitDirection.kReverse, 0.0f);
+    m_extenderMotor.getEncoder().setPosition(0.0);
   }
 
 

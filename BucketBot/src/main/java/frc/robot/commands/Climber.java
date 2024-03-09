@@ -35,6 +35,11 @@ public class Climber extends Command {
   @Override
   public void execute() {
 
+    // Read limit switch
+    if(m_Climber.getSwitchState()){
+      m_Climber.setSoftLimits();
+    }
+
     // Get motor velocities
     double extenderVelocity = m_Climber.getExtenderVelocity();
     double climberVelocity = m_Climber.getClimberVelocity();

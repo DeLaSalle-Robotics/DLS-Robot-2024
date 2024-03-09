@@ -42,10 +42,12 @@ public final class Constants {
                 // Endpoints for extender motor
                 public static final double kExtenderEndpointUp = -44.0;
                 public static final double kExtenderEndpointDown = -119.0;
+                public static final float kExtenderDistance = 75.0f;
 
                 // Endpoints for climber motor
                 public static final double kClimberEndpointUp = 2.1;
                 public static final double kClimberEndpointDown = 122.0;
+                public static final float kClimberDistance = 119.9f;
         }
         
 
