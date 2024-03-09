@@ -50,18 +50,18 @@ public final class Constants {
                 // Endpoints for extender motor
                 public static final double kExtenderEndpointUp = -44.0;
                 public static final double kExtenderEndpointDown = -119.0;
-                public static final float kExtenderDistanceCm = 75.0f;
+                public static final float kExtenderDistanceCm = 42.8625f;
 
                 // Endpoints for climber motor
                 public static final double kClimberEndpointUp = 2.1;
                 public static final double kClimberEndpointDown = 122.0;
-                public static final float kClimberDistanceCm = 119.9f;
+                public static final float kClimberDistanceCm = 119.9f; // Incorrect
 
                 // Conversion factors
-                public static final double kExtenderCmPerRotation = 0.5;
-                public static final double kClimberCmPerRotation = 0.5;
+                public static final double kExtenderCmPerRotation = 0.59;
+                public static final double kClimberCmPerRotation = 0.392;
 
-                
+
                 public static final double kMotorOffset = 0.2;
         }
         
