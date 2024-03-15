@@ -27,8 +27,8 @@ public class RobotContainer {
 
   // setting up Xbox controller
   private final XboxController m_joystick = new XboxController(0);
-  private Trigger controller_A = new JoystickButton(m_joystick, 1);
-  private Trigger controller_B = new JoystickButton(m_joystick, 2);
+   //private Trigger controller_A = new JoystickButton(m_joystick, 1);
+  // private Trigger controller_B = new JoystickButton(m_joystick, 2);
   private Trigger controller_X = new JoystickButton(m_joystick, 3);
   private Trigger controller_Y = new JoystickButton(m_joystick, 4);
 
