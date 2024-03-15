@@ -34,7 +34,7 @@ public class RobotContainer {
 
   // Setting up Xbox controller
   private final XboxController m_joystick = new XboxController(0);
-
+  
   // Controller buttons:
 
   private Trigger controller_A = new JoystickButton(m_joystick, 1);
@@ -128,7 +128,6 @@ public class RobotContainer {
     */
     // controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
     // controller_B.toggleOnTrue(new Intake(() -> 0.5, m_intake));
-
     controller_A.whileTrue(driveFieldOrientedWatchTarget);
 
     
