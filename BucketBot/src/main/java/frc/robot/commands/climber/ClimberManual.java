@@ -3,7 +3,6 @@ package frc.robot.commands.climber;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimberSubsystem;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -12,6 +11,11 @@ public class ClimberManual extends Command {
   private final ClimberSubsystem m_Climber;
   private final boolean m_MovingUp;
 
+  /**
+   * 
+   * @param movingUp
+   * @param climber
+   */
   public ClimberManual(boolean movingUp, ClimberSubsystem climber) {
     m_Climber = climber;
     m_MovingUp = movingUp;

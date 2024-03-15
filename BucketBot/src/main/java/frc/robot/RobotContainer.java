@@ -61,6 +61,7 @@ public class RobotContainer {
     toggleTrue toggles the command on every press: schedules if not currently scheduled, and cancels if scheduled.
     */
 
+    System.out.println("configured bindings");
     // Tele-op bindings
     if(RobotState.isTeleop()){
 
