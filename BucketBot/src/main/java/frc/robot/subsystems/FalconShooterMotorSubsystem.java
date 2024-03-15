@@ -30,6 +30,8 @@ public class FalconShooterMotorSubsystem extends SubsystemBase {
     // Simulate the battery supply voltage
     m_simMotor1.setSupplyVoltage(12);
     //m_simMotor2.setSupplyVoltage(12);
+
+    SmartDashboard.putNumber("Shooter Speed", 0.0);
   }
 
 

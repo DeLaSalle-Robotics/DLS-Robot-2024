@@ -11,8 +11,8 @@ public final class Constants {
         public static class Shooter {
 
                 // CAN IDs of the shooter motors
-                public static final int kShooterMotorID1 = 10;
-                public static final int kShooterMotorID2 = 12;
+                public static final int kShooterMotorID1 = 15;
+                public static final int kShooterMotorID2 = 16;
 
                 // Maximum voltage of the shooter motors
                 public static final double kShooterMaxVolts = 5.0;

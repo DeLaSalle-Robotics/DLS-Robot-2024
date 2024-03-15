@@ -6,6 +6,7 @@ import frc.robot.commands.Shooter;
 import frc.robot.commands.climber.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -69,6 +70,8 @@ public class RobotContainer {
       controller_dpad_N.whileTrue(new ClimberManual(true, m_ClimberSubsystem));
       controller_dpad_S.whileTrue(new ClimberManual(false, m_ClimberSubsystem));
 
+      
+
     // Test mode bindings
     } else if(RobotState.isTest()){
       
@@ -78,6 +81,12 @@ public class RobotContainer {
       
       // Swap which climber motor is active
       controller_Y.onTrue(new ClimberSwap(m_ClimberSubsystem));
+
+      controller_X.whileTrue(new Shooter(
+        () -> SmartDashboard.getNumber("Shooter Speed", 0.0), 
+        () -> SmartDashboard.getNumber("Shooter Speed", 0.0),
+        m_shooterMotor
+      ));
   
     }
 
