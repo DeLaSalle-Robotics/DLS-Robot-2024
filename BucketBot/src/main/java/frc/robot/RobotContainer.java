@@ -108,7 +108,7 @@ public class RobotContainer {
         () -> -MathUtil.applyDeadband(m_joystick.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> -MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> -MathUtil.applyDeadband(m_joystick.getRightX(), OperatorConstants.RIGHT_X_DEADBAND),
-        () -> m_joystick.getRightBumper());
+        () -> m_joystick.getLeftTriggerAxis());
 
     driveFieldOrientedWatchTarget = m_swerve.driveAutoAimCommand(
       () -> -MathUtil.applyDeadband(m_joystick.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -142,6 +142,13 @@ public class RobotContainer {
 
     // Final bindings, plz don't delete or comment!!!
     
+    // Spin intake
+    controller_A.whileTrue(new Intake(() -> 0.5, m_intake));
+    controller_B.whileTrue(new Intake(() -> -0.5, m_intake));
+
+    // Zero heading
+    controller_RStick.onTrue((new InstantCommand(m_swerve::zeroGyro)));
+
 
 
     

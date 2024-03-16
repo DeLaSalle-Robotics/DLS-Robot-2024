@@ -144,7 +144,7 @@ public class VisionSubsystem extends SubsystemBase {
       () -> 0.0, 
       () -> 0.0, 
       () -> rotationToTag.getRotations(),
-      () -> false
+      () -> 0.0
     );
 
   }
