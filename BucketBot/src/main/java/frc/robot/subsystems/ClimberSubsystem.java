@@ -23,12 +23,12 @@ import frc.robot.Constants;
 
 
 public class ClimberSubsystem extends SubsystemBase {
-
-  /** NEO that controls extension, controlled by a SparkMax. */
-  private final CANSparkMax m_extenderMotor = new CANSparkMax(Constants.Climber.kExtenderMotorID, MotorType.kBrushless);
-  /** TalonFX that controls climbing. */
-  private final TalonFX m_climberMotor = new TalonFX(Constants.Climber.kClimberMotorID);
-  private final DigitalInput m_limitSwitch = new DigitalInput(Constants.Climber.kLimitSwitchID);
+  
+  // /** NEO that controls extension, controlled by a SparkMax. */
+  // private final CANSparkMax m_extenderMotor = new CANSparkMax(Constants.Climber.kExtenderMotorID, MotorType.kBrushless);
+  // /** TalonFX that controls climbing. */
+  // private final TalonFX m_climberMotor = new TalonFX(Constants.Climber.kClimberMotorID);
+  // private final DigitalInput m_limitSwitch = new DigitalInput(Constants.Climber.kLimitSwitchID);
 
   private final PIDController m_extenderPID = new PIDController(0.1, 0.0, 0.0);
   private final PIDController m_climberPID = new PIDController(0.1, 0.0, 0.0);
@@ -36,6 +36,9 @@ public class ClimberSubsystem extends SubsystemBase {
   // ClimberSubsystem constructor
   public ClimberSubsystem() {
     super();
+
+    /*
+
     SmartDashboard.putNumber("kPExtenderDown", Constants.Climber.kPExtenderDown);
     SmartDashboard.putNumber("kPClimberDown", Constants.Climber.kPClimberDown);
     SmartDashboard.putNumber("kPExtenderUp", Constants.Climber.kPExtenderUp);
@@ -51,6 +54,8 @@ public class ClimberSubsystem extends SubsystemBase {
     if(RobotState.isTeleop()){
       m_climberMotor.setPosition(0.0);
     }
+
+    */
   }
 
 
@@ -61,6 +66,8 @@ public class ClimberSubsystem extends SubsystemBase {
    */
   public void spinMotors(double eSpeed, double cSpeed){
     
+    /*
+
     // Set speeds of each motor
     m_extenderMotor.set(eSpeed);
     m_climberMotor.set(cSpeed);
@@ -72,6 +79,8 @@ public class ClimberSubsystem extends SubsystemBase {
     // Send the speeds of the motors to SmartDashboard
     SmartDashboard.putNumber("Extender Speed", eSpeed);
     SmartDashboard.putNumber("Climber Speed", cSpeed);
+
+    */
   }
 
 
@@ -81,8 +90,13 @@ public class ClimberSubsystem extends SubsystemBase {
    * @param cPos Climber position, in centimeters.
    */
   public void spinMotorsTo(double ePos, double cPos){
+
+    /*
+
     m_extenderMotor.set(m_extenderPID.calculate(getExtenderPosition(), ePos));
     m_climberMotor.set(m_climberPID.calculate(getClimberPosition(), cPos));
+
+    */
   }
 
 
@@ -91,7 +105,8 @@ public class ClimberSubsystem extends SubsystemBase {
    * @return Position of the extender motor in centimeters
    */
   public double getExtenderPosition(){
-    return m_extenderMotor.getEncoder().getPosition() * Constants.Climber.kExtenderCmPerRotation;
+    return 0.0;
+    // return m_extenderMotor.getEncoder().getPosition() * Constants.Climber.kExtenderCmPerRotation;
   }
 
   /**
@@ -99,7 +114,8 @@ public class ClimberSubsystem extends SubsystemBase {
    * @return Position of the climber motor in centimeters
    */
   public double getClimberPosition(){
-    return m_climberMotor.getPosition().getValueAsDouble() * Constants.Climber.kClimberCmPerRotation;
+    return 0.0;
+    // return m_climberMotor.getPosition().getValueAsDouble() * Constants.Climber.kClimberCmPerRotation;
   }
 
   /**
@@ -107,7 +123,8 @@ public class ClimberSubsystem extends SubsystemBase {
    * @return Velocity of extender motor in RPM
    */
   public double getExtenderVelocity(){
-    return m_extenderMotor.getEncoder().getVelocity();
+    return 0.0;
+    // return m_extenderMotor.getEncoder().getVelocity();
   }
 
   /**
@@ -115,7 +132,8 @@ public class ClimberSubsystem extends SubsystemBase {
    * @return Velocity of the climber motor in RPM
    */
   public double getClimberVelocity(){
-    return m_climberMotor.getVelocity().getValueAsDouble() * 60;
+    return 0.0;
+    // return m_climberMotor.getVelocity().getValueAsDouble() * 60;
   }
 
 
@@ -124,7 +142,8 @@ public class ClimberSubsystem extends SubsystemBase {
    * @return The state of the limit switch.
    */
   public boolean getSwitchState(){
-    return m_limitSwitch.get();
+    return false;
+    // return m_limitSwitch.get();
   }
 
 
@@ -147,7 +166,7 @@ public class ClimberSubsystem extends SubsystemBase {
    * Resets the extender motor encoder to zero.
    */
   public void resetExtenderEncoder(){
-    m_extenderMotor.getEncoder().setPosition(0.0);
+    // m_extenderMotor.getEncoder().setPosition(0.0);
   }
 
 
@@ -155,7 +174,7 @@ public class ClimberSubsystem extends SubsystemBase {
    * Resets the climb motor encoder to zero.
    */
   public void resetClimberEncoder(){
-    m_climberMotor.setPosition(0.0);
+    // m_climberMotor.setPosition(0.0);
   }
 
 
