@@ -3,11 +3,16 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.proto.Controller;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.commands.Rumble;
 
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -16,9 +21,15 @@ public class IntakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_IntakeMotor = new CANSparkMax(Constants.Intake.kIntakeMotorID, MotorType.kBrushless);
   private final Encoder m_IntakeEncoder = new Encoder(0, 1);
 
-  // IntakeSubsystem constructor
-  public IntakeSubsystem() {
+  private final ControllerSubsystem m_controller;
+  private final Trigger m_feedback;
+  
+  public IntakeSubsystem(ControllerSubsystem controllerSubsystem) {
     super();
+    m_controller = controllerSubsystem;
+
+    m_feedback = new Trigger(() -> this.noteDetected());
+    m_feedback.onTrue(new Rumble(m_controller, () -> 1.0, true));
   }
 
   /**
@@ -43,6 +54,22 @@ public class IntakeSubsystem extends SubsystemBase {
   public double getEncoderRate(){
     return m_IntakeEncoder.getRate();
   }
+
+
+  public boolean noteDetected(){
+    return (this.getEncoderRate() <= -300);
+  }
+
+
+  /**
+   * Used to send rumble feedback when the note is automatically stopped.
+   */
+  public ControllerSubsystem getControllerSubsystem(){
+    return m_controller;
+  }
+
+
+
 
 
   // Default subsystem methods

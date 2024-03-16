@@ -1,13 +1,16 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.ControllerSubsystem;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.Intake;
+import frc.robot.commands.Rumble;
 import frc.robot.commands.WatchTarget;
 import java.io.File;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,17 +27,20 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
 
-  // Make sure to define swerve subsystem BEFORE vision subsystem
+  // Define subsystems
+  // Don't change the order that these are declared in, since some subsystems require others to function
   private final SwerveSubsystem m_swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-  private final VisionSubsystem m_vision = new VisionSubsystem(m_swerve);
-
-  // Define subsystems and commands
   private final FalconShooterMotorSubsystem m_shooterMotor = new FalconShooterMotorSubsystem();
-  private final IntakeSubsystem m_intake = new IntakeSubsystem();
+  private final ControllerSubsystem m_controller = new ControllerSubsystem();
+
+  // These subsystems require other subsystems and MUST be declared after all others
+  private final VisionSubsystem m_vision = new VisionSubsystem(m_swerve);
+  private final IntakeSubsystem m_intake = new IntakeSubsystem(m_controller);
+
 
 
   // Setting up Xbox controller
-  private final XboxController m_joystick = new XboxController(0);
+  private final XboxController m_joystick = m_controller.getController();
   
   // Controller buttons:
 
@@ -98,7 +104,7 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation 
     // right stick controls the angular velocity of the robot
-    Command driveFieldOrientedAnglularVelocity = m_swerve.driveCommand(
+    Command driveFieldOrientedAngularVelocity = m_swerve.driveCommand(
         () -> -MathUtil.applyDeadband(m_joystick.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> -MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> -MathUtil.applyDeadband(m_joystick.getRightX(), OperatorConstants.RIGHT_X_DEADBAND),
@@ -115,7 +121,7 @@ public class RobotContainer {
     //     () -> MathUtil.applyDeadband(m_joystick.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
     //     () -> m_joystick.getRightX());
 
-    m_swerve.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    m_swerve.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
     // Configure the trigger bindings
     configureBindings();
@@ -130,9 +136,7 @@ public class RobotContainer {
     // controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
     controller_B.whileTrue(new Intake(() -> 0.5, m_intake));
     //controller_A.whileTrue(driveFieldOrientedWatchTarget);
-
-    
-
+    controller_A.whileTrue(new Rumble(m_controller, () -> 1.0, true));
     //controller_X.onTrue((new InstantCommand(m_swerve::zeroGyro)));
     // controller_RB.whileTrue(new SwapDriveMode(m_swerve)); // Cannot confirm if this works in real life
 
