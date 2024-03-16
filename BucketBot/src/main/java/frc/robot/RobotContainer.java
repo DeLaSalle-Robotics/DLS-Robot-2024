@@ -47,25 +47,25 @@ public class RobotContainer {
   private Trigger controller_A = new JoystickButton(m_joystick, 1);
   private Trigger controller_B = new JoystickButton(m_joystick, 2);
   private Trigger controller_X = new JoystickButton(m_joystick, 3);
-  // private Trigger controller_Y = new JoystickButton(m_joystick, 4);
+  private Trigger controller_Y = new JoystickButton(m_joystick, 4);
 
-  // private Trigger controller_LB = new JoystickButton(m_joystick, 5);
-  // private Trigger controller_RB = new JoystickButton(m_joystick, 6);
+  private Trigger controller_LB = new JoystickButton(m_joystick, 5);
+  private Trigger controller_RB = new JoystickButton(m_joystick, 6);
 
-  // private Trigger controller_Share = new JoystickButton(m_joystick, 7);
-  // private Trigger controller_Menu = new JoystickButton(m_joystick, 8);
+  private Trigger controller_Share = new JoystickButton(m_joystick, 7);
+  private Trigger controller_Menu = new JoystickButton(m_joystick, 8);
 
-  // private Trigger controller_LStick = new JoystickButton(m_joystick, 9);
-  // private Trigger controller_RStick = new JoystickButton(m_joystick, 10);
+  private Trigger controller_LStick = new JoystickButton(m_joystick, 9);
+  private Trigger controller_RStick = new JoystickButton(m_joystick, 10);
 
-  // private Trigger controller_dpad_N = new POVButton(m_joystick, 0);
-  // private Trigger controller_dpad_NE = new POVButton(m_joystick, 45);
-  // private Trigger controller_dpad_E = new POVButton(m_joystick, 90);
-  // private Trigger controller_dpad_SE = new POVButton(m_joystick, 135);
-  // private Trigger controller_dpad_S = new POVButton(m_joystick, 180);
-  // private Trigger controller_dpad_SW = new POVButton(m_joystick, 225);
-  // private Trigger controller_dpad_W = new POVButton(m_joystick, 270);
-  // private Trigger controller_dpad_NW = new POVButton(m_joystick, 315);
+  private Trigger controller_dpad_N = new POVButton(m_joystick, 0);
+  private Trigger controller_dpad_NE = new POVButton(m_joystick, 45);
+  private Trigger controller_dpad_E = new POVButton(m_joystick, 90);
+  private Trigger controller_dpad_SE = new POVButton(m_joystick, 135);
+  private Trigger controller_dpad_S = new POVButton(m_joystick, 180);
+  private Trigger controller_dpad_SW = new POVButton(m_joystick, 225);
+  private Trigger controller_dpad_W = new POVButton(m_joystick, 270);
+  private Trigger controller_dpad_NW = new POVButton(m_joystick, 315);
 
 
   Command driveFieldOrientedWatchTarget;
@@ -134,11 +134,15 @@ public class RobotContainer {
     toggleOnTrue toggles the command on every press: schedules if not currently scheduled, and cancels if scheduled.
     */
     // controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
-    controller_B.whileTrue(new Intake(() -> 0.5, m_intake));
-    //controller_A.whileTrue(driveFieldOrientedWatchTarget);
-    controller_A.whileTrue(new Rumble(m_controller, () -> 1.0, true));
-    //controller_X.onTrue((new InstantCommand(m_swerve::zeroGyro)));
+    // controller_B.whileTrue(new Intake(() -> 0.5, m_intake));
+    // controller_A.whileTrue(driveFieldOrientedWatchTarget);
+    // controller_A.whileTrue(new Rumble(m_controller, () -> 1.0, true));
+    // controller_X.onTrue((new InstantCommand(m_swerve::zeroGyro)));
     // controller_RB.whileTrue(new SwapDriveMode(m_swerve)); // Cannot confirm if this works in real life
+
+    // Final bindings, plz don't delete or comment!!!
+    
+
 
     
 
