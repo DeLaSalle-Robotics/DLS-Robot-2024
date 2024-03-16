@@ -143,8 +143,8 @@ public class RobotContainer {
     // Final bindings, plz don't delete or comment!!!
     
     // Spin intake
-    controller_A.whileTrue(new Intake(() -> 0.5, m_intake));
-    controller_B.whileTrue(new Intake(() -> -0.5, m_intake));
+    controller_A.whileTrue(new Intake(() -> 0., m_intake));
+    controller_B.whileTrue(new Intake(() -> -0.4, m_intake));
 
     // Zero heading
     controller_RStick.onTrue((new InstantCommand(m_swerve::zeroGyro)));
