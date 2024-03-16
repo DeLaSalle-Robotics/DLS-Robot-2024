@@ -12,7 +12,7 @@ import swervelib.parser.PIDFConfig;
 public final class Constants {
         
         // Shooter constants
-        public static class Shooter {
+        public static final class Shooter {
 
                 // CAN IDs of the shooter motors
                 public static final int kShooterMotorID1 = 13;
@@ -25,7 +25,7 @@ public final class Constants {
 
 
         // Intake constants
-        public static class Intake {
+        public static final class Intake {
                 
                 // CAN ID of the intake motor
                 public static final int kIntakeMotorID = 15;
@@ -77,7 +77,7 @@ public final class Constants {
                 public static final double maxSpeed = 10;
         }
 
-        public static class OperatorConstants
+        public static final class OperatorConstants
         {
 
                 // Joystick Deadband
@@ -87,7 +87,7 @@ public final class Constants {
                 public static final double TURN_CONSTANT    = 6;
         }
 
-        public static class VisionConstants
+        public static final class VisionConstants
         {
                 // Simulated camera properties, based mostly on real camera
 
@@ -107,5 +107,53 @@ public final class Constants {
                 // Z: Up/Down
                 public static final Translation3d cameraPosition = new Translation3d(0.0, 0.0, 0.5);
                 public static final Rotation3d cameraRotation = new Rotation3d(0.0, 0.0, 0.0);
+        }
+
+
+        public static final class Climber {
+
+                // CAN IDs of the climber motors
+                public static final int kExtenderMotorID = 16;
+                public static final int kClimberMotorID = 17;
+
+                // DIO pin of the limit switch
+                public static final int kLimitSwitchID = 2;
+
+                // Target velocity of each climber motor
+                public static final double kExtenderMotorVelocityRPM = 900.0;
+                public static final double kClimberMotorVelocityRPM = 1440.0;
+
+                // Feed forward of the extender motor
+                public static final double kExtenderFeedForwardUp = 0.06;
+                public static final double kExtenderFeedForwardDown = -0.1;
+
+                // Feed forward of the climb motor
+                public static final double kClimberFeedForwardUp = -0.2; // -0.244
+                public static final double kClimberFeedForwardDown = 0.244;
+
+                // kP of the extender motor
+                public static final double kPExtenderDown = 0.00001;
+                public static final double kPExtenderUp = 0.00001;
+
+                // kP of the climb  motor
+                public static final double kPClimberUp = 0.00001;
+                public static final double kPClimberDown = 0.00002;
+
+                // Endpoints for extender motor
+                public static final double kExtenderEndpointUp = -44.0;
+                public static final double kExtenderEndpointDown = -119.0;
+                public static final float kExtenderDistanceCm = 42.8625f;
+
+                // Endpoints for climber motor
+                public static final double kClimberEndpointUp = 2.1;
+                public static final double kClimberEndpointDown = 122.0;
+                public static final float kClimberDistanceCm = 119.9f; // Incorrect
+
+                // Conversion factors
+                public static final double kExtenderCmPerRotation = 0.59;
+                public static final double kClimberCmPerRotation = 0.392;
+
+
+                public static final double kMotorOffset = 0.2;
         }
 }

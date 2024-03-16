@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ControllerSubsystem;
 import frc.robot.subsystems.FalconShooterMotorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -33,6 +34,7 @@ public class RobotContainer {
   private final SwerveSubsystem m_swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   private final FalconShooterMotorSubsystem m_shooterMotor = new FalconShooterMotorSubsystem();
   private final ControllerSubsystem m_controller = new ControllerSubsystem();
+  private final ClimberSubsystem m_climber = new ClimberSubsystem();
 
   // These subsystems require other subsystems and MUST be declared after all others
   private final VisionSubsystem m_vision = new VisionSubsystem(m_swerve);
