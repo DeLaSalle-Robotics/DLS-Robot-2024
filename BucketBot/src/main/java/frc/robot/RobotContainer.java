@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -123,6 +124,8 @@ public class RobotContainer {
 
     m_swerve.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
+    SmartDashboard.putNumber("Intake Target Speed", 100.0);
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -143,8 +146,15 @@ public class RobotContainer {
     // Final bindings, plz don't delete or comment!!!
     
     // Spin intake
-    controller_A.whileTrue(new Intake(() -> 0., m_intake));
-    controller_B.whileTrue(new Intake(() -> -0.4, m_intake));
+    controller_A.whileTrue(new Intake(() -> SmartDashboard.getNumber("Intake Target Speed", 0.5), m_intake));
+    controller_B.whileTrue(new Intake(() -> -SmartDashboard.getNumber("Intake Target Speed", 0.5), m_intake));
+
+    // controller_Y -> onTrue -> Fire shooter
+    // controller_LB -> whileTrue -> Auto aim heading
+    // controller_Share -> onTrue -> Enter winch mode
+    
+    // controller_dpad_N -> whileTrue -> Move climber up
+    // controller_dpad_S -> whileTrue -> Move climber down
 
     // Zero heading
     controller_RStick.onTrue((new InstantCommand(m_swerve::zeroGyro)));

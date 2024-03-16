@@ -52,6 +52,6 @@ public class Intake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return movingForward && (m_Intake.getEncoderRate() <= -300.0);
+    return movingForward && m_Intake.noteDetected();
   }
 }

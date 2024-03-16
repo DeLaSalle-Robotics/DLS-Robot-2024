@@ -32,6 +32,9 @@ public final class Constants {
 
                 // DIO pin that the limit switch is connected to
                 public static final int kIntakeLimitSwitchID = 0;
+
+                // PID Information for the intake
+                public static final double kPIntake = 0.01;
         } 
 
 

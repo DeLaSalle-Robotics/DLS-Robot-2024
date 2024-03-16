@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.proto.Controller;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,11 +26,19 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private final ControllerSubsystem m_controller;
   private final Trigger m_feedback;
+  private final PIDController m_intakeController;
+
+  private MedianFilter encoderFilter = new MedianFilter(10);
   
   public IntakeSubsystem(ControllerSubsystem controllerSubsystem) {
     super();
     m_controller = controllerSubsystem;
 
+    // Intake PID controller
+    SmartDashboard.putNumber("Intake kP", Constants.Intake.kPIntake);
+    m_intakeController = new PIDController(SmartDashboard.getNumber("Intake kP", Constants.Intake.kPIntake), 0.0, 0.0);
+
+    // Rumble feedback
     m_feedback = new Trigger(() -> this.noteDetected());
     m_feedback.onTrue(new Rumble(m_controller, () -> 1.0, true));
   }
@@ -44,15 +55,16 @@ public class IntakeSubsystem extends SubsystemBase {
 
   /**
    * Sets the intake motor to the given speed
-   * @param speed Speed of the intake motor, between -1.0 and 1.0
+   * @param speed Speed of the intake motor, in rotations per minute
    */
   public void spin(double speed) {
-    m_IntakeMotor.set(speed);
+    double rawSpeed = m_intakeController.calculate(m_IntakeMotor.getEncoder().getVelocity(), speed);
+    m_IntakeMotor.set(MathUtil.clamp(rawSpeed, -1.0, 1.0));
   }
 
 
   public double getEncoderRate(){
-    return m_IntakeEncoder.getRate();
+    return encoderFilter.calculate(m_IntakeEncoder.getRate());
   }
 
 
@@ -60,13 +72,6 @@ public class IntakeSubsystem extends SubsystemBase {
     return (this.getEncoderRate() <= -300);
   }
 
-
-  /**
-   * Used to send rumble feedback when the note is automatically stopped.
-   */
-  public ControllerSubsystem getControllerSubsystem(){
-    return m_controller;
-  }
 
 
 
