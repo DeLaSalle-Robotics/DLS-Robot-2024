@@ -59,7 +59,16 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   public void spin(double speed) {
     double rawSpeed = m_intakeController.calculate(m_IntakeMotor.getEncoder().getVelocity(), speed);
-    m_IntakeMotor.set(MathUtil.clamp(rawSpeed, -1.0, 1.0));
+    m_IntakeMotor.set(MathUtil.clamp(rawSpeed, -0.4, 0.4));
+    SmartDashboard.putNumber("Raw Motor Speed", rawSpeed);
+  }
+
+  public void spinDirect(double speed){
+    m_IntakeMotor.set(speed);
+  }
+
+  public void stopIntake() {
+    m_IntakeMotor.set(0.0);
   }
 
 
@@ -99,6 +108,7 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Encoder Rate", m_IntakeEncoder.getRate());
+    SmartDashboard.putNumber("Motor Velocity", m_IntakeMotor.getEncoder().getVelocity());
   }
 
 

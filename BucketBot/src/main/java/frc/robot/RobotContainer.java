@@ -125,7 +125,7 @@ public class RobotContainer {
 
     m_swerve.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
-    SmartDashboard.putNumber("Intake Target Speed", 100.0);
+    SmartDashboard.putNumber("Intake Target Speed", 0.5);
 
     // Configure the trigger bindings
     configureBindings();
@@ -137,18 +137,19 @@ public class RobotContainer {
     whileTrue schedules the command when the button is pressed, and cancels the command when the button is released.
     toggleOnTrue toggles the command on every press: schedules if not currently scheduled, and cancels if scheduled.
     */
-    // controller_A.toggleOnTrue(new Shooter(() -> 0.5, m_shooterMotor));
-    // controller_B.whileTrue(new Intake(() -> 0.5, m_intake));
-    // controller_A.whileTrue(driveFieldOrientedWatchTarget);
-    // controller_A.whileTrue(new Rumble(m_controller, () -> 1.0, true));
-    // controller_X.onTrue((new InstantCommand(m_swerve::zeroGyro)));
-    // controller_RB.whileTrue(new SwapDriveMode(m_swerve)); // Cannot confirm if this works in real life
 
     // Final bindings, plz don't delete or comment!!!
     
     // Spin intake
+    // controller_A.whileTrue(new Intake(() -> SmartDashboard.getNumber("Intake Target Speed", 0.5), m_intake));
+    // controller_B.whileTrue(new Intake(() -> -SmartDashboard.getNumber("Intake Target Speed", 0.5), m_intake));
+
     controller_A.whileTrue(new Intake(() -> SmartDashboard.getNumber("Intake Target Speed", 0.5), m_intake));
     controller_B.whileTrue(new Intake(() -> -SmartDashboard.getNumber("Intake Target Speed", 0.5), m_intake));
+
+    
+    // Zero heading
+    controller_RStick.onTrue((new InstantCommand(m_swerve::zeroGyro)));
 
     // controller_Y -> onTrue -> Fire shooter
     // controller_LB -> whileTrue -> Auto aim heading
@@ -156,16 +157,6 @@ public class RobotContainer {
     
     // controller_dpad_N -> whileTrue -> Move climber up
     // controller_dpad_S -> whileTrue -> Move climber down
-
-    // Zero heading
-    controller_RStick.onTrue((new InstantCommand(m_swerve::zeroGyro)));
-
-
-
-    
-
-    // Does not work properly
-    // controller_Y.toggleOnTrue(new WatchTarget(14, m_vision));
   }
 
   

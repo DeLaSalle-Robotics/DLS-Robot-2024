@@ -34,7 +34,7 @@ public final class Constants {
                 public static final int kIntakeLimitSwitchID = 0;
 
                 // PID Information for the intake
-                public static final double kPIntake = 0.01;
+                public static final double kPIntake = 0.005;
         } 
 
 

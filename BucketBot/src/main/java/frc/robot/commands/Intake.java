@@ -39,14 +39,16 @@ public class Intake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Intake.spin(m_speed.getAsDouble());
+    m_Intake.spinDirect(m_speed.getAsDouble());
+    System.out.println("vroom");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     // The intake stops spinning when the command ends.
-    m_Intake.spin(0);
+    m_Intake.stopIntake();
+    System.out.println("stop");
   }
 
   // Returns true when the command should end.

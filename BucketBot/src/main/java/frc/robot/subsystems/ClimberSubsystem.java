@@ -205,8 +205,8 @@ public class ClimberSubsystem extends SubsystemBase {
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("extenderVelocity", this.getExtenderVelocity());
-    SmartDashboard.putNumber("climberVelocity", this.getClimberVelocity());
+    // SmartDashboard.putNumber("extenderVelocity", this.getExtenderVelocity());
+    // SmartDashboard.putNumber("climberVelocity", this.getClimberVelocity());
   }
 
 
