@@ -8,18 +8,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class ClimberManual extends Command {
 
-  private final ClimberSubsystem m_Climber;
-  private final boolean m_MovingUp;
+  private final ClimberSubsystem m_ClimberSubsystem;
+  private final boolean m_movingUp;
 
   /**
    * 
+   * @param subsystem ClimberSubsystem
    * @param movingUp
-   * @param climber
    */
-  public ClimberManual(boolean movingUp, ClimberSubsystem climber) {
-    m_Climber = climber;
-    m_MovingUp = movingUp;
-    addRequirements(m_Climber);
+  public ClimberManual(ClimberSubsystem subsystem, boolean movingUp) {
+    m_ClimberSubsystem = subsystem;
+    m_movingUp = movingUp;
+    addRequirements(m_ClimberSubsystem);
   }
 
 
@@ -34,26 +34,26 @@ public class ClimberManual extends Command {
   public void execute() {
 
     // If the limit switch is hit, reset the extender encoder
-    if(m_Climber.getSwitchState()){
-      m_Climber.resetExtenderEncoder();
+    if(m_ClimberSubsystem.getSwitchState()){
+      m_ClimberSubsystem.resetExtenderEncoder();
     }
 
 
 
     // If moving in reverse and the extender is at position 0, don't move
-    if(!m_MovingUp && m_Climber.getExtenderPosition() <= 0){
-      m_Climber.spinMotors(0.0, 0.0);
+    if(!m_movingUp && m_ClimberSubsystem.getExtenderPosition() <= 0){
+      m_ClimberSubsystem.spinMotors(0.0, 0.0);
 
     // If moving forward and the extender has exceeded the endpoint, don't move
-    } else if (m_MovingUp && m_Climber.getExtenderPosition() >= Constants.Climber.kExtenderDistanceCm){
-      m_Climber.spinMotors(0.0, 0.0);
+    } else if (m_movingUp && m_ClimberSubsystem.getExtenderPosition() >= Constants.Climber.kExtenderDistanceCm){
+      m_ClimberSubsystem.spinMotors(0.0, 0.0);
 
     // Otherwise, move
     } else {
-      double direction = m_MovingUp? 1.0 : -1.0;
-      m_Climber.spinMotorsTo(
-        MathUtil.clamp(m_Climber.getExtenderPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kExtenderDistanceCm),
-        MathUtil.clamp(m_Climber.getClimberPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kClimberDistanceCm)
+      double direction = m_movingUp? 1.0 : -1.0;
+      m_ClimberSubsystem.spinMotorsTo(
+        MathUtil.clamp(m_ClimberSubsystem.getExtenderPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kExtenderDistanceCm),
+        MathUtil.clamp(m_ClimberSubsystem.getClimberPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kClimberDistanceCm)
       );
     }
 
@@ -63,7 +63,7 @@ public class ClimberManual extends Command {
   @Override
   public void end(boolean interrupted) {
     // Stop all motors
-    m_Climber.spinMotors(0.0, 0.0);
+    m_ClimberSubsystem.spinMotors(0.0, 0.0);
   }
 
   // Returns true when the command should end.

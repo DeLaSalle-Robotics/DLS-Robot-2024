@@ -6,29 +6,32 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.MedianFilter;
-import edu.wpi.first.math.proto.Controller;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import frc.robot.Constants;
 import frc.robot.commands.Rumble;
 
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  // Declare a SparkMax as the intake motor controller
+  // Intake motor controller
   private final CANSparkMax m_IntakeMotor = new CANSparkMax(Constants.Intake.kIntakeMotorID, MotorType.kBrushless);
+
+  // NOT linked to the intake motor, this is for stopping the note within the intake
   private final Encoder m_IntakeEncoder = new Encoder(0, 1);
 
+  // Controller subsystem and rumble feedback trigger
   private final ControllerSubsystem m_controller;
   private final Trigger m_feedback;
-  private final PIDController m_intakeController;
 
+  // PID Controller for the intake motor
+  private final PIDController m_intakeController;
   private MedianFilter encoderFilter = new MedianFilter(10);
+  
   
   public IntakeSubsystem(ControllerSubsystem controllerSubsystem) {
     super();
@@ -43,18 +46,11 @@ public class IntakeSubsystem extends SubsystemBase {
     m_feedback.onTrue(new Rumble(m_controller, () -> 1.0, true));
   }
 
-  /**
-   * Retrieves the state of the limit switch
-   * @return whether the limit switch is pressed
-   */
-  public boolean testLimitSwitch() {
-    return false;
-    //return m_LimitSwitch.get();
-  }
-
 
   /**
    * Sets the intake motor to the given speed
+   * <p><b>This is controlled by a PID!</b> Use {@link #spinDirect} to set raw speed, or {@link #stopIntake} to stop the motor.
+   * <p><b>DO NOT use this to stop the intake motor!</b>
    * @param speed Speed of the intake motor, in rotations per minute
    */
   public void spin(double speed) {
@@ -63,20 +59,38 @@ public class IntakeSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Raw Motor Speed", rawSpeed);
   }
 
+
+  /**
+   * Set the intake motor to a raw speed, from -1.0 to 1.0.
+   * @param speed
+   */
   public void spinDirect(double speed){
     m_IntakeMotor.set(speed);
   }
 
+
+  /**
+   * Stop the intake motor.
+   */
   public void stopIntake() {
     m_IntakeMotor.set(0.0);
   }
 
 
+  /**
+   * Gets the rate of the encoder.
+   * <p>This is NOT the motor encoder.
+   * @return The rate of the encoder in "distance per second."
+   */
   public double getEncoderRate(){
     return encoderFilter.calculate(m_IntakeEncoder.getRate());
   }
 
 
+  /**
+   * Returns whether or not a note is currently being moved forward through the intake.
+   * @return True if a note was detected, false otherwise.
+   */
   public boolean noteDetected(){
     return (this.getEncoderRate() <= -300);
   }

@@ -1,37 +1,29 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.Robot;
-import frc.robot.subsystems.SwerveSubsystem;
-
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class WatchTarget extends Command {
 
 
-  private final VisionSubsystem m_vision;
+  private final VisionSubsystem m_VisionSubsystem;
 
-  private final int aprilTagID;
+  private final int m_aprilTagID;
 
   /**
    * Force the robot to watch an april tag of the given fiducial ID.
+   * @param subsystem VisionSubsystem
    * @param aprilID ID of the april tag to watch, from 1-16.
-   * @param vision VisionSubsystem.
    */
-  public WatchTarget(int aprilTagID, VisionSubsystem vision) {
+  public WatchTarget(VisionSubsystem subsystem, int aprilTagID) {
 
     // Assign subsystems
-    m_vision = vision;
+    m_VisionSubsystem = subsystem;
 
     // Assign april tag ID
-    this.aprilTagID = aprilTagID;
+    this.m_aprilTagID = aprilTagID;
 
-    addRequirements(m_vision);
+    addRequirements(m_VisionSubsystem);
   }
 
 
@@ -44,7 +36,7 @@ public class WatchTarget extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_vision.watchAprilTag(aprilTagID);
+    m_VisionSubsystem.watchAprilTag(m_aprilTagID);
   }
 
   // Called once the command ends or is interrupted.

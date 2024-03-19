@@ -6,19 +6,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 
 public class ControllerSubsystem extends SubsystemBase {
 
-  private final XboxController m_joystick;
+  private final XboxController m_controller;
 
   /**
-   * Currently only used for global rumble functionality, though it MAY be possible to move all bindings here to keep
-   * {@link RobotContainer} cleaner.
+   * Currently only used for global rumble functionality.
    */
   public ControllerSubsystem() {
     super();
-    m_joystick = new XboxController(Constants.OIConstants.kDriverControllerPort);
+    m_controller = new XboxController(Constants.OperatorConstants.kDriverControllerPort);
   }
 
   /**
@@ -26,7 +24,7 @@ public class ControllerSubsystem extends SubsystemBase {
    * @return The current controller.
    */
   public XboxController getController(){
-    return m_joystick;
+    return m_controller;
   }
 
 
@@ -37,7 +35,7 @@ public class ControllerSubsystem extends SubsystemBase {
    * @param intensity Intensity of the rumble, from 0 to 1.
    */
   public void rumble(RumbleType motor, double intensity){
-    m_joystick.setRumble(motor, intensity);
+    m_controller.setRumble(motor, intensity);
   }
 
 

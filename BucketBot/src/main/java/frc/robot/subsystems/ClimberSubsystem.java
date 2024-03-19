@@ -1,8 +1,3 @@
-/*
- * Example subsystem
- * Copy this to create another subsystem
- */
-
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;

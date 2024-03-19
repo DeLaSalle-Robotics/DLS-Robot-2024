@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ClimberTest extends Command {
 
 
-  private final ClimberSubsystem m_Climber;
+  private final ClimberSubsystem m_ClimberSubsystem;
 
   private final DoubleSupplier m_speed;
 
@@ -19,13 +19,13 @@ public class ClimberTest extends Command {
   /**
    * Allows moving the climber motors individually.
    * <p><b>This should only be activated in test mode.</b>
+   * @param subsystem ClimberSubsystem
    * @param speed Speed of the active motor. Check SmartDashboard or Shuffleboard for live active motor data.
-   * @param climber Climber subsystem
    */
-  public ClimberTest(DoubleSupplier speed, ClimberSubsystem climber) {
-    m_Climber = climber;
+  public ClimberTest(ClimberSubsystem subsystem, DoubleSupplier speed) {
+    m_ClimberSubsystem = subsystem;
     m_speed = speed;
-    addRequirements(m_Climber);
+    addRequirements(m_ClimberSubsystem);
   }
 
 
@@ -45,17 +45,17 @@ public class ClimberTest extends Command {
     if(SmartDashboard.getBoolean("Using Extender", true)){
 
       // Moving down and limit switch is down
-      if(speed < 0 && m_Climber.getSwitchState()){
-        m_Climber.spinMotors(0.0, 0.0);
+      if(speed < 0 && m_ClimberSubsystem.getSwitchState()){
+        m_ClimberSubsystem.spinMotors(0.0, 0.0);
 
       // Else
       } else {
-        m_Climber.spinMotors(speed, 0.0);
+        m_ClimberSubsystem.spinMotors(speed, 0.0);
       }
 
     // Climb motor
     } else {
-      m_Climber.spinMotors(0.0, speed);
+      m_ClimberSubsystem.spinMotors(0.0, speed);
     }
   }
 
@@ -63,7 +63,7 @@ public class ClimberTest extends Command {
   @Override
   public void end(boolean interrupted) {
     // Stop all motors
-    m_Climber.spinMotors(0.0, 0.0);
+    m_ClimberSubsystem.spinMotors(0.0, 0.0);
   }
 
   // Returns true when the command should end.

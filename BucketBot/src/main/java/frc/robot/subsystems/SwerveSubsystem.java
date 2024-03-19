@@ -27,7 +27,6 @@ import frc.robot.Constants;
 
 import java.io.File;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import org.photonvision.PhotonCamera;
@@ -51,7 +50,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDrive swerveDrive;
 
   // Maximum speed of the robot in meters per second, used to limit acceleration.
-  public double maximumSpeed = Units.feetToMeters(Constants.Drivebase.maxSpeed);
+  public double maximumSpeed = Units.feetToMeters(Constants.Drivebase.kMaxSpeed);
 
 
   /**

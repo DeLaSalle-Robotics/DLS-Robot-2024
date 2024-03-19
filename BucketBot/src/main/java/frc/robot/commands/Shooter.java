@@ -4,7 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-import frc.robot.subsystems.FalconShooterMotorSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 
 public class Shooter extends Command {
@@ -12,18 +12,18 @@ public class Shooter extends Command {
   /*
   // Command parameters
   private final DoubleSupplier m_speed;
-  private final FalconShooterMotorSubsystem m_shooter;
+  private final FalconShooterMotorSubsystem m_ShooterSubsystem;
 */
   /**
    * Spin the shooter at the given speed.
+   * @param subsystem ShooterSubsystem
    * @param speed Speed to spin the shooter at, between -1.0 and 1.0
-   * @param subsystem FalconShooterMotor subsystem
    */
-  public Shooter(DoubleSupplier speed, FalconShooterMotorSubsystem subsystem) {
+  public Shooter(ShooterSubsystem subsystem, DoubleSupplier speed) {
     /*
     m_speed = speed;
-    m_shooter = subsystem;
-    addRequirements(m_shooter);
+    m_ShooterSubsystem = subsystem;
+    addRequirements(m_ShooterSubsystem);
     */
   }
 
@@ -35,7 +35,7 @@ public class Shooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //m_shooter.spin(m_speed.getAsDouble());
+    //m_ShooterSubsystem.spin(m_speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

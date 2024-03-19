@@ -1,31 +1,22 @@
-/*
- * Example subsystem
- * Copy this to create another subsystem
- */
-
 package frc.robot.subsystems;
 
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
-
-import java.util.List;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -50,9 +41,6 @@ public class VisionSubsystem extends SubsystemBase {
   // Swerve subsystem to be passed through the constructor
   private final SwerveSubsystem m_swerveSubsystem;
 
-  // List of camera targets, see periodic/simulationPeriodic
-  private List<PhotonTrackedTarget> targetList;
-
   // Position and orientation of the camera, robot-relative
   private final Transform3d vs_camTranslation;
 
@@ -69,20 +57,20 @@ public class VisionSubsystem extends SubsystemBase {
 
     // Set resolution and FOV calibration errors, FPS, and average latency
     vs_camProperties.setCalibration(
-      VisionConstants.resWidth,
-      VisionConstants.resHeight, 
-      Rotation2d.fromDegrees(VisionConstants.fovDiagDegrees)
+      VisionConstants.kResWidth,
+      VisionConstants.kResHeight, 
+      Rotation2d.fromDegrees(VisionConstants.kFovDiagDegrees)
     );
 
     // Set calibration errors
     vs_camProperties.setCalibError(
-      VisionConstants.calibErrorPx, 
-      VisionConstants.calibErrorStdDev
+      VisionConstants.kCalibErrorPx, 
+      VisionConstants.kCalibErrorStdDev
     );
 
     // Set FPS and average latency
-    vs_camProperties.setFPS(VisionConstants.fps);
-    vs_camProperties.setAvgLatencyMs(VisionConstants.avgLatencyMs);
+    vs_camProperties.setFPS(VisionConstants.kFps);
+    vs_camProperties.setAvgLatencyMs(VisionConstants.kAvgLatencyMs);
 
     // Add the properties to the simulated camera
     vs_camera = new PhotonCameraSim(camera, vs_camProperties);
@@ -92,43 +80,14 @@ public class VisionSubsystem extends SubsystemBase {
     vs_camera.enableDrawWireframe(false);
 
     // Position and rotation of the camera relative to the robot pose
-    Translation3d vs_camPosition = VisionConstants.cameraPosition;
-    Rotation3d vs_camRotation = VisionConstants.cameraRotation; // Note that this is in radians - use Math.toRadians to enter degree values
+    Translation3d vs_camPosition = VisionConstants.kCameraPosition;
+    Rotation3d vs_camRotation = VisionConstants.kCameraRotation; // Note that this is in radians - use Math.toRadians to enter degree values
     vs_camTranslation = new Transform3d(vs_camPosition, vs_camRotation);
 
     // Add the camera to the vision simulator
     visionSim.addCamera(vs_camera, vs_camTranslation);
   }
 
-
-  /**
-   * <b>This is unfinished nor is it tested and probably should not be used.</b>
-   * <p>Re-orient the robot based on april tags.
-   */
-  @Deprecated
-  public void orientRobot(){
-
-    // Define latest camera result
-    PhotonPipelineResult result = camera.getLatestResult();
-
-    // If a target does not exist, cancel the operation
-    if (result.hasTargets()) {
-
-      // Define the best target
-      PhotonTrackedTarget target = result.getBestTarget();
-
-      // Estimate robot pose
-      Pose3d estRobotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-        target.getBestCameraToTarget(),
-        vs_layout.getTagPose(target.getFiducialId()).get(),
-        vs_camTranslation
-      );
-
-      // Set robot pose
-      m_swerveSubsystem.resetOdometry(estRobotPose.toPose2d());
-    }
-
-  }
 
 
   public void watchAprilTag(int aprilTagID){

@@ -1,11 +1,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation3d;
-// import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-// import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-// import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+
 import swervelib.math.Matter;
 import swervelib.parser.PIDFConfig;
 
@@ -38,75 +36,73 @@ public final class Constants {
         } 
 
 
-
-        public static final class OIConstants {
+        // Operator constants
+        public static final class OperatorConstants {
 
                 /**Port of the current controller used for driving.*/
                 public static final int kDriverControllerPort = 0;
-
+ 
                 public static final int kDriverYAxis = 1;
                 public static final int kDriverXAxis = 0;
                 public static final int kDriverRotAxis = 4;
                 public static final int kDriverFieldOrientedButtonIdx = 1;
 
+                // Controller deadband
                 public static final double kDeadband = 0.1;
+
+                // Some YAGSL stuff
+                public static final double kLeftXDeadband = 0.1;
+                public static final double kLeftYDeadband = 0.1;
+                public static final double kRightXDeadband = 0.1;
+                public static final double kTurnConstant = 6;
         }
 
 
-        public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
-        public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
-        public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-
-        public static final class Auton
+        // Autonomous Constants
+        public static final class AutoConstants
         {
+                // All of this is YAGSL stuff
+                public static final PIDFConfig kTranslationPID = new PIDFConfig(0.7, 0, 0);
+                public static final PIDFConfig kAngleAutoPID   = new PIDFConfig(0.4, 0, 0.01);
 
-                public static final PIDFConfig TranslationPID = new PIDFConfig(0.7, 0, 0);
-                public static final PIDFConfig angleAutoPID   = new PIDFConfig(0.4, 0, 0.01);
+                public static final double kMaxAcceleration = 2;
 
-                public static final double MAX_ACCELERATION = 2;
-
-                public static final String PathFileName = "Experimental"; // Use this to switch which pathfinder file to run in auto
+                public static final String kPathFileName = "Experimental"; // Use this to switch which pathplanner file to run in auto
         }
 
         public static final class Drivebase
         {
 
                 // Hold time on motor brakes when disabled
-                public static final double WHEEL_LOCK_TIME = 10; // seconds
+                public static final double kWheelLockTime = 10; // seconds
 
-                public static final double maxSpeed = 10;
-        }
+                public static final double kMaxSpeed = 10;
 
-        public static final class OperatorConstants
-        {
-
-                // Joystick Deadband
-                public static final double LEFT_X_DEADBAND  = 0.1;
-                public static final double LEFT_Y_DEADBAND  = 0.1;
-                public static final double RIGHT_X_DEADBAND = 0.1;
-                public static final double TURN_CONSTANT    = 6;
+                // More YAGSL stuff
+                public static final double kRobotMass = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+                public static final Matter kChassis = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), kRobotMass);
+                public static final double kLoopTime = 0.13; //s, 20ms + 110ms sprk max velocity lag
         }
 
         public static final class VisionConstants
         {
                 // Simulated camera properties, based mostly on real camera
+                public static final int kResWidth = 960;
+                public static final int kResHeight = 720;
+                public static final double kFovDiagDegrees = 74.8;
 
-                public static final int resWidth = 960;
-                public static final int resHeight = 720;
-                public static final double fovDiagDegrees = 74.8;
+                public static final double kCalibErrorPx = 0.146;
+                public static final double kCalibErrorStdDev = 0.0486;
 
-                public static final double calibErrorPx = 0.146;
-                public static final double calibErrorStdDev = 0.0486;
-
-                public static final double fps = 45.0;
-                public static final double avgLatencyMs = 310.0;
+                public static final double kFps = 45.0;
+                public static final double kAvgLatencyMs = 310.0;
 
                 // For position (relative to the robot):
                 // X: Forward/Backward
                 // Y: Left/Right
                 // Z: Up/Down
-                public static final Translation3d cameraPosition = new Translation3d(0.0, 0.0, 0.5);
-                public static final Rotation3d cameraRotation = new Rotation3d(0.0, 0.0, 0.0);
+                public static final Translation3d kCameraPosition = new Translation3d(0.0, 0.0, 0.5);
+                public static final Rotation3d kCameraRotation = new Rotation3d(0.0, 0.0, 0.0);
         }
 
 
@@ -152,7 +148,6 @@ public final class Constants {
                 // Conversion factors
                 public static final double kExtenderCmPerRotation = 0.59;
                 public static final double kClimberCmPerRotation = 0.392;
-
 
                 public static final double kMotorOffset = 0.2;
         }

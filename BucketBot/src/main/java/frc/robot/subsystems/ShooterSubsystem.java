@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class FalconShooterMotorSubsystem extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase {
 
   /*
   //private final CANSparkMax m_shooterMotor = new CANSparkMax(Constants.OperatorConstants.kShooterMotorID, MotorType.kBrushless);
@@ -17,8 +17,8 @@ public class FalconShooterMotorSubsystem extends SubsystemBase {
   private final TalonFXSimState m_simMotor2 = m_shooterMotor2.getSimState();
 
   */
-  // FalconShooterMotorSubsystem constructor
-  public FalconShooterMotorSubsystem() {
+  // ShooterSubsystem constructor
+  public ShooterSubsystem() {
     /*
     super();
     // Simulate the battery supply voltage

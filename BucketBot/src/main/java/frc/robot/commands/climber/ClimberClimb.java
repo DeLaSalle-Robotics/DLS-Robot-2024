@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class ClimberClimb extends Command {
 
-  private final ClimberSubsystem m_Climber;
+  private final ClimberSubsystem m_ClimberSubsystem;
 
   /**
    * 
    * @param subsystem ClimberSubsystem
    */
   public ClimberClimb(ClimberSubsystem subsystem) {
-    m_Climber = subsystem;
+    m_ClimberSubsystem = subsystem;
   }
 
 

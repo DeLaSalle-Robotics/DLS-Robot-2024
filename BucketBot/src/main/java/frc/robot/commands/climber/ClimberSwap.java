@@ -8,24 +8,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ClimberSwap extends Command {
 
 
-  private final ClimberSubsystem m_Climber;
+  private final ClimberSubsystem m_ClimberSubsystem;
 
 
   /**
    * Swaps the active motor of the climber when using test mode.
    * <p><b>This is only used in test mode.</b>
-   * @param climber Climber Subsystem
+   * @param subsystem Climber Subsystem
    */
-  public ClimberSwap(ClimberSubsystem climber) {
-    m_Climber = climber;
-    addRequirements(m_Climber);
+  public ClimberSwap(ClimberSubsystem subsystem) {
+    m_ClimberSubsystem = subsystem;
+    addRequirements(m_ClimberSubsystem);
   }
 
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_Climber.swapActiveMotor();
+    m_ClimberSubsystem.swapActiveMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
