@@ -2,7 +2,6 @@ package frc.robot.commands.climber;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimberSubsystem;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -53,10 +52,8 @@ public class ClimberManual extends Command {
     // Otherwise, move
     } else {
       double direction = m_movingUp? 1.0 : -1.0;
-      m_ClimberSubsystem.spinMotorsAt(
-        MathUtil.clamp(m_ClimberSubsystem.getExtenderPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kExtenderDistanceCm),
-        MathUtil.clamp(m_ClimberSubsystem.getWinchPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kWinchDistanceCm)
-      );
+      m_ClimberSubsystem.spinExtender(0.0);
+      m_ClimberSubsystem.spinWinch(0.0);
     }
 
   }
