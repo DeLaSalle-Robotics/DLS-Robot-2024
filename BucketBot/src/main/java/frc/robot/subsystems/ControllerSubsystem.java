@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,6 +11,8 @@ import frc.robot.Constants;
 public class ControllerSubsystem extends SubsystemBase {
 
   private final XboxController m_controller;
+  private final Joystick m_flightJoystickR;
+  private final Joystick m_flightJoystickL;
 
   /**
    * Currently only used for global rumble functionality.
@@ -17,6 +20,8 @@ public class ControllerSubsystem extends SubsystemBase {
   public ControllerSubsystem() {
     super();
     m_controller = new XboxController(Constants.OperatorConstants.kDriverControllerPort);
+    m_flightJoystickR = new Joystick(Constants.OperatorConstants.kFlightJoystickPortR);
+    m_flightJoystickL = new Joystick(Constants.OperatorConstants.kFlightJoystickPortL);
   }
 
   /**
@@ -25,6 +30,20 @@ public class ControllerSubsystem extends SubsystemBase {
    */
   public XboxController getController(){
     return m_controller;
+  }
+
+
+  /**
+   * Returns one of the flight joysticks.
+   * @param right True returns joystick R, false returns joystick L
+   * @return The selected flight joystick
+   */
+  public Joystick getFlightJoystick(boolean right){
+    if (right){
+      return m_flightJoystickR;
+    } else {
+      return m_flightJoystickL;
+    }
   }
 
 

@@ -19,79 +19,124 @@ import frc.robot.Constants;
 
 public class ClimberSubsystem extends SubsystemBase {
   
-  // /** NEO that controls extension, controlled by a SparkMax. */
-  // private final CANSparkMax m_extenderMotor = new CANSparkMax(Constants.Climber.kExtenderMotorID, MotorType.kBrushless);
-  // /** TalonFX that controls climbing. */
-  // private final TalonFX m_climberMotor = new TalonFX(Constants.Climber.kClimberMotorID);
-  // private final DigitalInput m_limitSwitch = new DigitalInput(Constants.Climber.kLimitSwitchID);
+  // Physical devices
+  private final CANSparkMax m_extenderMotor;
+  private final TalonFX m_winchMotor;
+  private final DigitalInput m_limitSwitch;
 
-  private final PIDController m_extenderPID = new PIDController(0.1, 0.0, 0.0);
-  private final PIDController m_climberPID = new PIDController(0.1, 0.0, 0.0);
+  // PID controllers
+  private final PIDController m_extenderPID;
+  private final PIDController m_winchPID;
+
+
 
   // ClimberSubsystem constructor
   public ClimberSubsystem() {
     super();
 
-    /*
+    // Create physical devices
+    m_extenderMotor = new CANSparkMax(Constants.Climber.kExtenderMotorID, MotorType.kBrushless);
+    m_winchMotor = new TalonFX(Constants.Climber.kWinchMotorID);
+    m_limitSwitch = new DigitalInput(Constants.Climber.kLimitSwitchID);
 
+    // Create PID controllers
+    m_extenderPID = new PIDController(0.1, 0.0, 0.0);
+    m_winchPID = new PIDController(0.1, 0.0, 0.0);
+
+    // Create SmartDashboard kP values
     SmartDashboard.putNumber("kPExtenderDown", Constants.Climber.kPExtenderDown);
-    SmartDashboard.putNumber("kPClimberDown", Constants.Climber.kPClimberDown);
+    SmartDashboard.putNumber("kPWinchDown", Constants.Climber.kPWinchDown);
     SmartDashboard.putNumber("kPExtenderUp", Constants.Climber.kPExtenderUp);
-    SmartDashboard.putNumber("kPClimberUp", Constants.Climber.kPClimberUp);
-
-    // Invert climber motor
-    m_climberMotor.setInverted(true);
+    SmartDashboard.putNumber("kPWinchUp", Constants.Climber.kPWinchUp);
 
     // Send the currently active motor to SmartDashboard for test mode
     SmartDashboard.putBoolean("Using Extender", true);
 
-    // Reset the position of the climber motor encoder on startup when using Teleop
+    // Invert winch motor
+    m_winchMotor.setInverted(true);
+
+    // Reset the position of the winch motor encoder on startup when using Teleop
     if(RobotState.isTeleop()){
-      m_climberMotor.setPosition(0.0);
+      m_winchMotor.setPosition(0.0);
     }
 
-    */
   }
 
 
   /**
-   * Spin the extender and climber motors at separate speeds.
-   * @param eSpeed Speed of the extender motor
-   * @param cSpeed Speed of the climber motor
+   * Spin the extender motor directly with no limits.
+   * @param speed The speed to spin the extender motor at, from -1.0 to 1.0
    */
-  public void spinMotors(double eSpeed, double cSpeed){
-    
-    /*
+  public void spinExtender(double speed){
+    m_extenderMotor.set(speed);
+  }
 
-    // Set speeds of each motor
-    m_extenderMotor.set(eSpeed);
-    m_climberMotor.set(cSpeed);
+  /**
+   * Spin the extender motor directly with limits enabled.
+   * @param speed The speed to spin the extender motor at, from -1.0 to 1.0
+   * @param lowerLimit Lower limit of the extender position in centimeters
+   * @param upperLimit Upper limit of the extender position in centimeters
+   */
+  public void spinExtender(double speed, double lowerLimit, double upperLimit){
 
-    // Send the positions of the motors to SmartDashboard
-    SmartDashboard.putNumber("Extender Motor", m_extenderMotor.getEncoder().getPosition());
-    SmartDashboard.putNumber("Climber Motor", m_climberMotor.getPosition().getValueAsDouble());
+    // Moving up and under the upper limit
+    if(speed > 0 && this.getExtenderPosition() < upperLimit){
+      m_extenderMotor.set(speed);
 
-    // Send the speeds of the motors to SmartDashboard
-    SmartDashboard.putNumber("Extender Speed", eSpeed);
-    SmartDashboard.putNumber("Climber Speed", cSpeed);
+    // Moving down and above the lower limit
+    } else if(speed < 0 && this.getExtenderPosition() > lowerLimit){
+      m_extenderMotor.set(speed);
 
-    */
+    // Speed is zero or a limit was passed
+    } else {
+      m_extenderMotor.set(0.0);
+    }
+  }
+
+
+
+  /**
+   * Spin the winch motor directly with no limits.
+   * @param speed The speed to spin the winch motor at, from -1.0 to 1.0
+   */
+  public void spinWinch(double speed){
+    m_winchMotor.set(speed);
   }
 
 
   /**
-   * Spin both motors to a set position.
+   * Spin the winch motor directly with limits enabled.
+   * @param speed The speed to spin the winch motor at, from -1.0 to 1.0
+   * @param lowerLimit Lower limit of the winch position in centimeters
+   * @param upperLimit Upper limit of the winch position in centimeters
+   */
+  public void spinWinch(double speed, double lowerLimit, double upperLimit){
+
+    // Moving up and under the upper limit
+    if(speed > 0 && this.getWinchPosition() < upperLimit){
+      m_winchMotor.set(speed);
+
+    // Moving down and above the lower limit
+    } else if(speed < 0 && this.getWinchPosition() > lowerLimit){
+      m_winchMotor.set(speed);
+
+    // Speed is zero or a limit was passed
+    } else {
+      m_winchMotor.set(0.0);
+    }
+  }
+
+
+  /**
+   * Spin both motors at a set velocity, using PID controllers.
    * @param ePos Extender position, in centimeters.
-   * @param cPos Climber position, in centimeters.
+   * @param wPos Winch position, in centimeters.
    */
-  public void spinMotorsTo(double ePos, double cPos){
+  public void spinMotorsAt(double eSpeed, double wSpeed){
+    
+    m_extenderMotor.set(m_extenderPID.calculate(getExtenderVelocity(), eSpeed));
+    m_winchMotor.set(m_winchPID.calculate(getWinchVelocity(), wSpeed));
 
-    /*
-
-    m_extenderMotor.set(m_extenderPID.calculate(getExtenderPosition(), ePos));
-    m_climberMotor.set(m_climberPID.calculate(getClimberPosition(), cPos));
-
-    */
   }
 
 
@@ -100,35 +145,42 @@ public class ClimberSubsystem extends SubsystemBase {
    * @return Position of the extender motor in centimeters
    */
   public double getExtenderPosition(){
-    return 0.0;
-    // return m_extenderMotor.getEncoder().getPosition() * Constants.Climber.kExtenderCmPerRotation;
+    return m_extenderMotor.getEncoder().getPosition() * Constants.Climber.kExtenderCmPerRotation;
   }
 
   /**
-   * Returns the position of the climber motor
-   * @return Position of the climber motor in centimeters
+   * Returns the position of the winch motor
+   * @return Position of the winch motor in centimeters
    */
-  public double getClimberPosition(){
-    return 0.0;
-    // return m_climberMotor.getPosition().getValueAsDouble() * Constants.Climber.kClimberCmPerRotation;
+  public double getWinchPosition(){
+    return m_winchMotor.getPosition().getValueAsDouble() * Constants.Climber.kWinchCmPerRotation;
   }
+
 
   /**
    * Returns the velocity of the extender motor
-   * @return Velocity of extender motor in RPM
+   * @return Velocity of extender motor in cm/s
    */
   public double getExtenderVelocity(){
-    return 0.0;
-    // return m_extenderMotor.getEncoder().getVelocity();
+    
+    // Raw velocity in rotations/min
+    double rawVelocity = m_extenderMotor.getEncoder().getVelocity();
+
+    // Return in cm/s
+    return (rawVelocity / 60) * Constants.Climber.kExtenderCmPerRotation;
   }
 
   /**
-   * Returns the velocity of the climber motor
-   * @return Velocity of the climber motor in RPM
+   * Returns the velocity of the winch motor
+   * @return Velocity of the winch motor in cm/s
    */
-  public double getClimberVelocity(){
-    return 0.0;
-    // return m_climberMotor.getVelocity().getValueAsDouble() * 60;
+  public double getWinchVelocity(){
+
+    // Raw velocity in rotations/s
+    double rawVelocity = m_winchMotor.getVelocity().getValueAsDouble();
+
+    // Return in cm/s
+    return (rawVelocity * Constants.Climber.kWinchCmPerRotation);
   }
 
 
@@ -137,8 +189,7 @@ public class ClimberSubsystem extends SubsystemBase {
    * @return The state of the limit switch.
    */
   public boolean getSwitchState(){
-    return false;
-    // return m_limitSwitch.get();
+    return m_limitSwitch.get();
   }
 
 
@@ -161,15 +212,15 @@ public class ClimberSubsystem extends SubsystemBase {
    * Resets the extender motor encoder to zero.
    */
   public void resetExtenderEncoder(){
-    // m_extenderMotor.getEncoder().setPosition(0.0);
+    m_extenderMotor.getEncoder().setPosition(0.0);
   }
 
 
   /**
-   * Resets the climb motor encoder to zero.
+   * Resets the winch motor encoder to zero.
    */
-  public void resetClimberEncoder(){
-    // m_climberMotor.setPosition(0.0);
+  public void resetWinchEncoder(){
+    m_winchMotor.setPosition(0.0);
   }
 
 

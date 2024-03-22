@@ -41,6 +41,11 @@ public final class Constants {
 
                 /**Port of the current controller used for driving.*/
                 public static final int kDriverControllerPort = 0;
+
+                // Flight joystick ports, in case they are ever used
+                // For purposes of organization, the joystick with the "Left" label is considered L, and the other R
+                public static final int kFlightJoystickPortR = 2;
+                public static final int kFlightJoystickPortL = 1;
  
                 public static final int kDriverYAxis = 1;
                 public static final int kDriverXAxis = 0;
@@ -110,44 +115,44 @@ public final class Constants {
 
                 // CAN IDs of the climber motors
                 public static final int kExtenderMotorID = 16;
-                public static final int kClimberMotorID = 17;
+                public static final int kWinchMotorID = 17;
 
                 // DIO pin of the limit switch
                 public static final int kLimitSwitchID = 2;
 
                 // Target velocity of each climber motor
                 public static final double kExtenderMotorVelocityRPM = 900.0;
-                public static final double kClimberMotorVelocityRPM = 1440.0;
+                public static final double kWinchMotorVelocityRPM = 1440.0;
 
                 // Feed forward of the extender motor
                 public static final double kExtenderFeedForwardUp = 0.06;
                 public static final double kExtenderFeedForwardDown = -0.1;
 
-                // Feed forward of the climb motor
-                public static final double kClimberFeedForwardUp = -0.2; // -0.244
-                public static final double kClimberFeedForwardDown = 0.244;
+                // Feed forward of the winch motor
+                public static final double kWinchFeedForwardUp = -0.2; // -0.244
+                public static final double kWinchFeedForwardDown = 0.244;
 
                 // kP of the extender motor
                 public static final double kPExtenderDown = 0.00001;
                 public static final double kPExtenderUp = 0.00001;
 
-                // kP of the climb  motor
-                public static final double kPClimberUp = 0.00001;
-                public static final double kPClimberDown = 0.00002;
+                // kP of the winch motor
+                public static final double kPWinchUp = 0.00001;
+                public static final double kPWinchDown = 0.00002;
 
                 // Endpoints for extender motor
                 public static final double kExtenderEndpointUp = -44.0;
                 public static final double kExtenderEndpointDown = -119.0;
                 public static final float kExtenderDistanceCm = 42.8625f;
 
-                // Endpoints for climber motor
-                public static final double kClimberEndpointUp = 2.1;
-                public static final double kClimberEndpointDown = 122.0;
-                public static final float kClimberDistanceCm = 119.9f; // Incorrect
+                // Endpoints for winch motor
+                public static final double kWinchEndpointUp = 2.1;
+                public static final double kWinchEndpointDown = 122.0;
+                public static final float kWinchDistanceCm = 119.9f; // Incorrect
 
                 // Conversion factors
                 public static final double kExtenderCmPerRotation = 0.59;
-                public static final double kClimberCmPerRotation = 0.392;
+                public static final double kWinchCmPerRotation = 0.392;
 
                 public static final double kMotorOffset = 0.2;
         }

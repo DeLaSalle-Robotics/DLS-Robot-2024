@@ -42,18 +42,20 @@ public class ClimberManual extends Command {
 
     // If moving in reverse and the extender is at position 0, don't move
     if(!m_movingUp && m_ClimberSubsystem.getExtenderPosition() <= 0){
-      m_ClimberSubsystem.spinMotors(0.0, 0.0);
+      m_ClimberSubsystem.spinExtender(0.0);
+      m_ClimberSubsystem.spinWinch(0.0);
 
     // If moving forward and the extender has exceeded the endpoint, don't move
     } else if (m_movingUp && m_ClimberSubsystem.getExtenderPosition() >= Constants.Climber.kExtenderDistanceCm){
-      m_ClimberSubsystem.spinMotors(0.0, 0.0);
+      m_ClimberSubsystem.spinExtender(0.0);
+      m_ClimberSubsystem.spinWinch(0.0);
 
     // Otherwise, move
     } else {
       double direction = m_movingUp? 1.0 : -1.0;
-      m_ClimberSubsystem.spinMotorsTo(
+      m_ClimberSubsystem.spinMotorsAt(
         MathUtil.clamp(m_ClimberSubsystem.getExtenderPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kExtenderDistanceCm),
-        MathUtil.clamp(m_ClimberSubsystem.getClimberPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kClimberDistanceCm)
+        MathUtil.clamp(m_ClimberSubsystem.getWinchPosition() + Constants.Climber.kMotorOffset * direction, 0.0, Constants.Climber.kWinchDistanceCm)
       );
     }
 
@@ -63,7 +65,8 @@ public class ClimberManual extends Command {
   @Override
   public void end(boolean interrupted) {
     // Stop all motors
-    m_ClimberSubsystem.spinMotors(0.0, 0.0);
+    m_ClimberSubsystem.spinExtender(0.0);
+    m_ClimberSubsystem.spinWinch(0.0);
   }
 
   // Returns true when the command should end.

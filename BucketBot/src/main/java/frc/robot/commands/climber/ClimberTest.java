@@ -46,16 +46,19 @@ public class ClimberTest extends Command {
 
       // Moving down and limit switch is down
       if(speed < 0 && m_ClimberSubsystem.getSwitchState()){
-        m_ClimberSubsystem.spinMotors(0.0, 0.0);
+        m_ClimberSubsystem.spinExtender(0.0);
+        m_ClimberSubsystem.spinWinch(0.0);
 
       // Else
       } else {
-        m_ClimberSubsystem.spinMotors(speed, 0.0);
+        m_ClimberSubsystem.spinExtender(speed);
+        m_ClimberSubsystem.spinWinch(0.0);
       }
 
-    // Climb motor
+    // Winch motor
     } else {
-      m_ClimberSubsystem.spinMotors(0.0, speed);
+      m_ClimberSubsystem.spinExtender(0.0);
+      m_ClimberSubsystem.spinWinch(speed);
     }
   }
 
@@ -63,7 +66,8 @@ public class ClimberTest extends Command {
   @Override
   public void end(boolean interrupted) {
     // Stop all motors
-    m_ClimberSubsystem.spinMotors(0.0, 0.0);
+    m_ClimberSubsystem.spinExtender(0.0);
+    m_ClimberSubsystem.spinWinch(0.0);
   }
 
   // Returns true when the command should end.

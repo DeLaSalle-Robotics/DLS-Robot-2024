@@ -16,6 +16,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,10 +42,11 @@ public class RobotContainer {
 
 
 
-  // Setting up Xbox controller
+  // Setting up Xbox controller and flight joysticks
   private final XboxController m_controller = m_ControllerSubsystem.getController();
+  private final Joystick m_flightJoystick = m_ControllerSubsystem.getFlightJoystick(true);
   
-  // Controller buttons:
+  // Xbox Controller buttons:
 
   private Trigger controller_A = new JoystickButton(m_controller, 1);
   private Trigger controller_B = new JoystickButton(m_controller, 2);
@@ -68,6 +70,11 @@ public class RobotContainer {
   private Trigger controller_dpad_SW = new POVButton(m_controller, 225);
   private Trigger controller_dpad_W = new POVButton(m_controller, 270);
   private Trigger controller_dpad_NW = new POVButton(m_controller, 315);
+
+
+  // Joystick buttons are pretty easy, just follow the format below
+  // Change "1" to whichever numbered button you wish to use.
+  private Trigger joystick_1 = new JoystickButton(m_flightJoystick, 1);
 
 
   Command driveFieldOrientedAngularVelocity;
