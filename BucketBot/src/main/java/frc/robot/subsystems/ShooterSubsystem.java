@@ -36,10 +36,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // Real motors
     m_shooterMotor1.set(-speed);
     m_shooterMotor2.set(speed);
-
-    // Post speed to SmartDashboard
-    SmartDashboard.putNumber("Shooter Speed", speed);
-    
   }
 
 
@@ -66,7 +62,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   // Called once per scheduler run
   @Override
-  public void periodic() {}
+  public void periodic() {
+    SmartDashboard.putNumber("Shooter Velocity 1 (RPS)", m_shooterMotor1.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Shooter Velocity 2 (RPS)", m_shooterMotor2.getVelocity().getValueAsDouble());
+  }
 
 
   // Called once per scheduler run during simulation

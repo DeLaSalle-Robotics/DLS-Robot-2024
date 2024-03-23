@@ -2,25 +2,19 @@ package frc.robot.commands.climber;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimberSubsystem;
-
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class ClimberWinch extends Command {
+public class ClimberRetract extends Command {
 
   private final ClimberSubsystem m_ClimberSubsystem;
-  private final BooleanSupplier m_movingUp;
 
   /**
    * 
    * @param subsystem ClimberSubsystem
-   * @param movingUp
    */
-  public ClimberWinch(ClimberSubsystem subsystem, BooleanSupplier movingUp) {
+  public ClimberRetract(ClimberSubsystem subsystem) {
     m_ClimberSubsystem = subsystem;
-    m_movingUp = movingUp;
     addRequirements(m_ClimberSubsystem);
   }
 
@@ -34,21 +28,8 @@ public class ClimberWinch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    // If the winch exceeds its current limit, reset the encoder position
-    if(m_ClimberSubsystem.getWinchCurrent() >= Constants.Climber.kWinchCurrentLimit){
-      m_ClimberSubsystem.setWinchLowerLimit();
-    }
-
-    // Changes the direction that the motors will move in
-    int direction = m_movingUp.getAsBoolean()? 1:-1;
-
-    // Spin winch motor
-    // Raw power because the PID controller is not tuned for heavy loads
-    m_ClimberSubsystem.spinWinch(direction * Constants.Climber.kWinchPowerInWinchMode);
-
-    // The extender motor should not be moving
-    m_ClimberSubsystem.spinExtender(0.0);
+    // Spin the extender with no limits
+    m_ClimberSubsystem.spinExtenderAt(-Constants.Climber.kClimberVelocityCmPerSec);
   }
 
   // Called once the command ends or is interrupted.
@@ -62,7 +43,7 @@ public class ClimberWinch extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_ClimberSubsystem.getSwitchState();
   }
 }
 

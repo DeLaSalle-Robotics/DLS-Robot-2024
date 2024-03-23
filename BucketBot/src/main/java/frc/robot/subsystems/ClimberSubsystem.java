@@ -18,7 +18,6 @@ import frc.robot.Constants;
 // neo pulls down
 // falcon controls climbing
 
-
 public class ClimberSubsystem extends SubsystemBase {
   
   // Physical devices
@@ -67,6 +66,41 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
 
+
+  /**
+   * Calculates the PID-Feedforward controller for the extender motor
+   * @param speed Speed to spin the extender at, in cm/s
+   * @return A clamped PID-Feedforward calculation
+   */
+  private double calculateExtenderPID(double speed){
+
+    // Calculate feedforward and PID controllers and add them together
+    double ffPower = m_extenderFF.calculate(speed);
+    double pidPower = m_extenderPID.calculate(this.getExtenderVelocity(), speed);
+    double power = ffPower + pidPower;
+
+    // Clamp the above result and return
+    return MathUtil.clamp(power, Constants.Climber.kExtenderMinPower, Constants.Climber.kExtenderMaxPower);
+  }
+
+  /**
+   * Calculates the PID-Feedforward controller for the winch motor
+   * @param speed Speed to spin the winch at, in cm/s
+   * @return A clamped PID-Feedforward calculation
+   */
+  private double calculateWinchPID(double speed){
+
+    // Calculate feedforward and PID controllers and add them together
+    double ffPower = m_winchFF.calculate(speed);
+    double pidPower = m_winchPID.calculate(this.getWinchVelocity(), speed);
+    double power = ffPower + pidPower;
+
+    // Clamp the above result and return
+    return MathUtil.clamp(power, Constants.Climber.kWinchMinPower, Constants.Climber.kWinchMaxPower);
+  }
+
+
+
   /**
    * Spin the extender motor directly with no limits.
    * @param power The speed to spin the extender motor at, from -1.0 to 1.0
@@ -107,7 +141,6 @@ public class ClimberSubsystem extends SubsystemBase {
     m_winchMotor.set(power);
   }
 
-
   /**
    * Spin the winch motor directly with limits enabled.
    * @param power The speed to spin the winch motor at, from -1.0 to 1.0
@@ -131,26 +164,49 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
 
+
   /**
-   * Spin the extender at a given velocity.
+   * Spin the extender at a given velocity with no limits.
+   * @param speed Speed to spin the extender motor at, in cm/s.
+   */
+  public void spinExtenderAt(double speed){
+
+    // Calculate feedforward and PID controllers
+    double totalPower = this.calculateExtenderPID(speed);
+
+    // Spin the extender with no limits
+    this.spinExtender(totalPower);
+  }
+
+  /**
+   * Spin the extender at a given velocity with limits enabled.
    * @param speed Speed to spin the extender motor at, in cm/s.
    * @param lowerLimit Lower limit of the extender position in centimeters.
    * @param upperLimit Upper limit of the extender position in centimeters.
    */
   public void spinExtenderAt(double speed, double lowerLimit, double upperLimit){
 
-    // Calculate feedforward and PID controllers and add them together
-    double ffPower = m_extenderFF.calculate(speed);
-    double pidPower = m_extenderPID.calculate(this.getExtenderVelocity(), speed);
-    double power = ffPower + pidPower;
+    // Calculate feedforward and PID controllers
+    double totalPower = this.calculateExtenderPID(speed);
 
-    // Clamp the above result
-    double totalPower = MathUtil.clamp(power, Constants.Climber.kExtenderMinPower, Constants.Climber.kExtenderMaxPower);
-
-    // Set the speed of the motor
+    // Spin the extender with limits enabled
     this.spinExtender(totalPower, lowerLimit, upperLimit);
   }
 
+
+
+  /**
+   * Spin the winch at a given velocity with no limits.
+   * @param speed Speed to spin the winch motor at, in cm/s.
+   */
+  public void spinWinchAt(double speed){
+    
+    // Calculate feedforward and PID controllers
+    double totalPower = this.calculateWinchPID(speed);
+
+    // Spin the winch with no limits
+    this.spinWinch(totalPower);
+  }
 
   /**
    * Spin the winch at a given velocity.
@@ -160,15 +216,10 @@ public class ClimberSubsystem extends SubsystemBase {
    */
   public void spinWinchAt(double speed, double lowerLimit, double upperLimit){
 
-    // Calculate feedforward and PID controllers and add them together
-    double ffPower = m_winchFF.calculate(speed);
-    double pidPower = m_winchPID.calculate(this.getWinchVelocity(), speed);
-    double power = ffPower + pidPower;
+    // Calculate feedforward and PID controllers
+    double totalPower = this.calculateWinchPID(speed);
 
-    // Clamp the above result
-    double totalPower = MathUtil.clamp(power, Constants.Climber.kWinchMinPower, Constants.Climber.kWinchMaxPower);
-
-    // Set the speed of the motor
+    // Spin the winch with limits enabled
     this.spinWinch(totalPower, lowerLimit, upperLimit);
   }
 
@@ -257,6 +308,15 @@ public class ClimberSubsystem extends SubsystemBase {
    */
   public void setWinchLowerLimit(){
     m_winchMotor.setPosition(Constants.Climber.kWinchEndpointDown);
+  }
+
+
+  /**
+   * Gets the current corresponding to the torque output of the winch motor.
+   * @return The absolute value of the torque current of the winch motor, between 0 and 327.68
+   */
+  public double getWinchCurrent(){
+    return Math.abs(m_winchMotor.getTorqueCurrent().getValueAsDouble());
   }
 
 

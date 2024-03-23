@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ControllerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -8,6 +9,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
+import frc.robot.commands.climber.ClimberTest;
 
 import java.io.File;
 
@@ -29,6 +31,7 @@ public class RobotContainer {
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
   private final ControllerSubsystem m_ControllerSubsystem = new ControllerSubsystem();
+  private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
 
   // These subsystems require other subsystems and MUST be declared after all others
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
@@ -47,7 +50,7 @@ public class RobotContainer {
   // private Trigger controller_X = new JoystickButton(m_controller, 3);
   private Trigger controller_Y = new JoystickButton(m_controller, 4);
 
-  // private Trigger controller_LB = new JoystickButton(m_controller, 5);
+  private Trigger controller_LB = new JoystickButton(m_controller, 5);
   // private Trigger controller_RB = new JoystickButton(m_controller, 6);
 
   // private Trigger controller_Share = new JoystickButton(m_controller, 7);
@@ -69,13 +72,6 @@ public class RobotContainer {
   // Flight joystick buttons are pretty easy, just follow the format below
   // Change "1" to whichever numbered button you wish to use.
   // private Trigger joystick_1 = new JoystickButton(m_flightJoystick, 1);
-
-
-  // Declare commands here so they can be used globally within RobotContainer
-  Command driveFieldOrientedAngularVelocity;
-  Command driveFieldOrientedWatchTarget;
-  Command spinShooter;
-  Command climbTestMode;
 
 
 
@@ -103,7 +99,7 @@ public class RobotContainer {
   private void configureAnalogTeleop(){
 
     // Default drive command
-    driveFieldOrientedAngularVelocity = m_SwerveSubsystem.driveCommand(
+    Command driveFieldOrientedAngularVelocity = m_SwerveSubsystem.driveCommand(
       () -> -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kLeftYDeadband),
       () -> -MathUtil.applyDeadband(m_controller.getLeftX(), OperatorConstants.kLeftXDeadband),
       () -> -MathUtil.applyDeadband(m_controller.getRightX(), OperatorConstants.kRightXDeadband),
@@ -112,14 +108,14 @@ public class RobotContainer {
 
     // Vision drive command
     // Watches an april tag while still allowing movement
-    driveFieldOrientedWatchTarget = m_SwerveSubsystem.driveAutoAimCommand(
+    Command driveFieldOrientedWatchTarget = m_SwerveSubsystem.driveAutoAimCommand(
       () -> -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kLeftYDeadband),
       () -> -MathUtil.applyDeadband(m_controller.getLeftX(), OperatorConstants.kLeftXDeadband),
       m_VisionSubsystem.getPhotonCamera()
     );
 
     // Spin the shooter motors depending on the state of the right analog trigger (RT)
-    spinShooter = new Shooter(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
+    Command spinShooter = new Shooter(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
     
 
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
@@ -175,8 +171,29 @@ public class RobotContainer {
   private void configureAnalogTest(){
 
     // Controls the climber motors
-    // can't put this here yet because the climber doesn't exist.
+    Command climbTestMode = new ClimberTest(
+      m_ClimberSubsystem,
+      () -> -MathUtil.applyDeadband(m_controller.getRightY(), Constants.OperatorConstants.kRightYDeadband),
+      () -> -MathUtil.applyDeadband(m_controller.getLeftY(), Constants.OperatorConstants.kLeftYDeadband)
+    );
 
+    // Spin shooter motor at variable power
+    Command spinShooterTestMode = new Shooter(
+      m_ShooterSubsystem,
+      () -> MathUtil.applyDeadband(m_controller.getRightTriggerAxis(), Constants.OperatorConstants.kDeadband)
+    );
+
+    // Run intake at variable power
+    Command spinIntakeTestMode = new Intake(
+      m_IntakeSubsystem, 
+      () -> MathUtil.applyDeadband(m_controller.getLeftTriggerAxis(), Constants.OperatorConstants.kDeadband), 
+      () -> false
+    );
+
+
+    m_ClimberSubsystem.setDefaultCommand(climbTestMode);
+    m_ShooterSubsystem.setDefaultCommand(spinShooterTestMode);
+    m_IntakeSubsystem.setDefaultCommand(spinIntakeTestMode);
   }
 
 
@@ -184,7 +201,20 @@ public class RobotContainer {
    * Digital controller bindings for test mode.
    */
   private void configureBindingsTest(){
+    
+    // Fire shooter
+    controller_Y.whileTrue(new Intake(
+      m_IntakeSubsystem, 
+      () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed), 
+      () -> true
+    ));
 
+    // Reverse intake
+    controller_LB.whileTrue(new Intake(
+      m_IntakeSubsystem,
+      () -> -SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
+      () -> false
+    ));
   }
 
   
@@ -207,7 +237,6 @@ public class RobotContainer {
   {
     m_SwerveSubsystem.setMotorBrake(brake);
   }
-
 }
 
 

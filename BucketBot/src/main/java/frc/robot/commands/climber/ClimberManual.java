@@ -2,20 +2,23 @@ package frc.robot.commands.climber;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimberSubsystem;
+
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 
 public class ClimberManual extends Command {
 
   private final ClimberSubsystem m_ClimberSubsystem;
-  private final boolean m_movingUp;
+  private final BooleanSupplier m_movingUp;
 
   /**
    * 
    * @param subsystem ClimberSubsystem
    * @param movingUp
    */
-  public ClimberManual(ClimberSubsystem subsystem, boolean movingUp) {
+  public ClimberManual(ClimberSubsystem subsystem, BooleanSupplier movingUp) {
     m_ClimberSubsystem = subsystem;
     m_movingUp = movingUp;
     addRequirements(m_ClimberSubsystem);
@@ -37,24 +40,22 @@ public class ClimberManual extends Command {
       m_ClimberSubsystem.setExtenderLowerLimit();
     }
 
+    // Changes the direction that the motors will move in
+    int direction = m_movingUp.getAsBoolean()? 1:-1;
 
+    // Spin extender motor
+    m_ClimberSubsystem.spinExtenderAt(
+      direction * Constants.Climber.kClimberVelocityCmPerSec, 
+      Constants.Climber.kExtenderEndpointDown,
+      Constants.Climber.kExtenderEndpointUp
+    );
 
-    // If moving in reverse and the extender is at position 0, don't move
-    if(!m_movingUp && m_ClimberSubsystem.getExtenderPosition() <= 0){
-      m_ClimberSubsystem.spinExtender(0.0);
-      m_ClimberSubsystem.spinWinch(0.0);
-
-    // If moving forward and the extender has exceeded the endpoint, don't move
-    } else if (m_movingUp && m_ClimberSubsystem.getExtenderPosition() >= Constants.Climber.kExtenderDistanceCm){
-      m_ClimberSubsystem.spinExtender(0.0);
-      m_ClimberSubsystem.spinWinch(0.0);
-
-    // Otherwise, move
-    } else {
-      double direction = m_movingUp? 1.0 : -1.0;
-      m_ClimberSubsystem.spinExtender(0.0);
-      m_ClimberSubsystem.spinWinch(0.0);
-    }
+    // Spin winch motor
+    m_ClimberSubsystem.spinWinchAt(
+      direction * Constants.Climber.kClimberVelocityCmPerSec,
+      Constants.Climber.kExtenderEndpointDown, // Zero, which is the same as the extender
+      Constants.Climber.kWinchEndpointUp
+    );
 
   }
 

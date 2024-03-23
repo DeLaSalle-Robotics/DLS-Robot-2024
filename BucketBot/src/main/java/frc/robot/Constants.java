@@ -60,13 +60,16 @@ public final class Constants {
                 public static final int kDriverRotAxis = 4;
                 public static final int kDriverFieldOrientedButtonIdx = 1;
 
-                // Controller deadband
+                // Trigger deadband
                 public static final double kDeadband = 0.1;
 
-                // Some YAGSL stuff
+                // Deadband
                 public static final double kLeftXDeadband = 0.1;
                 public static final double kLeftYDeadband = 0.1;
                 public static final double kRightXDeadband = 0.1;
+                public static final double kRightYDeadband = 0.1;
+
+                
                 public static final double kTurnConstant = 6;
         }
 
@@ -129,8 +132,13 @@ public final class Constants {
                 public static final int kLimitSwitchID = 2;
 
                 // Target velocity of each climber motor
-                public static final double kExtenderMotorVelocityRPM = 900.0;
-                public static final double kWinchMotorVelocityRPM = 1440.0;
+                public static final double kClimberVelocityCmPerSec = 3.0;
+
+                // Winch power in winch mode!!!
+                public static final double kWinchPowerInWinchMode = 0.0;
+
+                // Current limit of the winch motor during winch mode
+                public static final double kWinchCurrentLimit = 1000.0;
 
                 // Old feed forward of the extender motor
                 public static final double kExtenderFeedForwardUp = 0.06;
@@ -179,3 +187,22 @@ public final class Constants {
                 public static final double kMotorOffset = 0.2;
         }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// me when I constantly have a constant constant in constants with a constantly constanting constant that is always constant
