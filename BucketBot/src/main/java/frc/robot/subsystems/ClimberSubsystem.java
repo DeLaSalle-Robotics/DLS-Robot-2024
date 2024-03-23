@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import org.opencv.imgproc.Subdiv2D;
-
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;

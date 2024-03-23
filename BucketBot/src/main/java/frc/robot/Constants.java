@@ -18,6 +18,10 @@ public final class Constants {
 
                 // Maximum voltage of the shooter motors
                 public static final double kShooterMaxVolts = 5.0;
+
+                // Set speeds for shooting at the amp and speaker, respectively
+                public static final double kAmpSpeed = 0.3;
+                public static final double kSpeakerSpeed = 0.6;
         }
         
 

@@ -9,6 +9,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Rumble;
+import frc.robot.commands.Shooter;
 import frc.robot.commands.WatchTarget;
 import java.io.File;
 import java.util.function.DoubleSupplier;
@@ -18,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,35 +52,38 @@ public class RobotContainer {
 
   private Trigger controller_A = new JoystickButton(m_controller, 1);
   private Trigger controller_B = new JoystickButton(m_controller, 2);
-  private Trigger controller_X = new JoystickButton(m_controller, 3);
-  private Trigger controller_Y = new JoystickButton(m_controller, 4);
+  // private Trigger controller_X = new JoystickButton(m_controller, 3);
+  // private Trigger controller_Y = new JoystickButton(m_controller, 4);
 
-  private Trigger controller_LB = new JoystickButton(m_controller, 5);
-  private Trigger controller_RB = new JoystickButton(m_controller, 6);
+  // private Trigger controller_LB = new JoystickButton(m_controller, 5);
+  // private Trigger controller_RB = new JoystickButton(m_controller, 6);
 
-  private Trigger controller_Share = new JoystickButton(m_controller, 7);
-  private Trigger controller_Menu = new JoystickButton(m_controller, 8);
+  // private Trigger controller_Share = new JoystickButton(m_controller, 7);
+  // private Trigger controller_Menu = new JoystickButton(m_controller, 8);
 
-  private Trigger controller_LStick = new JoystickButton(m_controller, 9);
+  // private Trigger controller_LStick = new JoystickButton(m_controller, 9);
   private Trigger controller_RStick = new JoystickButton(m_controller, 10);
 
-  private Trigger controller_dpad_N = new POVButton(m_controller, 0);
-  private Trigger controller_dpad_NE = new POVButton(m_controller, 45);
-  private Trigger controller_dpad_E = new POVButton(m_controller, 90);
-  private Trigger controller_dpad_SE = new POVButton(m_controller, 135);
-  private Trigger controller_dpad_S = new POVButton(m_controller, 180);
-  private Trigger controller_dpad_SW = new POVButton(m_controller, 225);
-  private Trigger controller_dpad_W = new POVButton(m_controller, 270);
-  private Trigger controller_dpad_NW = new POVButton(m_controller, 315);
+  // private Trigger controller_dpad_N = new POVButton(m_controller, 0);
+  // private Trigger controller_dpad_NE = new POVButton(m_controller, 45);
+  // private Trigger controller_dpad_E = new POVButton(m_controller, 90);
+  // private Trigger controller_dpad_SE = new POVButton(m_controller, 135);
+  // private Trigger controller_dpad_S = new POVButton(m_controller, 180);
+  // private Trigger controller_dpad_SW = new POVButton(m_controller, 225);
+  // private Trigger controller_dpad_W = new POVButton(m_controller, 270);
+  // private Trigger controller_dpad_NW = new POVButton(m_controller, 315);
 
 
-  // Joystick buttons are pretty easy, just follow the format below
+  // Flight joystick buttons are pretty easy, just follow the format below
   // Change "1" to whichever numbered button you wish to use.
-  private Trigger joystick_1 = new JoystickButton(m_flightJoystick, 1);
+  // private Trigger joystick_1 = new JoystickButton(m_flightJoystick, 1);
 
 
+  // Declare commands here so they can be used globally within RobotContainer
   Command driveFieldOrientedAngularVelocity;
   Command driveFieldOrientedWatchTarget;
+  Command spinShooter;
+  Command climbTestMode;
 
 
 
@@ -86,43 +91,63 @@ public class RobotContainer {
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
 
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation 
-    // right stick controls the angular velocity of the robot
-    driveFieldOrientedAngularVelocity = m_SwerveSubsystem.driveCommand(
-        () -> -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kLeftYDeadband),
-        () -> -MathUtil.applyDeadband(m_controller.getLeftX(), OperatorConstants.kLeftXDeadband),
-        () -> -MathUtil.applyDeadband(m_controller.getRightX(), OperatorConstants.kRightXDeadband),
-        () -> m_controller.getLeftTriggerAxis());
+    SmartDashboard.putNumber("Intake Target Speed", 0.5);
 
+    // Configure the trigger bindings
+    if (RobotState.isTeleop()){
+      configureAnalogTeleop();
+      configureBindingsTeleop();
+
+    } else if (RobotState.isTest()){
+      configureAnalogTest();
+      configureBindingsTest();
+    }
+  }
+
+  /**
+   * Analog controller bindings for tele-op mode.
+   */
+  private void configureAnalogTeleop(){
+
+    // Default drive command
+    driveFieldOrientedAngularVelocity = m_SwerveSubsystem.driveCommand(
+      () -> -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kLeftYDeadband),
+      () -> -MathUtil.applyDeadband(m_controller.getLeftX(), OperatorConstants.kLeftXDeadband),
+      () -> -MathUtil.applyDeadband(m_controller.getRightX(), OperatorConstants.kRightXDeadband),
+      () -> m_controller.getLeftTriggerAxis()
+    );
+
+    // Vision drive command
+    // Watches an april tag while still allowing movement
     driveFieldOrientedWatchTarget = m_SwerveSubsystem.driveAutoAimCommand(
       () -> -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kLeftYDeadband),
       () -> -MathUtil.applyDeadband(m_controller.getLeftX(), OperatorConstants.kLeftXDeadband),
       m_VisionSubsystem.getPhotonCamera()
     );
 
+    // Spin the shooter motors depending on the state of the right analog trigger (RT)
+    spinShooter = new Shooter(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
+    
+
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
-
-    SmartDashboard.putNumber("Intake Target Speed", 0.5);
-
-    // Configure the trigger bindings
-    configureBindings();
+    m_ShooterSubsystem.setDefaultCommand(spinShooter);
   }
 
-  private void configureBindings() {
+
+  /**
+   * Digital controller bindings for tele-op mode.
+   */
+  private void configureBindingsTeleop() {
     /*
     onTrue schedules the command when the button is pressed.
     whileTrue schedules the command when the button is pressed, and cancels the command when the button is released.
     toggleOnTrue toggles the command on every press: schedules if not currently scheduled, and cancels if scheduled.
     */
 
-    // Final bindings, plz don't delete or comment!!!
+    // Intake bindings
     controller_A.whileTrue(new Intake(m_IntakeSubsystem, () -> SmartDashboard.getNumber("Intake Target Speed", 0.5)));
     controller_B.whileTrue(new Intake(m_IntakeSubsystem, () -> -SmartDashboard.getNumber("Intake Target Speed", 0.5)));
 
-    
     // Zero heading
     controller_RStick.onTrue((new InstantCommand(m_SwerveSubsystem::zeroGyro)));
 
@@ -132,6 +157,25 @@ public class RobotContainer {
     
     // controller_dpad_N -> whileTrue -> Move climber up
     // controller_dpad_S -> whileTrue -> Move climber down
+  }
+
+
+  /**
+   * Analog controller bindings for test mode.
+   */
+  private void configureAnalogTest(){
+
+    // Controls the climber motors
+    // can't put this here yet because the climber doesn't exist.
+
+  }
+
+
+  /**
+   * Digital controller bindings for test mode.
+   */
+  private void configureBindingsTest(){
+
   }
 
   

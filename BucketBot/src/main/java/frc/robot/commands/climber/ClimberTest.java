@@ -1,30 +1,29 @@
 package frc.robot.commands.climber;
-
-import frc.robot.subsystems.ClimberSubsystem;
-
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ClimberSubsystem;
 
 
 public class ClimberTest extends Command {
 
 
   private final ClimberSubsystem m_ClimberSubsystem;
-
-  private final DoubleSupplier m_speed;
-
+  private final DoubleSupplier m_power;
+  private final BooleanSupplier m_extender;
 
   /**
-   * Allows moving the climber motors individually.
-   * <p><b>This should only be activated in test mode.</b>
+   * Allows moving the climber motors individually with joysticks
+   * <p><i>This should only be used in test mode.</i>
    * @param subsystem ClimberSubsystem
-   * @param speed Speed of the active motor. Check SmartDashboard or Shuffleboard for live active motor data.
+   * @param power Power to send to the motor, between -1.0 and 1.0
+   * @param extender Which motor to use. True uses the extender, false uses the winch.
    */
-  public ClimberTest(ClimberSubsystem subsystem, DoubleSupplier speed) {
+  public ClimberTest(ClimberSubsystem subsystem, DoubleSupplier power, BooleanSupplier extender) {
     m_ClimberSubsystem = subsystem;
-    m_speed = speed;
+    m_power = power;
+    m_extender = extender;
     addRequirements(m_ClimberSubsystem);
   }
 
@@ -38,27 +37,31 @@ public class ClimberTest extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    double speed = m_speed.getAsDouble();
 
-    // Extender motor
-    if(SmartDashboard.getBoolean("Using Extender", true)){
+    // Power to spin the motors at
+    double power = m_power.getAsDouble();
 
-      // Moving down and limit switch is down
-      if(speed < 0 && m_ClimberSubsystem.getSwitchState()){
+    // Determines which motor to use
+    boolean usingExtender = m_extender.getAsBoolean();
+
+    // Using extender
+    if(usingExtender){
+
+      // Moving down and limit switch is down, stop the motors
+      if(power < 0 && m_ClimberSubsystem.getSwitchState()){
         m_ClimberSubsystem.spinExtender(0.0);
         m_ClimberSubsystem.spinWinch(0.0);
 
-      // Else
+      // Moving up, limit switch state is not needed
       } else {
-        m_ClimberSubsystem.spinExtender(speed);
+        m_ClimberSubsystem.spinExtender(power);
         m_ClimberSubsystem.spinWinch(0.0);
       }
 
-    // Winch motor
+    // Using winch
     } else {
       m_ClimberSubsystem.spinExtender(0.0);
-      m_ClimberSubsystem.spinWinch(speed);
+      m_ClimberSubsystem.spinWinch(power);
     }
   }
 

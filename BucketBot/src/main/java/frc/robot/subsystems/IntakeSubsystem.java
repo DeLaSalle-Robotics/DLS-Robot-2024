@@ -3,8 +3,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,44 +17,29 @@ import frc.robot.commands.Rumble;
 public class IntakeSubsystem extends SubsystemBase {
 
   // Intake motor controller
-  private final CANSparkMax m_IntakeMotor = new CANSparkMax(Constants.Intake.kIntakeMotorID, MotorType.kBrushless);
-
-  // NOT linked to the intake motor, this is for stopping the note within the intake
-  private final Encoder m_IntakeEncoder = new Encoder(0, 1);
+  private final CANSparkMax m_IntakeMotor;
+  private final Encoder m_IntakeEncoder;
 
   // Controller subsystem and rumble feedback trigger
-  private final ControllerSubsystem m_controller;
+  private final ControllerSubsystem m_ControllerSubsystem;
   private final Trigger m_feedback;
 
-  // PID Controller for the intake motor
-  private final PIDController m_intakeController;
+  // Median filter to avoid accidentally randomly stopping the intake
   private MedianFilter encoderFilter = new MedianFilter(10);
   
   
   public IntakeSubsystem(ControllerSubsystem controllerSubsystem) {
     super();
-    m_controller = controllerSubsystem;
+    m_ControllerSubsystem = controllerSubsystem;
 
-    // Intake PID controller
-    SmartDashboard.putNumber("Intake kP", Constants.Intake.kPIntake);
-    m_intakeController = new PIDController(SmartDashboard.getNumber("Intake kP", Constants.Intake.kPIntake), 0.0, 0.0);
+    // Intake motor controller and encoder
+    // The encoder is NOT the same as the motor's encoder!
+    m_IntakeMotor = new CANSparkMax(Constants.Intake.kIntakeMotorID, MotorType.kBrushless);
+    m_IntakeEncoder = new Encoder(0, 1);
 
     // Rumble feedback
     m_feedback = new Trigger(() -> this.noteDetected());
-    m_feedback.onTrue(new Rumble(m_controller, () -> 1.0, true));
-  }
-
-
-  /**
-   * Sets the intake motor to the given speed
-   * <p><b>This is controlled by a PID!</b> Use {@link #spinDirect} to set raw speed, or {@link #stopIntake} to stop the motor.
-   * <p><b>DO NOT use this to stop the intake motor!</b>
-   * @param speed Speed of the intake motor, in rotations per minute
-   */
-  public void spin(double speed) {
-    double rawSpeed = m_intakeController.calculate(m_IntakeMotor.getEncoder().getVelocity(), speed);
-    m_IntakeMotor.set(MathUtil.clamp(rawSpeed, -0.4, 0.4));
-    SmartDashboard.putNumber("Raw Motor Speed", rawSpeed);
+    m_feedback.onTrue(new Rumble(m_ControllerSubsystem, () -> 1.0, true));
   }
 
 
