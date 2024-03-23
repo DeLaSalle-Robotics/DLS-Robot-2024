@@ -51,10 +51,10 @@ public class RobotContainer {
   // private Trigger controller_RB = new JoystickButton(m_controller, 6);
 
   // private Trigger controller_Share = new JoystickButton(m_controller, 7);
-  // private Trigger controller_Menu = new JoystickButton(m_controller, 8);
+  private Trigger controller_Menu = new JoystickButton(m_controller, 8);
 
   // private Trigger controller_LStick = new JoystickButton(m_controller, 9);
-  private Trigger controller_RStick = new JoystickButton(m_controller, 10);
+  // private Trigger controller_RStick = new JoystickButton(m_controller, 10);
 
   // private Trigger controller_dpad_N = new POVButton(m_controller, 0);
   // private Trigger controller_dpad_NE = new POVButton(m_controller, 45);
@@ -141,7 +141,7 @@ public class RobotContainer {
     controller_B.whileTrue(new Intake(m_IntakeSubsystem, () -> -SmartDashboard.getNumber("Intake Target Speed", 0.5)));
 
     // Zero heading
-    controller_RStick.onTrue((new InstantCommand(m_SwerveSubsystem::zeroGyro)));
+    controller_Menu.onTrue((new InstantCommand(m_SwerveSubsystem::zeroGyro)));
 
     // controller_Y -> onTrue -> Fire shooter
     // controller_LB -> whileTrue -> Auto aim heading
