@@ -1,12 +1,10 @@
 package frc.robot.commands.climber;
 
-import frc.robot.Constants;
 import frc.robot.subsystems.ClimberSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class ClimberClimb extends Command {
+public class ClimberWinch extends Command {
 
   private final ClimberSubsystem m_ClimberSubsystem;
 
@@ -14,7 +12,7 @@ public class ClimberClimb extends Command {
    * 
    * @param subsystem ClimberSubsystem
    */
-  public ClimberClimb(ClimberSubsystem subsystem) {
+  public ClimberWinch(ClimberSubsystem subsystem) {
     m_ClimberSubsystem = subsystem;
   }
 

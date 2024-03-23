@@ -1,32 +1,24 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ControllerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.Intake;
-import frc.robot.commands.Rumble;
 import frc.robot.commands.Shooter;
-import frc.robot.commands.WatchTarget;
+
 import java.io.File;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
@@ -46,7 +38,7 @@ public class RobotContainer {
 
   // Setting up Xbox controller and flight joysticks
   private final XboxController m_controller = m_ControllerSubsystem.getController();
-  private final Joystick m_flightJoystick = m_ControllerSubsystem.getFlightJoystick(true);
+  // private final Joystick m_flightJoystick = m_ControllerSubsystem.getFlightJoystick(true);
   
   // Xbox Controller buttons:
 
