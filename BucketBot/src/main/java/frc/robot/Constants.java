@@ -80,7 +80,7 @@ public final class Constants {
 
                 public static final double kMaxAcceleration = 2;
 
-                public static final String kPathFileName = "Do Nothing"; // Use this to switch which pathplanner file to run in auto
+                public static final String kPathFileName = "Backup Auto Paths/Blue 1 Backup"; // Use this to switch which pathplanner file to run in auto
         }
 
         public static final class Drivebase
@@ -163,13 +163,13 @@ public final class Constants {
                 public static final double kWinchMaxPower = 1.0;
 
                 // Endpoints for extender motor
-                public static final double kExtenderEndpointUp = -44.0;
-                public static final double kExtenderEndpointDown = -119.0;
+                public static final double kExtenderEndpointUp = 100.0;
+                public static final double kExtenderEndpointDown = 0.0;
                 public static final float kExtenderDistanceCm = 42.8625f;
 
                 // Endpoints for winch motor
-                public static final double kWinchEndpointUp = 2.1;
-                public static final double kWinchEndpointDown = 122.0;
+                public static final double kWinchEndpointUp = 100.0;
+                public static final double kWinchEndpointDown = -10.0;
                 public static final float kWinchDistanceCm = 119.9f; // Incorrect
 
                 // Conversion factors

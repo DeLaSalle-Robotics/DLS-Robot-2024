@@ -10,20 +10,20 @@ public class ClimberTest extends Command {
 
 
   private final ClimberSubsystem m_ClimberSubsystem;
-  private final DoubleSupplier m_power;
-  private final BooleanSupplier m_extender;
+  private final DoubleSupplier m_extenderPower;
+  private final DoubleSupplier m_winchPower;
 
   /**
    * Allows moving the climber motors individually with joysticks
    * <p><i>This should only be used in test mode.</i>
    * @param subsystem ClimberSubsystem
-   * @param power Power to send to the motor, between -1.0 and 1.0
-   * @param extender Which motor to use. True uses the extender, false uses the winch.
+   * @param extenderPower Power to send to the extender motor, between -1.0 and 1.0
+   * @param winchPower Power to send to the winch motor, between -1.0 and 1.0
    */
-  public ClimberTest(ClimberSubsystem subsystem, DoubleSupplier power, BooleanSupplier extender) {
+  public ClimberTest(ClimberSubsystem subsystem, DoubleSupplier extenderPower, DoubleSupplier winchPower) {
     m_ClimberSubsystem = subsystem;
-    m_power = power;
-    m_extender = extender;
+    m_extenderPower = extenderPower;
+    m_winchPower = winchPower;
     addRequirements(m_ClimberSubsystem);
   }
 
@@ -38,31 +38,21 @@ public class ClimberTest extends Command {
   @Override
   public void execute() {
 
-    // Power to spin the motors at
-    double power = m_power.getAsDouble();
+    // Power of each motor
+    double extenderPower = m_extenderPower.getAsDouble();
+    double winchPower = m_winchPower.getAsDouble();
 
-    // Determines which motor to use
-    boolean usingExtender = m_extender.getAsBoolean();
-
-    // Using extender
-    if(usingExtender){
-
-      // Moving down and limit switch is down, stop the motors
-      if(power < 0 && m_ClimberSubsystem.getSwitchState()){
-        m_ClimberSubsystem.spinExtender(0.0);
-        m_ClimberSubsystem.spinWinch(0.0);
-
-      // Moving up, limit switch state is not needed
-      } else {
-        m_ClimberSubsystem.spinExtender(power);
-        m_ClimberSubsystem.spinWinch(0.0);
-      }
-
-    // Using winch
-    } else {
+    // Extender is moving down and limit switch is down, stop the motor
+    if(extenderPower < 0 && m_ClimberSubsystem.getSwitchState()){
       m_ClimberSubsystem.spinExtender(0.0);
-      m_ClimberSubsystem.spinWinch(power);
+
+    // Moving up, limit switch state is not needed
+    } else {
+      m_ClimberSubsystem.spinExtender(extenderPower);
     }
+
+    // Always spin the winch anyways
+    m_ClimberSubsystem.spinWinch(winchPower);
   }
 
   // Called once the command ends or is interrupted.

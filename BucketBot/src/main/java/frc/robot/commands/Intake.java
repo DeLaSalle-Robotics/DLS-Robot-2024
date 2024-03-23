@@ -53,6 +53,16 @@ public class Intake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (!m_isFeeding.getAsBoolean() || (movingForward && m_IntakeSubsystem.noteDetected()));
+
+    // If in feeding mode, don't end
+    if(m_isFeeding.getAsBoolean()){
+      return false;
+    
+    // If NOT in feeding mode, end if moving forward and a note is detected.
+    } else {
+      return (movingForward && m_IntakeSubsystem.noteDetected());
+    }
+
+    //return (!m_isFeeding.getAsBoolean() && (movingForward && m_IntakeSubsystem.noteDetected()));
   }
 }

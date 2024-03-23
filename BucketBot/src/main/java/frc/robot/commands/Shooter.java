@@ -34,17 +34,17 @@ public class Shooter extends Command {
   @Override
   public void execute() {
 
-    // Under 10%, don't move
-    if(m_analogState.getAsDouble() < 0.1){
-      m_ShooterSubsystem.spin(0.0);
+    // Above 90%, move at speaker speed
+    if(m_analogState.getAsDouble() > 0.9){
+      m_ShooterSubsystem.spin(SmartDashboard.getNumber("Speaker Speed", Constants.Shooter.kSpeakerSpeed));
 
     // Between 10% and 90%, move at amp speed
     } else if (m_analogState.getAsDouble() >= 0.1 && m_analogState.getAsDouble() <= 0.9){
       m_ShooterSubsystem.spin(SmartDashboard.getNumber("Amp Speed", Constants.Shooter.kAmpSpeed));
 
-    // Above 90%, move at speaker speed
-    } else if (m_analogState.getAsDouble() > 0.9){
-      m_ShooterSubsystem.spin(SmartDashboard.getNumber("Speaker Speed", Constants.Shooter.kSpeakerSpeed));
+    // Under 10%, don't move
+    } else {
+      m_ShooterSubsystem.spin(0.0);
     }
   }
 

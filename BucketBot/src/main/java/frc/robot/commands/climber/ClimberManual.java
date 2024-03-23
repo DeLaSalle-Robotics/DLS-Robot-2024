@@ -34,7 +34,7 @@ public class ClimberManual extends Command {
 
     // If the limit switch is hit, reset the extender encoder
     if(m_ClimberSubsystem.getSwitchState()){
-      m_ClimberSubsystem.resetExtenderEncoder();
+      m_ClimberSubsystem.setExtenderLowerLimit();
     }
 
 

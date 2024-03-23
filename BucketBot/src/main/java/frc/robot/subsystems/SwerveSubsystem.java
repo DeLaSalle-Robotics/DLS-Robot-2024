@@ -241,6 +241,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param translationX     Translation in the X direction. Cubed for smoother controls.
    * @param translationY     Translation in the Y direction. Cubed for smoother controls.
    * @param angularRotationX Angular velocity of the robot to set. Cubed for smoother controls.
+   * @param triggerValue     State of the left trigger.
    * @return Drive command.
    */
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX, DoubleSupplier triggerValue){

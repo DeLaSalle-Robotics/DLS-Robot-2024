@@ -247,16 +247,16 @@ public class ClimberSubsystem extends SubsystemBase {
   /**
    * Resets the extender motor encoder to zero.
    */
-  public void resetExtenderEncoder(){
-    m_extenderMotor.getEncoder().setPosition(0.0);
+  public void setExtenderLowerLimit(){
+    m_extenderMotor.getEncoder().setPosition(Constants.Climber.kExtenderEndpointDown);
   }
 
 
   /**
    * Resets the winch motor encoder to zero.
    */
-  public void resetWinchEncoder(){
-    m_winchMotor.setPosition(0.0);
+  public void setWinchLowerLimit(){
+    m_winchMotor.setPosition(Constants.Climber.kWinchEndpointDown);
   }
 
 
