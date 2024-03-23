@@ -141,7 +141,7 @@ public class RobotContainer {
     controller_B.whileTrue(new Intake(m_IntakeSubsystem, () -> -SmartDashboard.getNumber("Intake Target Speed", 0.5)));
 
     // Zero heading
-    controller_Menu.onTrue((new InstantCommand(m_SwerveSubsystem::zeroGyro)));
+    controller_Menu.onTrue(new InstantCommand(m_SwerveSubsystem::zeroGyro));
 
     // controller_Y -> onTrue -> Fire shooter
     // controller_LB -> whileTrue -> Auto aim heading
