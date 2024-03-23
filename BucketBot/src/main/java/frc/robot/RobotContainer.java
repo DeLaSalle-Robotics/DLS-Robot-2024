@@ -45,7 +45,7 @@ public class RobotContainer {
   private Trigger controller_A = new JoystickButton(m_controller, 1);
   private Trigger controller_B = new JoystickButton(m_controller, 2);
   // private Trigger controller_X = new JoystickButton(m_controller, 3);
-  // private Trigger controller_Y = new JoystickButton(m_controller, 4);
+  private Trigger controller_Y = new JoystickButton(m_controller, 4);
 
   // private Trigger controller_LB = new JoystickButton(m_controller, 5);
   // private Trigger controller_RB = new JoystickButton(m_controller, 6);
@@ -83,7 +83,8 @@ public class RobotContainer {
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
 
-    SmartDashboard.putNumber("Intake Target Speed", 0.5);
+    SmartDashboard.putNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed);
+    SmartDashboard.putNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed);
 
     // Configure the trigger bindings
     if (RobotState.isTeleop()){
@@ -137,8 +138,24 @@ public class RobotContainer {
     */
 
     // Intake bindings
-    controller_A.whileTrue(new Intake(m_IntakeSubsystem, () -> SmartDashboard.getNumber("Intake Target Speed", 0.5)));
-    controller_B.whileTrue(new Intake(m_IntakeSubsystem, () -> -SmartDashboard.getNumber("Intake Target Speed", 0.5)));
+    controller_A.whileTrue(new Intake(
+      m_IntakeSubsystem, 
+      () -> SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
+      () -> false
+    ));
+
+    controller_B.whileTrue(new Intake(
+      m_IntakeSubsystem, 
+      () -> -SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
+      () -> false
+    ));
+
+    // Feed intake to shooter
+    controller_Y.whileTrue(new Intake(
+      m_IntakeSubsystem, 
+      () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed), 
+      () -> true
+    ));
 
     // Zero heading
     controller_Menu.onTrue(new InstantCommand(m_SwerveSubsystem::zeroGyro));

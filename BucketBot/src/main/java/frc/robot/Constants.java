@@ -37,6 +37,10 @@ public final class Constants {
 
                 // PID Information for the intake
                 public static final double kPIntake = 0.005;
+
+                // Intake target speeds
+                public static final double kIntakeTargetSpeed = 0.5;
+                public static final double kIntakeFeederSpeed = 0.3;
         } 
 
 
