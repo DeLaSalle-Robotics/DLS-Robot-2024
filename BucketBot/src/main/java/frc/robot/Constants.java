@@ -39,7 +39,7 @@ public final class Constants {
                 public static final double kPIntake = 0.005;
 
                 // Intake target speeds
-                public static final double kIntakeTargetSpeed = 0.5;
+                public static final double kIntakeTargetSpeed = 0.75;
                 public static final double kIntakeFeederSpeed = 0.3;
         } 
 

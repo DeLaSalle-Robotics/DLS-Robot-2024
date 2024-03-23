@@ -39,7 +39,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // Rumble feedback
     m_feedback = new Trigger(() -> this.noteDetected());
-    m_feedback.onTrue(new Rumble(m_ControllerSubsystem, () -> 1.0, true));
+    m_feedback.onTrue(new Rumble(m_ControllerSubsystem, () -> 0.0, true));
   }
 
 

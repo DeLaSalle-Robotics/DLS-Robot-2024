@@ -9,6 +9,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
+import frc.robot.commands.ShooterTest;
 import frc.robot.commands.climber.ClimberTest;
 
 import java.io.File;
@@ -31,7 +32,6 @@ public class RobotContainer {
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
   private final ControllerSubsystem m_ControllerSubsystem = new ControllerSubsystem();
-  private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
 
   // These subsystems require other subsystems and MUST be declared after all others
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
@@ -115,7 +115,8 @@ public class RobotContainer {
     );
 
     // Spin the shooter motors depending on the state of the right analog trigger (RT)
-    Command spinShooter = new Shooter(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
+    // Command spinShooter = new Shooter(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
+    Command spinShooter = new ShooterTest(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
     
 
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
@@ -171,14 +172,16 @@ public class RobotContainer {
   private void configureAnalogTest(){
 
     // Controls the climber motors
+    /*
     Command climbTestMode = new ClimberTest(
       m_ClimberSubsystem,
       () -> -MathUtil.applyDeadband(m_controller.getRightY(), Constants.OperatorConstants.kRightYDeadband),
       () -> -MathUtil.applyDeadband(m_controller.getLeftY(), Constants.OperatorConstants.kLeftYDeadband)
     );
+    */
 
     // Spin shooter motor at variable power
-    Command spinShooterTestMode = new Shooter(
+    Command spinShooterTestMode = new ShooterTest(
       m_ShooterSubsystem,
       () -> MathUtil.applyDeadband(m_controller.getRightTriggerAxis(), Constants.OperatorConstants.kDeadband)
     );
@@ -191,7 +194,7 @@ public class RobotContainer {
     );
 
 
-    m_ClimberSubsystem.setDefaultCommand(climbTestMode);
+    // m_ClimberSubsystem.setDefaultCommand(climbTestMode);
     m_ShooterSubsystem.setDefaultCommand(spinShooterTestMode);
     m_IntakeSubsystem.setDefaultCommand(spinIntakeTestMode);
   }

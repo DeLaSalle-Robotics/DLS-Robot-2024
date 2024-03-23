@@ -34,7 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void spin(double speed){
     
     // Real motors
-    m_shooterMotor1.set(-speed);
+    m_shooterMotor1.set(speed);
     m_shooterMotor2.set(speed);
   }
 
