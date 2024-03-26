@@ -34,7 +34,7 @@ public class RobotContainer {
   private final ControllerSubsystem m_ControllerSubsystem = new ControllerSubsystem();
 
   // These subsystems require other subsystems and MUST be declared after all others
-  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
+  // private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(m_ControllerSubsystem);
 
 
@@ -82,6 +82,17 @@ public class RobotContainer {
     SmartDashboard.putNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed);
     SmartDashboard.putNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed);
 
+    
+
+    // Configure the trigger bindings
+    if (RobotState.isTeleop()){
+      configureAnalogTeleop();
+      configureBindingsTeleop();
+
+    } else if (RobotState.isTest()){
+      configureAnalogTest();
+      configureBindingsTest();
+    }
   }
 
   /**
@@ -99,11 +110,13 @@ public class RobotContainer {
 
     // Vision drive command
     // Watches an april tag while still allowing movement
+    /*
     Command driveFieldOrientedWatchTarget = m_SwerveSubsystem.driveAutoAimCommand(
       () -> -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kLeftYDeadband),
       () -> -MathUtil.applyDeadband(m_controller.getLeftX(), OperatorConstants.kLeftXDeadband),
       m_VisionSubsystem.getPhotonCamera()
     );
+    */
 
     // Spin the shooter motors depending on the state of the right analog trigger (RT)
     // Command spinShooter = new Shooter(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());

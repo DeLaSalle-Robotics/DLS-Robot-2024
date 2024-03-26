@@ -106,6 +106,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Encoder Rate", m_IntakeEncoder.getRate());
     SmartDashboard.putNumber("Motor Velocity", m_IntakeMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Intake Temp", m_IntakeMotor.getMotorTemperature());
   }
 
 

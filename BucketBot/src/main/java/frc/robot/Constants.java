@@ -83,7 +83,7 @@ public final class Constants {
 
                 public static final double kMaxAcceleration = 2;
 
-                public static final String kPathFileName = "Backup Auto Paths/Blue 1 Backup"; // Use this to switch which pathplanner file to run in auto
+                public static final String kPathFileName = "Backup"; // Use this to switch which pathplanner file to run in auto
         }
 
         public static final class Drivebase

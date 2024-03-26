@@ -21,6 +21,8 @@ public class ShooterSubsystem extends SubsystemBase {
     m_shooterMotor1 = new TalonFX(Constants.Shooter.kShooterMotorID1);
     m_shooterMotor2 = new TalonFX(Constants.Shooter.kShooterMotorID2);
 
+    m_shooterMotor1.setInverted(true);
+
     // Allows editing shooter speeds for testing purposes
     SmartDashboard.putNumber("Amp Speed", Constants.Shooter.kAmpSpeed);
     SmartDashboard.putNumber("Speaker Speed", Constants.Shooter.kSpeakerSpeed);
@@ -32,6 +34,8 @@ public class ShooterSubsystem extends SubsystemBase {
    * @param speed Double between -1.0 and 1.0
    */
   public void spin(double speed){
+
+    SmartDashboard.putNumber("Shooter Commanded Power", speed);
     
     // Real motors
     m_shooterMotor1.set(speed);
