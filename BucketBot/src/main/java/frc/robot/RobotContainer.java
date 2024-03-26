@@ -16,6 +16,7 @@ import java.io.File;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -83,16 +84,6 @@ public class RobotContainer {
     SmartDashboard.putNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed);
 
     
-
-    // Configure the trigger bindings
-    if (RobotState.isTeleop()){
-      configureAnalogTeleop();
-      configureBindingsTeleop();
-
-    } else if (RobotState.isTest()){
-      configureAnalogTest();
-      configureBindingsTest();
-    }
   }
 
   /**

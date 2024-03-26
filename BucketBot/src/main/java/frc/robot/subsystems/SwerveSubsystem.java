@@ -19,6 +19,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -155,10 +156,23 @@ public class SwerveSubsystem extends SubsystemBase {
   public Command getAutonomousCommand(String pathName, boolean setOdomToStart){
     // Load the path you want to follow using its name in the GUI
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
-
+    
     // Set odometry position to the start of the path, if specified.
     if (setOdomToStart) {
       resetOdometry(new Pose2d(path.getPoint(0).position, getHeading()));
+    }
+
+    if (RobotBase.isSimulation()){
+       var alliance = DriverStation.getAlliance();
+      boolean is_red = alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+      PathPlannerPath flipped_path = path;
+      if(is_red){
+         flipped_path = path.flipPath();
+      }
+      resetOdometry(new Pose2d(flipped_path.getPoint(0).position, getHeading()));
+
+
+      swerveDrive.field.setRobotPose(getPose());
     }
 
     // Create a path following command using AutoBuilder. This will also trigger event markers.
