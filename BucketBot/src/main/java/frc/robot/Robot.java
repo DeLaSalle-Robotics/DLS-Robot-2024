@@ -126,8 +126,13 @@ public class Robot extends TimedRobot
     {
       m_autonomousCommand.cancel();
     }
-    m_robotContainer.setDriveMode();
+
+    // Configure controller bindings
+    m_robotContainer.configureAnalogTeleop();
+    m_robotContainer.configureBindingsTeleop();
+
     m_robotContainer.setMotorBrake(true);
+
   }
 
   /**
@@ -150,6 +155,10 @@ public class Robot extends TimedRobot
     {
       throw new RuntimeException(e);
     }
+
+    // Create controller bindings
+    m_robotContainer.configureAnalogTest();
+    m_robotContainer.configureBindingsTest();
   }
 
   /**

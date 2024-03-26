@@ -82,21 +82,12 @@ public class RobotContainer {
     SmartDashboard.putNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed);
     SmartDashboard.putNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed);
 
-    // Configure the trigger bindings
-    if (RobotState.isTeleop()){
-      configureAnalogTeleop();
-      configureBindingsTeleop();
-
-    } else if (RobotState.isTest()){
-      configureAnalogTest();
-      configureBindingsTest();
-    }
   }
 
   /**
    * Analog controller bindings for tele-op mode.
    */
-  private void configureAnalogTeleop(){
+  public void configureAnalogTeleop(){
 
     // Default drive command
     Command driveFieldOrientedAngularVelocity = m_SwerveSubsystem.driveCommand(
@@ -127,7 +118,7 @@ public class RobotContainer {
   /**
    * Digital controller bindings for tele-op mode.
    */
-  private void configureBindingsTeleop() {
+  public void configureBindingsTeleop() {
     /*
     onTrue schedules the command when the button is pressed.
     whileTrue schedules the command when the button is pressed, and cancels the command when the button is released.
@@ -169,7 +160,7 @@ public class RobotContainer {
   /**
    * Analog controller bindings for test mode.
    */
-  private void configureAnalogTest(){
+  public void configureAnalogTest(){
 
     // Controls the climber motors
     /*
@@ -203,7 +194,7 @@ public class RobotContainer {
   /**
    * Digital controller bindings for test mode.
    */
-  private void configureBindingsTest(){
+  public void configureBindingsTest(){
     
     // Fire shooter
     controller_Y.whileTrue(new Intake(
@@ -229,11 +220,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return m_SwerveSubsystem.getAutonomousCommand(Constants.AutoConstants.kPathFileName, true);
-  }
-
-  public void setDriveMode()
-  {
-    // m_swerve.setDefaultCommand(driveFieldOrientedAnglularVelocity);
   }
 
   public void setMotorBrake(boolean brake)
