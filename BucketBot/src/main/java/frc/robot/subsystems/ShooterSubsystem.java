@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,6 +21,9 @@ public class ShooterSubsystem extends SubsystemBase {
     super();
     m_shooterMotor1 = new TalonFX(Constants.Shooter.kShooterMotorID1);
     m_shooterMotor2 = new TalonFX(Constants.Shooter.kShooterMotorID2);
+
+    m_shooterMotor1.getConfigurator().apply(new TalonFXConfiguration()); // Resets the motor configurations
+    m_shooterMotor2.getConfigurator().apply(new TalonFXConfiguration());
 
     m_shooterMotor1.setInverted(true);
 
