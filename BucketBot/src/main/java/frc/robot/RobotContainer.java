@@ -9,13 +9,14 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
-import frc.robot.commands.ShooterTest;
+import frc.robot.commands.ShooterAnalog;
 import frc.robot.commands.climber.ClimberTest;
 
 import java.io.File;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
@@ -42,17 +43,17 @@ public class RobotContainer {
 
   // Setting up Xbox controller and flight joysticks
   private final XboxController m_controller = m_ControllerSubsystem.getController();
-  // private final Joystick m_flightJoystick = m_ControllerSubsystem.getFlightJoystick(true);
+  private final Joystick m_flightJoystick = m_ControllerSubsystem.getFlightJoystick(true);
   
   // Xbox Controller buttons:
 
-  private Trigger controller_A = new JoystickButton(m_controller, 1);
-  private Trigger controller_B = new JoystickButton(m_controller, 2);
+  // private Trigger controller_A = new JoystickButton(m_controller, 1);
+  // private Trigger controller_B = new JoystickButton(m_controller, 2);
   // private Trigger controller_X = new JoystickButton(m_controller, 3);
   private Trigger controller_Y = new JoystickButton(m_controller, 4);
 
-  private Trigger controller_LB = new JoystickButton(m_controller, 5);
-  // private Trigger controller_RB = new JoystickButton(m_controller, 6);
+  // private Trigger controller_LB = new JoystickButton(m_controller, 5);
+  private Trigger controller_RB = new JoystickButton(m_controller, 6);
 
   // private Trigger controller_Share = new JoystickButton(m_controller, 7);
   private Trigger controller_Menu = new JoystickButton(m_controller, 8);
@@ -72,7 +73,20 @@ public class RobotContainer {
 
   // Flight joystick buttons are pretty easy, just follow the format below
   // Change "1" to whichever numbered button you wish to use.
-  // private Trigger joystick_1 = new JoystickButton(m_flightJoystick, 1);
+  private Trigger joystick_1 = new JoystickButton(m_flightJoystick, 1);
+  private Trigger joystick_2 = new JoystickButton(m_flightJoystick, 2);
+  private Trigger joystick_3 = new JoystickButton(m_flightJoystick, 3);
+  private Trigger joystick_4 = new JoystickButton(m_flightJoystick, 4);
+  private Trigger joystick_5 = new JoystickButton(m_flightJoystick, 5);
+  private Trigger joystick_6 = new JoystickButton(m_flightJoystick, 6);
+  private Trigger joystick_7 = new JoystickButton(m_flightJoystick, 7);
+  private Trigger joystick_8 = new JoystickButton(m_flightJoystick, 8);
+  private Trigger joystick_9 = new JoystickButton(m_flightJoystick, 9);
+  private Trigger joystick_10 = new JoystickButton(m_flightJoystick, 10);
+
+  // Other triggers
+  private Trigger controller_RT = new Trigger(() -> m_controller.getRightTriggerAxis() > 0.2);
+
 
 
 
@@ -111,7 +125,7 @@ public class RobotContainer {
 
     // Spin the shooter motors depending on the state of the right analog trigger (RT)
     // Command spinShooter = new Shooter(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
-    Command spinShooter = new ShooterTest(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
+    Command spinShooter = new ShooterAnalog(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
     
 
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
@@ -129,35 +143,46 @@ public class RobotContainer {
     toggleOnTrue toggles the command on every press: schedules if not currently scheduled, and cancels if scheduled.
     */
 
-    // Intake bindings
-    controller_A.whileTrue(new Intake(
-      m_IntakeSubsystem, 
-      () -> SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
-      () -> false
+    // Run intake forward
+    controller_RT.whileTrue(
+      new Intake(
+        m_IntakeSubsystem, 
+        () -> SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
+        () -> false
     ));
 
-    controller_B.whileTrue(new Intake(
+    // Run intake backward
+    controller_RB.whileTrue(new Intake(
       m_IntakeSubsystem, 
       () -> -SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
-      () -> false
-    ));
-
-    // Feed intake to shooter
-    controller_Y.whileTrue(new Intake(
-      m_IntakeSubsystem, 
-      () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed), 
       () -> true
     ));
 
     // Zero heading
     controller_Menu.onTrue(new InstantCommand(m_SwerveSubsystem::zeroGyro));
 
-    // controller_Y -> onTrue -> Fire shooter
-    // controller_LB -> whileTrue -> Auto aim heading
-    // controller_Share -> onTrue -> Enter winch mode
+
+
+    // Feed intake to shooter
+    joystick_1.whileTrue(new Intake(
+      m_IntakeSubsystem, 
+      () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed), 
+      () -> true
+    ));
+
+    // Spin shooter forward
+    joystick_3.whileTrue(new Shooter(m_ShooterSubsystem));
     
-    // controller_dpad_N -> whileTrue -> Move climber up
-    // controller_dpad_S -> whileTrue -> Move climber down
+    // Spin shooter backward
+    joystick_7.whileTrue(new ShooterAnalog(
+      m_ShooterSubsystem, 
+      () -> -Constants.Shooter.kShooterReversePower
+    ));
+  
+    // joystick_9 -> onTrue -> Enter winch mode
+    
+    // joystick_11 -> whileTrue -> Move climber up
+    // joystick_10 -> whileTrue -> Move climber down
   }
 
 
@@ -176,7 +201,7 @@ public class RobotContainer {
     */
 
     // Spin shooter motor at variable power
-    Command spinShooterTestMode = new ShooterTest(
+    Command spinShooterTestMode = new ShooterAnalog(
       m_ShooterSubsystem,
       () -> MathUtil.applyDeadband(m_controller.getRightTriggerAxis(), Constants.OperatorConstants.kDeadband)
     );
@@ -208,7 +233,7 @@ public class RobotContainer {
     ));
 
     // Reverse intake
-    controller_LB.whileTrue(new Intake(
+    controller_RB.whileTrue(new Intake(
       m_IntakeSubsystem,
       () -> -SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
       () -> false

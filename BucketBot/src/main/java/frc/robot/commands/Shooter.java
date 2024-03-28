@@ -11,16 +11,13 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class Shooter extends Command {
 
   // Command parameters
-  private final DoubleSupplier m_analogState;
   private final ShooterSubsystem m_ShooterSubsystem;
 
   /**
-   * Spin the shooter at the given speed.
+   * Spin the shooter.
    * @param subsystem ShooterSubsystem
-   * @param analogState State of the right analog trigger (RT)
    */
-  public Shooter(ShooterSubsystem subsystem, DoubleSupplier analogState) {
-    m_analogState = analogState;
+  public Shooter(ShooterSubsystem subsystem) {
     m_ShooterSubsystem = subsystem;
     addRequirements(m_ShooterSubsystem);
   }
@@ -33,19 +30,7 @@ public class Shooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    // Above 90%, move at speaker speed
-    if(m_analogState.getAsDouble() > 0.9){
-      m_ShooterSubsystem.spin(SmartDashboard.getNumber("Speaker Speed", Constants.Shooter.kSpeakerSpeed));
-
-    // Between 10% and 90%, move at amp speed
-    } else if (m_analogState.getAsDouble() >= 0.1 && m_analogState.getAsDouble() <= 0.9){
-      m_ShooterSubsystem.spin(SmartDashboard.getNumber("Amp Speed", Constants.Shooter.kAmpSpeed));
-
-    // Under 10%, don't move
-    } else {
-      m_ShooterSubsystem.spin(0.0);
-    }
+      m_ShooterSubsystem.spinAt(Constants.Shooter.kSpeakerSpeedRPS);
   }
 
   // Called once the command ends or is interrupted.

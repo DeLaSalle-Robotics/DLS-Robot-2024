@@ -21,7 +21,10 @@ public final class Constants {
 
                 // Set speeds for shooting at the amp and speaker, respectively
                 public static final double kAmpSpeed = 0.3;
-                public static final double kSpeakerSpeed = 0.6;
+                public static final double kSpeakerSpeedRPS = 30;
+
+                // Reverse shooter power
+                public static final double kShooterReversePower = 0.1;
         }
         
 

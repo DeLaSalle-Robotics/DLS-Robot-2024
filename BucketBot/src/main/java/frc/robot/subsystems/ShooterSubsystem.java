@@ -33,7 +33,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // Allows editing shooter speeds for testing purposes
     SmartDashboard.putNumber("Amp Speed", Constants.Shooter.kAmpSpeed);
-    SmartDashboard.putNumber("Speaker Speed", Constants.Shooter.kSpeakerSpeed);
+    SmartDashboard.putNumber("Speaker Speed", Constants.Shooter.kSpeakerSpeedRPS);
 
     //Shooter Motor Spin Velocity Control Code:
 
@@ -50,16 +50,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
   /**
-   * Spin the motors at the given speed
-   * @param speed Double between -1.0 and 1.0
+   * Spin the motors at the given power
+   * @param power Double between -1.0 and 1.0
    */
-  public void spin(double speed){
+  public void spin(double power){
 
-    SmartDashboard.putNumber("Shooter Commanded Power", speed);
+    SmartDashboard.putNumber("Shooter Commanded Power", power);
     
     // Real motors
-    m_shooterMotor1.set(speed);
-    m_shooterMotor2.set(speed);
+    m_shooterMotor1.set(power);
+    m_shooterMotor2.set(power);
   }
 
 
@@ -67,10 +67,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
 //Spin Shooter method with Velocity Control - this code should spin at 50 revolutions per second
 
-public void spinShooterWithControl(){
+/**
+ * Spin the shooter at the given speed.
+ * @param speed Speed in rotations per second
+ */
+public void spinAt(double speed){
   m_velocity.Slot = 0;
-  m_shooterMotor1.setControl(m_velocity.withVelocity(50));
-  m_shooterMotor2.setControl(m_velocity.withVelocity(50));
+  m_shooterMotor1.setControl(m_velocity.withVelocity(speed));
+  m_shooterMotor2.setControl(m_velocity.withVelocity(speed));
 
 }
 
