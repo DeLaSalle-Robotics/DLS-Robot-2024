@@ -16,15 +16,19 @@ public final class Constants {
                 public static final int kShooterMotorID1 = 13;
                 public static final int kShooterMotorID2 = 14;
 
-                // Maximum voltage of the shooter motors
-                public static final double kShooterMaxVolts = 5.0;
-
                 // Set speeds for shooting at the amp and speaker, respectively
                 public static final double kAmpSpeed = 0.3;
                 public static final double kSpeakerSpeedRPS = 30;
 
                 // Reverse shooter power
                 public static final double kShooterReversePower = 0.1;
+
+                // Feedforward and PID for shooter motor
+                public static final double kShooterFFS = 0.05;
+                public static final double kShooterFFV = 0.016;
+                public static final double kShooterKP = 0.01;
+                public static final double kShooterKI = 0.0;
+                public static final double kShooterKD = 0.0;
         }
         
 
@@ -159,13 +163,22 @@ public final class Constants {
                 public static final double kPWinchUp = 0.00001;
                 public static final double kPWinchDown = 0.00002;
 
-                // Feedforward for extender motor
+                // Feedforward and PID for extender motor
                 public static final double kExtenderFFS = 0.0;
                 public static final double kExtenderFFV = 0.0;
+                public static final double kExtenderFFG = 0.0;
+                public static final double kExtenderKP = 0.0;
+                public static final double kExtenderKI = 0.0;
+                public static final double kExtenderKD = 0.0;
 
-                // Feedforward for winch motor
+                // Feedforward and PID for winch motor
                 public static final double kWinchFFS = 0.0;
                 public static final double kWinchFFV = 0.0;
+                public static final double kWinchFFG = 0.0;
+                public static final double kWinchKP = 0.0;
+                public static final double kWinchKI = 0.0;
+                public static final double kWinchKD = 0.0;
+
 
                 // Power limits for climber motors
                 public static final double kExtenderMinPower = -1.0;

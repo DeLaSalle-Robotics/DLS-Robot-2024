@@ -35,14 +35,13 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Amp Speed", Constants.Shooter.kAmpSpeed);
     SmartDashboard.putNumber("Speaker Speed", Constants.Shooter.kSpeakerSpeedRPS);
 
-    //Shooter Motor Spin Velocity Control Code:
-
+    // Velocity control for shooter motor using FF and P controller
     var slot0Configs = new Slot0Configs();
-    slot0Configs.kS = 0.05; // Voltage Required to move the motors at all. 
-    slot0Configs.kV = 0.12; // Same as kF - V per rot/s <-- Calculated from applied voltage/ spin velocity
-    slot0Configs.kP = 0.11; // Proportional factor needs tuning
-    slot0Configs.kI = 0.0;  // Integral factor useful if not getting to set point
-    slot0Configs.kD = 0.00;
+    slot0Configs.kS = Constants.Shooter.kShooterFFS; // Voltage Required to move the motors at all. 
+    slot0Configs.kV = Constants.Shooter.kShooterFFV; // Same as kF - V per rot/s <-- Calculated from applied voltage/ spin velocity
+    slot0Configs.kP = Constants.Shooter.kShooterKP; // Proportional factor needs tuning
+    slot0Configs.kI = Constants.Shooter.kShooterKI;  // Integral factor useful if not getting to set point
+    slot0Configs.kD = Constants.Shooter.kShooterKD; // derivative factor to prevent overshoot
     //Put these control values into Slot0 in the talonFx controller- with a 50 ms overflow limit.
     m_shooterMotor1.getConfigurator().apply(slot0Configs, 0.050);
     m_shooterMotor2.getConfigurator().apply(slot0Configs, 0.050);

@@ -1,16 +1,17 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -27,13 +28,12 @@ public class ClimberSubsystem extends SubsystemBase {
 
   // PID controllers
   private final PIDController m_extenderPID;
-  private final PIDController m_winchPID;
 
   // Feedforward controllers
-  private final SimpleMotorFeedforward m_extenderFF;
-  private final SimpleMotorFeedforward m_winchFF;
+  private final ElevatorFeedforward m_extenderFF;
 
-
+  // Velocity command for winch motor
+  final VelocityVoltage m_velocityCmdWinch = new VelocityVoltage(0);
 
   // ClimberSubsystem constructor
   public ClimberSubsystem() {
@@ -44,19 +44,32 @@ public class ClimberSubsystem extends SubsystemBase {
     m_winchMotor = new TalonFX(Constants.Climber.kWinchMotorID);
     m_limitSwitch = new DigitalInput(Constants.Climber.kLimitSwitchID);
 
-    // Create PID controllers
-    m_extenderPID = new PIDController(0.1, 0.0, 0.0);
-    m_winchPID = new PIDController(0.1, 0.0, 0.0);
+    // Invert winch motor
+    m_winchMotor.setInverted(true);
 
-    // Create Feedforward controllers
-    m_extenderFF = new SimpleMotorFeedforward(Constants.Climber.kExtenderFFS, Constants.Climber.kExtenderFFV);
-    m_winchFF = new SimpleMotorFeedforward(Constants.Climber.kWinchFFS, Constants.Climber.kWinchFFV);
+    // Create controller for winch motor
+    // Slot 0 is a FF controller with gravity term and P controller
+    // This is for manual mode where we have no load on the winch
+    var slot0Configs = new Slot0Configs();
+    slot0Configs.kS = Constants.Climber.kWinchFFS; // Voltage Required to move the motors at all. 
+    slot0Configs.kV = Constants.Climber.kWinchFFV; // Same as kF - V per rot/s <-- Calculated from applied voltage/ spin velocity
+    slot0Configs.kG = Constants.Climber.kWinchFFG;  // Holding power for constant gravitation loads
+    slot0Configs.kP = Constants.Climber.kWinchKP;  // Proportional factor needs tuning
+    slot0Configs.kI = Constants.Climber.kWinchKI;  // Integral factor useful if not getting to set point
+    slot0Configs.kD = Constants.Climber.kWinchKD; // Derivative term for preventing overshoot
+    m_winchMotor.getConfigurator().apply(slot0Configs, 0.050); //Put these control values into Slot0 in the talonFx controller- with a 50 ms overflow limit.
+    
+    // Create controllers for extender motor
+    m_extenderFF = new ElevatorFeedforward(Constants.Climber.kExtenderFFS, 
+                                            Constants.Climber.kExtenderFFV, 
+                                            Constants.Climber.kExtenderFFG);
+    m_extenderPID = new PIDController(Constants.Climber.kExtenderKP, 
+                                      Constants.Climber.kExtenderKI,
+                                      Constants.Climber.kExtenderKD);
+
 
     // Send the currently active motor to SmartDashboard for test mode
     SmartDashboard.putBoolean("Using Extender", true);
-
-    // Invert winch motor
-    m_winchMotor.setInverted(true);
 
     // Reset the position of the winch motor encoder on startup when using Teleop
     if(RobotState.isTeleop()){
@@ -64,8 +77,6 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
   }
-
-
 
   /**
    * Calculates the PID-Feedforward controller for the extender motor
@@ -82,23 +93,6 @@ public class ClimberSubsystem extends SubsystemBase {
     // Clamp the above result and return
     return MathUtil.clamp(power, Constants.Climber.kExtenderMinPower, Constants.Climber.kExtenderMaxPower);
   }
-
-  /**
-   * Calculates the PID-Feedforward controller for the winch motor
-   * @param speed Speed to spin the winch at, in cm/s
-   * @return A clamped PID-Feedforward calculation
-   */
-  private double calculateWinchPID(double speed){
-
-    // Calculate feedforward and PID controllers and add them together
-    double ffPower = m_winchFF.calculate(speed);
-    double pidPower = m_winchPID.calculate(this.getWinchVelocity(), speed);
-    double power = ffPower + pidPower;
-
-    // Clamp the above result and return
-    return MathUtil.clamp(power, Constants.Climber.kWinchMinPower, Constants.Climber.kWinchMaxPower);
-  }
-
 
 
   /**
@@ -117,6 +111,7 @@ public class ClimberSubsystem extends SubsystemBase {
    */
   public void spinExtender(double power, double lowerLimit, double upperLimit){
 
+
     // Moving up and under the upper limit
     if(power > 0 && this.getExtenderPosition() < upperLimit){
       m_extenderMotor.set(power);
@@ -130,8 +125,6 @@ public class ClimberSubsystem extends SubsystemBase {
       m_extenderMotor.set(0.0);
     }
   }
-
-
 
   /**
    * Spin the winch motor directly with no limits.
@@ -186,11 +179,19 @@ public class ClimberSubsystem extends SubsystemBase {
    */
   public void spinExtenderAt(double speed, double lowerLimit, double upperLimit){
 
-    // Calculate feedforward and PID controllers
-    double totalPower = this.calculateExtenderPID(speed);
+    double setSpeed = speed;
+    // Apply upper limit
+    if(speed > 0 && getExtenderPosition() > Constants.Climber.kExtenderEndpointUp){
+      setSpeed = 0;
+    }
+    // Apply lower limit
+    else if(speed < 0 && getExtenderPosition() < Constants.Climber.kExtenderEndpointDown){
+      setSpeed = 0;
+    }
 
-    // Spin the extender with limits enabled
-    this.spinExtender(totalPower, lowerLimit, upperLimit);
+    // Calculate feedforward and PID controllers
+    double totalPower = this.calculateExtenderPID(setSpeed);
+    m_extenderMotor.set(totalPower);
   }
 
 
@@ -200,12 +201,9 @@ public class ClimberSubsystem extends SubsystemBase {
    * @param speed Speed to spin the winch motor at, in cm/s.
    */
   public void spinWinchAt(double speed){
-    
-    // Calculate feedforward and PID controllers
-    double totalPower = this.calculateWinchPID(speed);
-
-    // Spin the winch with no limits
-    this.spinWinch(totalPower);
+    m_velocityCmdWinch.Slot = 0;
+    double speedRPS = speed / Constants.Climber.kWinchCmPerRotation; // Convert from cm/s to rot/s
+    m_winchMotor.setControl(m_velocityCmdWinch.withVelocity(speedRPS));
   }
 
   /**
@@ -215,15 +213,21 @@ public class ClimberSubsystem extends SubsystemBase {
    * @param upperLimit Upper limit of the winch position in centimeters.
    */
   public void spinWinchAt(double speed, double lowerLimit, double upperLimit){
+    
+    double setSpeed = speed;
+    // Apply upper limit
+    if(speed > 0 && getWinchPosition() > Constants.Climber.kWinchEndpointUp){
+      setSpeed = 0;
+    }
+    // Apply lower limit
+    else if(speed < 0 && getWinchPosition() < Constants.Climber.kWinchEndpointDown){
+      setSpeed = 0;
+    }
 
-    // Calculate feedforward and PID controllers
-    double totalPower = this.calculateWinchPID(speed);
-
-    // Spin the winch with limits enabled
-    this.spinWinch(totalPower, lowerLimit, upperLimit);
+    m_velocityCmdWinch.Slot = 0;
+    double speedRPS = setSpeed / Constants.Climber.kWinchCmPerRotation; // Convert from cm/s to rot/s
+    m_winchMotor.setControl(m_velocityCmdWinch.withVelocity(speedRPS));
   }
-
-
 
 
 
@@ -319,29 +323,6 @@ public class ClimberSubsystem extends SubsystemBase {
     return Math.abs(m_winchMotor.getTorqueCurrent().getValueAsDouble());
   }
 
-
-
-
-
-
-
-  // Default subsystem methods
-
-
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
-  }
-
-
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
 
 
   // This method will be called once per scheduler run
