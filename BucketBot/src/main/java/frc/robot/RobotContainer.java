@@ -83,7 +83,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed);
     SmartDashboard.putNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed);
 
-    
+    SmartDashboard.putString("Robot State", "Have Note");
   }
 
   /**

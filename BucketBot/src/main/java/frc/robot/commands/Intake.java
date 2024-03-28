@@ -5,6 +5,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -35,6 +36,7 @@ public class Intake extends Command {
   @Override
   public void initialize() {
     movingForward = (m_speed.getAsDouble() > 0);
+    SmartDashboard.putString("Robot State", "Empty");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,6 +50,7 @@ public class Intake extends Command {
   public void end(boolean interrupted) {
     // The intake stops spinning when the command ends.
     m_IntakeSubsystem.stopIntake();
+   
   }
 
   // Returns true when the command should end.
@@ -60,7 +63,13 @@ public class Intake extends Command {
     
     // If NOT in feeding mode, end if moving forward and a note is detected.
     } else {
-      return (movingForward && m_IntakeSubsystem.noteDetected());
+      if (movingForward && m_IntakeSubsystem.noteDetected()) {
+        SmartDashboard.putString("Robot State", "Have Note");
+      
+      return (true);
+      } else {
+        return (false);
+      }
     }
 
     //return (!m_isFeeding.getAsBoolean() && (movingForward && m_IntakeSubsystem.noteDetected()));
