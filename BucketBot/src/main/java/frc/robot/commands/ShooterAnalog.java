@@ -8,7 +8,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 
-public class ShooterTest extends Command {
+public class ShooterAnalog extends Command {
 
   // Command parameters
   private final DoubleSupplier m_power;
@@ -19,7 +19,7 @@ public class ShooterTest extends Command {
    * @param subsystem ShooterSubsystem
    * @param power Power to give to the shooter motors, between -1.0 and 1.0
    */
-  public ShooterTest(ShooterSubsystem subsystem, DoubleSupplier power) {
+  public ShooterAnalog(ShooterSubsystem subsystem, DoubleSupplier power) {
     m_power = power;
     m_ShooterSubsystem = subsystem;
     addRequirements(m_ShooterSubsystem);
