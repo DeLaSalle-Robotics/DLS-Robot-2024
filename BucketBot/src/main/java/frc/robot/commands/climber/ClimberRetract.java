@@ -29,15 +29,14 @@ public class ClimberRetract extends Command {
   @Override
   public void execute() {
     // Spin the extender with no limits
-    m_ClimberSubsystem.spinExtenderAt(-Constants.Climber.kClimberVelocityCmPerSec);
+    m_ClimberSubsystem.spinExtenderAt(-Constants.Climber.kExtenderTargetVelocity);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     // Stop all motors
-    m_ClimberSubsystem.spinExtender(0.0);
-    m_ClimberSubsystem.spinWinch(0.0);
+    m_ClimberSubsystem.spinExtenderAt(0.0);
   }
 
   // Returns true when the command should end.

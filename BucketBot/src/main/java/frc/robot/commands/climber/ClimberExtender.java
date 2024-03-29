@@ -8,7 +8,7 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class ClimberManual extends Command {
+public class ClimberExtender extends Command {
 
   private final ClimberSubsystem m_ClimberSubsystem;
   private final BooleanSupplier m_movingUp;
@@ -18,7 +18,7 @@ public class ClimberManual extends Command {
    * @param subsystem ClimberSubsystem
    * @param movingUp
    */
-  public ClimberManual(ClimberSubsystem subsystem, BooleanSupplier movingUp) {
+  public ClimberExtender(ClimberSubsystem subsystem, BooleanSupplier movingUp) {
     m_ClimberSubsystem = subsystem;
     m_movingUp = movingUp;
     addRequirements(m_ClimberSubsystem);
@@ -45,16 +45,9 @@ public class ClimberManual extends Command {
 
     // Spin extender motor
     m_ClimberSubsystem.spinExtenderAt(
-      direction * Constants.Climber.kClimberVelocityCmPerSec, 
+      direction * Constants.Climber.kExtenderTargetVelocity, 
       Constants.Climber.kExtenderEndpointDown,
       Constants.Climber.kExtenderEndpointUp
-    );
-
-    // Spin winch motor
-    m_ClimberSubsystem.spinWinchAt(
-      direction * Constants.Climber.kClimberVelocityCmPerSec,
-      Constants.Climber.kExtenderEndpointDown, // Zero, which is the same as the extender
-      Constants.Climber.kWinchEndpointUp
     );
 
   }
@@ -64,7 +57,6 @@ public class ClimberManual extends Command {
   public void end(boolean interrupted) {
     // Stop all motors
     m_ClimberSubsystem.spinExtender(0.0);
-    m_ClimberSubsystem.spinWinch(0.0);
   }
 
   // Returns true when the command should end.

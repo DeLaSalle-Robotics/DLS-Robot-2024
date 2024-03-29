@@ -139,13 +139,8 @@ public final class Constants {
                 public static final int kLimitSwitchID = 2;
 
                 // Target velocity of each climber motor
-                public static final double kClimberVelocityCmPerSec = 3.0;
-
-                // Winch power in winch mode!!!
-                public static final double kWinchPowerInWinchMode = 0.0;
-
-                // Current limit of the winch motor during winch mode
-                public static final double kWinchCurrentLimit = 1000.0;
+                public static final double kExtenderTargetVelocity = 3.0; // cm/s
+                public static final double kWinchTargetVelocity = 3.0; // cm/s
 
                 // Old feed forward of the extender motor
                 public static final double kExtenderFeedForwardUp = 0.06;
@@ -179,28 +174,18 @@ public final class Constants {
                 public static final double kWinchKI = 0.0;
                 public static final double kWinchKD = 0.0;
 
-
-                // Power limits for climber motors
-                public static final double kExtenderMinPower = -1.0;
-                public static final double kExtenderMaxPower = 1.0;
-                public static final double kWinchMinPower = -1.0;
-                public static final double kWinchMaxPower = 1.0;
-
                 // Endpoints for extender motor
-                public static final double kExtenderEndpointUp = 100.0;
+                public static final double kExtenderEndpointUp = 44.0; //cm
                 public static final double kExtenderEndpointDown = 0.0;
-                public static final float kExtenderDistanceCm = 42.8625f;
 
                 // Endpoints for winch motor
-                public static final double kWinchEndpointUp = 100.0;
-                public static final double kWinchEndpointDown = -10.0;
-                public static final float kWinchDistanceCm = 119.9f; // Incorrect
+                public static final double kWinchEndpointUp = 0;
+                public static final double kWinchEndpointDown = -91.0; //cm
 
                 // Conversion factors
                 public static final double kExtenderCmPerRotation = 0.59;
                 public static final double kWinchCmPerRotation = 0.392;
 
-                public static final double kMotorOffset = 0.2;
         }
 }
 

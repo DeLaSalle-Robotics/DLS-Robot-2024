@@ -91,7 +91,7 @@ public class ClimberSubsystem extends SubsystemBase {
     double power = ffPower + pidPower;
 
     // Clamp the above result and return
-    return MathUtil.clamp(power, Constants.Climber.kExtenderMinPower, Constants.Climber.kExtenderMaxPower);
+    return MathUtil.clamp(power, -1.0, 1.0);
   }
 
 
