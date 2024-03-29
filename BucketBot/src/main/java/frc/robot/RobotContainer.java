@@ -14,6 +14,8 @@ import frc.robot.commands.climber.ClimberTest;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -32,12 +34,12 @@ public class RobotContainer {
   // Define subsystems
   // Don't change the order that these are declared in, since some subsystems require others to function
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-  private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
   private final ControllerSubsystem m_ControllerSubsystem = new ControllerSubsystem();
+  private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
 
   // These subsystems require other subsystems and MUST be declared after all others
-  // private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(m_ControllerSubsystem);
+  // private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
 
 
 
@@ -93,6 +95,9 @@ public class RobotContainer {
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
+
+    // Register Named Commands
+    NamedCommands.registerCommand("autoShooter", m_ShooterSubsystem.autoShooter(m_IntakeSubsystem));
 
     SmartDashboard.putNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed);
     SmartDashboard.putNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed);
