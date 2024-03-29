@@ -61,6 +61,9 @@ public final class Constants {
                 // For purposes of organization, the joystick with the "Left" label is considered L, and the other R
                 public static final int kFlightJoystickPortR = 2;
                 public static final int kFlightJoystickPortL = 1;
+
+                // Port of the controller used for testing
+                public static final int kTestControllerPort = 3;
  
                 public static final int kDriverYAxis = 1;
                 public static final int kDriverXAxis = 0;
