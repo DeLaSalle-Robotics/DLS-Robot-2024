@@ -36,6 +36,7 @@ public class RobotContainer {
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   private final ControllerSubsystem m_ControllerSubsystem = new ControllerSubsystem();
   private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
+  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
 
   // These subsystems require other subsystems and MUST be declared after all others
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(m_ControllerSubsystem);
@@ -135,6 +136,10 @@ public class RobotContainer {
 
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
     m_ShooterSubsystem.setDefaultCommand(spinShooter);
+
+    // Set up default command for LED subsystem
+    // Not bound to any controller action, just runs all the time
+    m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_ShooterSubsystem, m_IntakeSubsystem, m_ClimberSubsystem));
   }
 
 
