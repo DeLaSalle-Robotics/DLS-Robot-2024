@@ -5,30 +5,51 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
+
 public class LEDSubsystem extends SubsystemBase {
 
-  // Declare Falcon controllers
-  private final m_leds;
-  
+    // Must be a PWM header, not MXP or DIO
+    private final AddressableLED m_led;
+    private final AddressableLEDBuffer m_ledBuffer;
+
   // LEDSubsystem constructor
   public LEDSubsystem() {
     super();
-    m_leds = new LEDController(Constants.LED.Pin);
+    // Must be a PWM header, not MXP or DIO
+    m_led = new AddressableLED(Constants.LED.kLEDPWM);
+
+    // Reuse buffer
+    // Default to a length of 60, start empty output
+    // Length is expensive to set, so only set it once, then just update data
+    m_ledBuffer = new AddressableLEDBuffer(Constants.LED.kNumberLEDs);
+    m_led.setLength(m_ledBuffer.getLength());
+
+    // Set the data
+    m_led.setData(m_ledBuffer);
+    m_led.start();
   }
 
   /**
    * Set the LED to a certain color
-   * @param power Double between -1.0 and 1.0
+   * @param color Color to set the LED to
    */
   public void set(Colors color){
-    m_leds.set(color);
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+        // Sets the specified LED to the HSV values for red
+        m_ledBuffer.setLED(i, color);
+     }
+     m_led.setData(m_ledBuffer);
   }
 
    /**
    * Turn off the LED
    */
    public void off(){
-      m_leds.off();
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+        // Sets the specified LED to the HSV values for red
+        m_ledBuffer.setLED(i, Colors.kBlack);
+     }
+     m_led.setData(m_ledBuffer);
    }
 
   // Called once per scheduler run

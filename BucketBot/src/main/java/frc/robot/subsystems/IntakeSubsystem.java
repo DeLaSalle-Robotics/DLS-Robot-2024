@@ -26,6 +26,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   // Median filter to avoid accidentally randomly stopping the intake
   private MedianFilter encoderFilter = new MedianFilter(10);
+
+  private boolean m_hasNote = false;
   
   
   public IntakeSubsystem(ControllerSubsystem controllerSubsystem) {
@@ -79,8 +81,13 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
 
+  public void setHasNote(boolean hasNote){
+    m_hasNote = hasNote;
+  }
 
-
+  public boolean hasNote(){
+    return m_hasNote;
+  }
 
 
   // Default subsystem methods

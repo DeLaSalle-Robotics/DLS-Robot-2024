@@ -52,7 +52,7 @@ public class LED extends Command {
       m_LEDSubsystem.set(Colors.GREEN);
     } else if(m_IntakeSubsystem.hasNote()){
       m_LEDSubsystem.set(Colors.Blue);
-    } else if(m_ClimberSubsystem.isMaxedOut()){
+    } else if(m_ClimberSubsystem.isWinchAtLowerLimit()){
         m_LEDSubsystem.set(Colors.RED);
     } else {
       m_LEDSubsystem.off();

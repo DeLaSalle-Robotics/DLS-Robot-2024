@@ -167,6 +167,8 @@ public class RobotContainer {
       () -> -SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
       () -> true
     ));
+    // Clear hasNote status after running intake backward
+    controller_RB.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
 
     // Zero heading
     controller_Menu.onTrue(new InstantCommand(m_SwerveSubsystem::zeroGyro));
@@ -179,6 +181,8 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed), 
       () -> true
     ));
+    // Clear hasNote status after feeding to shooter
+    joystick_1.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
 
     // Spin shooter forward
     joystick_3.whileTrue(new Shooter(m_ShooterSubsystem));
@@ -188,6 +192,7 @@ public class RobotContainer {
       m_ShooterSubsystem, 
       () -> -Constants.Shooter.kShooterReversePower
     ));
+    
   
     // joystick_9 -> onTrue -> Enter winch mode
     
