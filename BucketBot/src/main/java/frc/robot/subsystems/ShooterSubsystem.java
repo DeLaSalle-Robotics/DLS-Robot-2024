@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.commands.Intake;
@@ -95,13 +96,18 @@ public Command autoShooter(IntakeSubsystem intake){
         // Command A (deadline): Once shooter is up to speed, run the intake for 1 second
         new WaitUntilCommand(
           () -> this.atSpeed()
-
-        ).andThen(
+        )
+        // Wait a second for speed to stabilize
+        .andThen(
+          new WaitCommand(1)
+        )
+        // Then feed intake
+        .andThen(
           new Intake(
             intake, 
             () -> 0.5, 
             () -> true
-          ).withTimeout(1.0)
+          ).withTimeout(2)
         ),
 
         // Command B: Spin shooter until intake command is complete

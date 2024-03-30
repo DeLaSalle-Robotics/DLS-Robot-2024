@@ -119,13 +119,12 @@ public class RobotContainer {
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
-
-    // Build an auto chooser
-    m_autoChooser = AutoBuilder.buildAutoChooser("Backup");
-    SmartDashboard.putData("Auto Chooser", m_autoChooser);
-
     // Register Named Commands
     NamedCommands.registerCommand("autoShooter", m_ShooterSubsystem.autoShooter(m_IntakeSubsystem));
+
+    // Build an auto chooser
+    m_autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
     SmartDashboard.putNumber("Intake Target Speed", Constants.Intake.kIntakePower);
     SmartDashboard.putNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower);
@@ -285,6 +284,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return m_autoChooser.getSelected();
+    //return m_ShooterSubsystem.autoShooter(m_IntakeSubsystem);
   }
 
   public void setMotorBrake(boolean brake)
