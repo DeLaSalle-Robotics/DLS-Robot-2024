@@ -14,6 +14,7 @@ import frc.robot.commands.climber.ClimberTest;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -45,7 +47,8 @@ public class RobotContainer {
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(m_ControllerSubsystem);
   // private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
 
-
+  // Allows picking autonomous routines from SmartDashboard
+  private final SendableChooser<Command> m_autoChooser;
 
   // Setting up controllers and flight joysticks
   private final XboxController m_controller = m_ControllerSubsystem.getController();
@@ -79,7 +82,7 @@ public class RobotContainer {
   private Trigger controller_dpad_NW = new POVButton(m_controller, 315);
 
   // Other triggers
-  private Trigger controller_RT = new Trigger(() -> m_controller.getRightTriggerAxis() > 0.2);
+  private Trigger controller_RT = new Trigger(() -> m_controller.getRightTriggerAxis() > 0.1);
 
 
   // Flight joystick buttons are pretty easy, just follow the format below
@@ -117,11 +120,16 @@ public class RobotContainer {
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
 
+    // Build an auto chooser
+    m_autoChooser = AutoBuilder.buildAutoChooser("Backup");
+    SmartDashboard.putData("Auto Chooser", m_autoChooser);
+
     // Register Named Commands
     NamedCommands.registerCommand("autoShooter", m_ShooterSubsystem.autoShooter(m_IntakeSubsystem));
 
-    SmartDashboard.putNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed);
-    SmartDashboard.putNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed);
+    SmartDashboard.putNumber("Intake Target Speed", Constants.Intake.kIntakePower);
+    SmartDashboard.putNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower);
+    SmartDashboard.putNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederPower);
 
     SmartDashboard.putString("Robot State", "Have Note");
   }
@@ -151,11 +159,11 @@ public class RobotContainer {
 
     // Spin the shooter motors depending on the state of the right analog trigger (RT)
     // Command spinShooter = new Shooter(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
-    Command spinShooter = new ShooterAnalog(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
+    //Command spinShooter = new ShooterAnalog(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
     
 
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
-    m_ShooterSubsystem.setDefaultCommand(spinShooter);
+    //m_ShooterSubsystem.setDefaultCommand(spinShooter);
   }
 
 
@@ -173,14 +181,14 @@ public class RobotContainer {
     controller_RT.whileTrue(
       new Intake(
         m_IntakeSubsystem, 
-        () -> SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
+        () -> SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakePower),
         () -> false
     ));
 
     // Run intake backward
     controller_RB.whileTrue(new Intake(
       m_IntakeSubsystem, 
-      () -> -SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
+      () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower),
       () -> true
     ));
 
@@ -192,7 +200,7 @@ public class RobotContainer {
     // Feed intake to shooter
     joystick_1.whileTrue(new Intake(
       m_IntakeSubsystem, 
-      () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed), 
+      () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederPower), 
       () -> true
     ));
 
@@ -257,14 +265,14 @@ public class RobotContainer {
     // Fire shooter
     testController_Y.whileTrue(new Intake(
       m_IntakeSubsystem, 
-      () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederSpeed), 
+      () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederPower), 
       () -> true
     ));
 
     // Reverse intake
     testController_LB.whileTrue(new Intake(
       m_IntakeSubsystem,
-      () -> -SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakeTargetSpeed),
+      () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower),
       () -> false
     ));
   }
@@ -276,8 +284,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return m_SwerveSubsystem.getAutonomousCommand(Constants.AutoConstants.kPathFileName, true);
+    return m_autoChooser.getSelected();
   }
 
   public void setMotorBrake(boolean brake)

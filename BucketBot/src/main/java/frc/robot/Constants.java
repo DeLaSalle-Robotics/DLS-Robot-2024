@@ -18,15 +18,15 @@ public final class Constants {
 
                 // Set speeds for shooting at the amp and speaker, respectively
                 public static final double kAmpSpeed = 0.3;
-                public static final double kSpeakerSpeedRPS = 30;
+                public static final double kSpeakerSpeedRPS = 45;
 
                 // Reverse shooter power
                 public static final double kShooterReversePower = 0.1;
 
                 // Feedforward and PID for shooter motor
-                public static final double kShooterFFS = 0.05;
-                public static final double kShooterFFV = 0.016;
-                public static final double kShooterKP = 0.01;
+                public static final double kShooterFFS = 0.48; // volts
+                public static final double kShooterFFV = 0.11; //0.11 Volts per RPS
+                public static final double kShooterKP = 0.15; 
                 public static final double kShooterKI = 0.0;
                 public static final double kShooterKD = 0.0;
         }
@@ -39,15 +39,10 @@ public final class Constants {
                 // CAN ID of the intake motor
                 public static final int kIntakeMotorID = 15;
 
-                // DIO pin that the limit switch is connected to
-                public static final int kIntakeLimitSwitchID = 0;
-
-                // PID Information for the intake
-                public static final double kPIntake = 0.005;
-
                 // Intake target speeds
-                public static final double kIntakeTargetSpeed = 0.75;
-                public static final double kIntakeFeederSpeed = 0.3;
+                public static final double kIntakePower = 0.5;
+                public static final double kIntakeReversePower = 0.2;
+                public static final double kIntakeFeederPower = 0.35;
         } 
 
 

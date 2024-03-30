@@ -147,39 +147,6 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Get the path follower with events.
-   *
-   * @param pathName       PathPlanner path name.
-   * @param setOdomToStart Set the odometry position to the start of the path.
-   * @return {@link AutoBuilder#followPath(PathPlannerPath)} path command.
-   */
-  public Command getAutonomousCommand(String pathName, boolean setOdomToStart){
-    // Load the path you want to follow using its name in the GUI
-    PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
-    
-    // Set odometry position to the start of the path, if specified.
-    if (setOdomToStart) {
-      resetOdometry(new Pose2d(path.getPoint(0).position, getHeading()));
-    }
-
-    if (RobotBase.isSimulation()){
-       var alliance = DriverStation.getAlliance();
-      boolean is_red = alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
-      PathPlannerPath flipped_path = path;
-      if(is_red){
-         flipped_path = path.flipPath();
-      }
-      resetOdometry(new Pose2d(flipped_path.getPoint(0).position, getHeading()));
-
-
-      swerveDrive.field.setRobotPose(getPose());
-    }
-
-    // Create a path following command using AutoBuilder. This will also trigger event markers.
-    return AutoBuilder.followPath(path);
-  }
-
-  /**
    * Use PathPlanner Path finding to go to a point on the field.
    *
    * @param pose Target {@link Pose2d} to go to.

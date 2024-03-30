@@ -163,7 +163,9 @@ public class Robot extends TimedRobot
     }
 
     // Create controller bindings
-    m_robotContainer.configureAnalogTest();
+    m_robotContainer.
+    
+    configureAnalogTest();
     m_robotContainer.configureBindingsTest();
   }
 

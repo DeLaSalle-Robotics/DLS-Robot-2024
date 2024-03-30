@@ -47,7 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
     slot0Configs.kP = Constants.Shooter.kShooterKP; // Proportional factor needs tuning
     slot0Configs.kI = Constants.Shooter.kShooterKI;  // Integral factor useful if not getting to set point
     slot0Configs.kD = Constants.Shooter.kShooterKD; // derivative factor to prevent overshoot
-    //Put these control values into Slot0 in the talonFx controller- with a 50 ms overflow limit.
+    // Put these control values into Slot0 in the talonFx controller- with a 50 ms overflow limit.
     m_shooterMotor1.getConfigurator().apply(slot0Configs, 0.050);
     m_shooterMotor2.getConfigurator().apply(slot0Configs, 0.050);
   }
