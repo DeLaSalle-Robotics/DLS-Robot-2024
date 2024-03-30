@@ -318,8 +318,6 @@ public class RobotContainer {
     testController_X.onTrue(new LEDTest(m_LEDSubsystem, Color.kBlack));
     testController_LB.onTrue(new LEDTest(m_LEDSubsystem, Color.kRed));
     testController_RB.onTrue(new LEDTest(m_LEDSubsystem, Color.kGreen));
-
-    
   }
 
   
