@@ -38,8 +38,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_shooterMotor1.setInverted(true);
 
     // Allows editing shooter speeds for testing purposes
-    SmartDashboard.putNumber("Amp Speed", Constants.Shooter.kAmpSpeed);
-    SmartDashboard.putNumber("Speaker Speed", Constants.Shooter.kSpeakerSpeedRPS);
+    SmartDashboard.putNumber("Speaker Speed", Constants.Shooter.kShooterSpeedRPS);
 
     // Velocity control for shooter motor using FF and P controller
     var slot0Configs = new Slot0Configs();
@@ -127,8 +126,8 @@ public boolean atSpeed() {
   double speed2 = m_shooterMotor2.getVelocity().getValueAsDouble();
 
   // Check if each motor is within the speed threshold
-  boolean check1 = Math.abs(speed1 - Constants.Shooter.kSpeakerSpeedRPS) < 5;
-  boolean check2 = Math.abs(speed2 - Constants.Shooter.kSpeakerSpeedRPS) < 5;
+  boolean check1 = Math.abs(speed1 - Constants.Shooter.kShooterSpeedRPS) < 5;
+  boolean check2 = Math.abs(speed2 - Constants.Shooter.kShooterSpeedRPS) < 5;
 
   // Return true if at least one of the motors is within the speed threshold 
   return check1 || check2;

@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,8 +12,7 @@ import frc.robot.Constants;
 public class ControllerSubsystem extends SubsystemBase {
 
   private final XboxController m_controller;
-  private final Joystick m_flightJoystickR;
-  private final Joystick m_flightJoystickL;
+  private final Joystick m_flightJoystick;
   private final GenericHID m_testController;
 
   /**
@@ -23,36 +21,29 @@ public class ControllerSubsystem extends SubsystemBase {
   public ControllerSubsystem() {
     super();
     m_controller = new XboxController(Constants.OperatorConstants.kDriverControllerPort);
-    m_flightJoystickR = new Joystick(Constants.OperatorConstants.kFlightJoystickPortR);
-    m_flightJoystickL = new Joystick(Constants.OperatorConstants.kFlightJoystickPortL);
+    m_flightJoystick = new Joystick(Constants.OperatorConstants.kClimbControllerPort);
     m_testController = new GenericHID(Constants.OperatorConstants.kTestControllerPort);
   }
 
   /**
-   * Returns the current Xbox controller used for driving. 
+   * Returns the controller used for driving. 
    * @return The controller in port 0.
    */
-  public XboxController getController(){
+  public XboxController getDriveController(){
     return m_controller;
   }
 
 
   /**
-   * Returns one of the flight joysticks.
-   * @param right True returns joystick R, false returns joystick L
-   * @return The selected flight joystick
+   * Returns the controller used for climbing.
+   * @return The controller in port 2.
    */
-  public Joystick getFlightJoystick(boolean right){
-    if (right){
-      return m_flightJoystickR;
-    } else {
-      return m_flightJoystickL;
-    }
+  public Joystick getClimbController(){
+    return m_flightJoystick;
   }
-
   
   /**
-   * Returns the PS4 Controller used for test mode.
+   * Returns the controller used for test mode.
    * @return The controller in port 3.
    */
   public GenericHID getTestController(){

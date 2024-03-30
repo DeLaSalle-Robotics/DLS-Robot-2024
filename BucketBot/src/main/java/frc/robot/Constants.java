@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 import swervelib.math.Matter;
-import swervelib.parser.PIDFConfig;
 
 public final class Constants {
         
@@ -16,9 +15,8 @@ public final class Constants {
                 public static final int kShooterMotorID1 = 13;
                 public static final int kShooterMotorID2 = 14;
 
-                // Set speeds for shooting at the amp and speaker, respectively
-                public static final double kAmpSpeed = 0.3;
-                public static final double kSpeakerSpeedRPS = 45;
+                // Target shooter speed for shooting into the speaker
+                public static final double kShooterSpeedRPS = 60;
 
                 // Reverse shooter power
                 public static final double kShooterReversePower = 0.1;
@@ -39,7 +37,11 @@ public final class Constants {
                 // CAN ID of the intake motor
                 public static final int kIntakeMotorID = 15;
 
-                // Intake target speeds
+                // DIO pins of the roller encoder
+                public static final int kIntakeEncoderDIO1 = 0;
+                public static final int kIntakeEncoderDIO2 = 1;
+
+                // Intake target power levels
                 public static final double kIntakePower = 0.5;
                 public static final double kIntakeReversePower = 0.2;
                 public static final double kIntakeFeederPower = 0.35;
@@ -49,30 +51,17 @@ public final class Constants {
         // Operator constants
         public static final class OperatorConstants {
 
-                /**Port of the current controller used for driving.*/
+                // Controller ports
                 public static final int kDriverControllerPort = 0;
-
-                // Flight joystick ports, in case they are ever used
-                // For purposes of organization, the joystick with the "Left" label is considered L, and the other R
-                public static final int kFlightJoystickPortR = 2;
-                public static final int kFlightJoystickPortL = 1;
-
-                // Port of the controller used for testing
+                public static final int kClimbControllerPort = 2;
                 public static final int kTestControllerPort = 3;
- 
-                public static final int kDriverYAxis = 1;
-                public static final int kDriverXAxis = 0;
-                public static final int kDriverRotAxis = 4;
-                public static final int kDriverFieldOrientedButtonIdx = 1;
-
-                // Trigger deadband
-                public static final double kDeadband = 0.1;
 
                 // Deadband
                 public static final double kLeftXDeadband = 0.1;
                 public static final double kLeftYDeadband = 0.1;
                 public static final double kRightXDeadband = 0.1;
                 public static final double kRightYDeadband = 0.1;
+                public static final double kTriggerDeadband = 0.1;
 
                 
                 public static final double kTurnConstant = 6;
@@ -82,13 +71,7 @@ public final class Constants {
         // Autonomous Constants
         public static final class AutoConstants
         {
-                // All of this is YAGSL stuff
-                public static final PIDFConfig kTranslationPID = new PIDFConfig(0.7, 0, 0);
-                public static final PIDFConfig kAngleAutoPID   = new PIDFConfig(0.4, 0, 0.01);
-
-                public static final double kMaxAcceleration = 2;
-
-                public static final String kPathFileName = "Backup"; // Use this to switch which pathplanner file to run in auto
+                // Empty class, nothing here was actually ever used.
         }
 
         public static final class Drivebase
@@ -139,22 +122,6 @@ public final class Constants {
                 // Target velocity of each climber motor
                 public static final double kExtenderTargetVelocity = 3.0; // cm/s
                 public static final double kWinchTargetVelocity = 3.0; // cm/s
-
-                // Old feed forward of the extender motor
-                public static final double kExtenderFeedForwardUp = 0.06;
-                public static final double kExtenderFeedForwardDown = -0.1;
-
-                // Old feed forward of the winch motor
-                public static final double kWinchFeedForwardUp = -0.2; // -0.244
-                public static final double kWinchFeedForwardDown = 0.244;
-
-                // Old kP of the extender motor
-                public static final double kPExtenderDown = 0.00001;
-                public static final double kPExtenderUp = 0.00001;
-
-                // Old kP of the winch motor
-                public static final double kPWinchUp = 0.00001;
-                public static final double kPWinchDown = 0.00002;
 
                 // Feedforward and PID for extender motor
                 public static final double kExtenderFFS = 0.0;

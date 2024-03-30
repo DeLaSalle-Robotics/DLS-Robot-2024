@@ -35,11 +35,11 @@ public class IntakeSubsystem extends SubsystemBase {
     // Intake motor controller and encoder
     // The encoder is NOT the same as the motor's encoder!
     m_IntakeMotor = new CANSparkMax(Constants.Intake.kIntakeMotorID, MotorType.kBrushless);
-    m_IntakeEncoder = new Encoder(0, 1);
+    m_IntakeEncoder = new Encoder(Constants.Intake.kIntakeEncoderDIO1, Constants.Intake.kIntakeEncoderDIO2);
 
     // Rumble feedback
     m_feedback = new Trigger(() -> this.noteDetected());
-    m_feedback.onTrue(new Rumble(m_ControllerSubsystem, () -> 0.0, true));
+    m_feedback.onTrue(new Rumble(m_ControllerSubsystem, () -> 0.5, true));
   }
 
 

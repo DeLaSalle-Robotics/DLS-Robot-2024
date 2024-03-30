@@ -52,8 +52,8 @@ public class RobotContainer {
   private final SendableChooser<Command> m_autoChooser;
 
   // Setting up controllers and flight joysticks
-  private final XboxController m_controller = m_ControllerSubsystem.getController();
-  private final Joystick m_flightJoystick = m_ControllerSubsystem.getFlightJoystick(true);
+  private final XboxController m_controller = m_ControllerSubsystem.getDriveController();
+  private final Joystick m_flightJoystick = m_ControllerSubsystem.getClimbController();
   private final GenericHID m_testController = m_ControllerSubsystem.getTestController();
   
 
@@ -120,6 +120,7 @@ public class RobotContainer {
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
+    
     // Register Named Commands
     NamedCommands.registerCommand("autoShooter", m_ShooterSubsystem.autoShooter(m_IntakeSubsystem));
 
@@ -212,6 +213,13 @@ public class RobotContainer {
       m_ShooterSubsystem, 
       () -> -Constants.Shooter.kShooterReversePower
     ));
+
+    // Run intake in reverse
+    joystick_2.whileTrue(new Intake(
+      m_IntakeSubsystem, 
+      () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower), 
+      () -> true
+    ));
   
     
     // joystick_11 -> whileTrue -> Move climber up
@@ -234,13 +242,13 @@ public class RobotContainer {
     // Spin shooter motor at variable power
     Command spinShooterTestMode = new ShooterAnalog(
       m_ShooterSubsystem,
-      () -> MathUtil.applyDeadband(m_testController.getRawAxis(3), Constants.OperatorConstants.kDeadband)
+      () -> MathUtil.applyDeadband(m_testController.getRawAxis(3), Constants.OperatorConstants.kTriggerDeadband)
     );
 
     // Run intake at variable power
     Command spinIntakeTestMode = new Intake(
       m_IntakeSubsystem, 
-      () -> MathUtil.applyDeadband(m_testController.getRawAxis(2), Constants.OperatorConstants.kDeadband), 
+      () -> MathUtil.applyDeadband(m_testController.getRawAxis(2), Constants.OperatorConstants.kTriggerDeadband), 
       () -> false
     );
 

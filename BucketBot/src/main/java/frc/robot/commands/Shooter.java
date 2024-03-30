@@ -1,8 +1,5 @@
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -14,7 +11,7 @@ public class Shooter extends Command {
   private final ShooterSubsystem m_ShooterSubsystem;
 
   /**
-   * Spin the shooter.
+   * Spin the shooter. The speeds are defined in {@link Constants}.
    * @param subsystem ShooterSubsystem
    */
   public Shooter(ShooterSubsystem subsystem) {
@@ -30,7 +27,7 @@ public class Shooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      m_ShooterSubsystem.spinAt(Constants.Shooter.kSpeakerSpeedRPS);
+      m_ShooterSubsystem.spinAt(Constants.Shooter.kShooterSpeedRPS);
   }
 
   // Called once the command ends or is interrupted.

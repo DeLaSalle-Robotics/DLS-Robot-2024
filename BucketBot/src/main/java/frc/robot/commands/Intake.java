@@ -65,13 +65,11 @@ public class Intake extends Command {
     } else {
       if (movingForward && m_IntakeSubsystem.noteDetected()) {
         SmartDashboard.putString("Robot State", "Have Note");
-      
-      return (true);
+        return true;
+
       } else {
-        return (false);
+        return false;
       }
     }
-
-    //return (!m_isFeeding.getAsBoolean() && (movingForward && m_IntakeSubsystem.noteDetected()));
   }
 }
