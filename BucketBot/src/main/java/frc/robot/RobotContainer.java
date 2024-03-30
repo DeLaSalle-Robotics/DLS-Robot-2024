@@ -12,7 +12,7 @@ import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.ShooterAnalog;
 import frc.robot.commands.LED;
-import frc.robot.commands.climber.ClimberTest;
+import frc.robot.commands.climber.*;
 
 import java.io.File;
 
@@ -98,6 +98,7 @@ public class RobotContainer {
   private Trigger joystick_8 = new JoystickButton(m_flightJoystick, 8);
   private Trigger joystick_9 = new JoystickButton(m_flightJoystick, 9);
   private Trigger joystick_10 = new JoystickButton(m_flightJoystick, 10);
+  private Trigger joystick_11 = new JoystickButton(m_flightJoystick, 11);
 
 
   // Test controller buttons
@@ -231,9 +232,30 @@ public class RobotContainer {
       () -> true
     ));
   
-    
-    // joystick_11 -> whileTrue -> Move climber up
-    // joystick_10 -> whileTrue -> Move climber down
+
+    // Move extender down
+    joystick_6.whileTrue(new ClimberExtenderSimple(
+      m_ClimberSubsystem, 
+      () -> Constants.Climber.kExtenderExtendPower
+    ));
+
+    // Move extender down
+    joystick_7.whileTrue(new ClimberExtenderSimple(
+      m_ClimberSubsystem, 
+      () -> Constants.Climber.kExtenderRetractPower
+    ));
+
+    // Move winch up
+    joystick_11.whileTrue(new ClimberWinchSimple(
+      m_ClimberSubsystem, 
+      () -> Constants.Climber.kWinchExtendPower
+    ));
+
+    // Move winch down
+    joystick_10.whileTrue(new ClimberWinchSimple(
+      m_ClimberSubsystem, 
+      () -> Constants.Climber.kWinchRetractPower
+    ));
   }
 
 

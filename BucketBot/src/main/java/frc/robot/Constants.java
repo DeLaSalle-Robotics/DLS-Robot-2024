@@ -132,6 +132,12 @@ public final class Constants {
                 public static final double kExtenderTargetVelocity = 3.0; // cm/s
                 public static final double kWinchTargetVelocity = 3.0; // cm/s
 
+                // Simple climber power constants
+                public static final double kExtenderExtendPower = 0.1;
+                public static final double kExtenderRetractPower = -0.2;
+                public static final double kWinchExtendPower = 0.01;
+                public static final double kWinchRetractPower = -0.15;
+
                 // Feedforward and PID for extender motor
                 public static final double kExtenderFFS = 0.0;
                 public static final double kExtenderFFV = 0.0;
