@@ -42,6 +42,7 @@ public class RobotContainer {
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   private final ControllerSubsystem m_ControllerSubsystem = new ControllerSubsystem();
   private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
+  private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
 
   // These subsystems require other subsystems and MUST be declared after all others
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(m_ControllerSubsystem);
@@ -225,13 +226,11 @@ public class RobotContainer {
   public void configureAnalogTest(){
 
     // Controls the climber motors
-    /*
     Command climbTestMode = new ClimberTest(
       m_ClimberSubsystem,
-      () -> -MathUtil.applyDeadband(m_controller.getRightY(), Constants.OperatorConstants.kRightYDeadband),
-      () -> -MathUtil.applyDeadband(m_controller.getLeftY(), Constants.OperatorConstants.kLeftYDeadband)
+      () -> -MathUtil.applyDeadband(m_testController.getRawAxis(5), Constants.OperatorConstants.kRightYDeadband) * 0.2, // RightY
+      () -> -MathUtil.applyDeadband(m_testController.getRawAxis(1), Constants.OperatorConstants.kLeftYDeadband) // LeftY
     );
-    */
 
     // Spin shooter motor at variable power
     Command spinShooterTestMode = new ShooterAnalog(
@@ -247,7 +246,7 @@ public class RobotContainer {
     );
 
 
-    // m_ClimberSubsystem.setDefaultCommand(climbTestMode);
+    m_ClimberSubsystem.setDefaultCommand(climbTestMode);
     m_ShooterSubsystem.setDefaultCommand(spinShooterTestMode);
     m_IntakeSubsystem.setDefaultCommand(spinIntakeTestMode);
 

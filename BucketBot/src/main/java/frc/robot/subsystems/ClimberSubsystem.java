@@ -47,6 +47,9 @@ public class ClimberSubsystem extends SubsystemBase {
     // Invert winch motor
     m_winchMotor.setInverted(true);
 
+    // Set brake mode
+    // TODO
+
     // Create controller for winch motor
     // Slot 0 is a FF controller with gravity term and P controller
     // This is for manual mode where we have no load on the winch
