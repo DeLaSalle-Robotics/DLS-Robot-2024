@@ -54,7 +54,7 @@ public class LED extends Command {
     } else if(m_IntakeSubsystem.hasNote()){
       m_LEDSubsystem.set(Color.kBlue);
     } else if(m_ClimberSubsystem.isWinchAtLowerLimit()){
-        m_LEDSubsystem.set(Color.kRed);
+        m_LEDSubsystem.set(Color.kGreen);
     } else {
       m_LEDSubsystem.off();
     }

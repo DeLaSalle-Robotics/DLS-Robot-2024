@@ -116,9 +116,6 @@ public final class Constants {
 
                 // Number of LEDs in the strip
                 public static final int kNumberLEDs = 60;
-
-                // LED colors
-                
         }
 
 
