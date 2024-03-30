@@ -3,7 +3,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
@@ -48,7 +50,8 @@ public class ClimberSubsystem extends SubsystemBase {
     m_winchMotor.setInverted(true);
 
     // Set brake mode
-    // TODO
+    m_winchMotor.setNeutralMode(NeutralModeValue.Brake);
+    m_extenderMotor.setIdleMode(IdleMode.kBrake);
 
     // Create controller for winch motor
     // Slot 0 is a FF controller with gravity term and P controller

@@ -208,12 +208,11 @@ public class RobotContainer {
     joystick_3.whileTrue(new Shooter(m_ShooterSubsystem));
     
     // Spin shooter backward
-    joystick_7.whileTrue(new ShooterAnalog(
+    joystick_8.whileTrue(new ShooterAnalog(
       m_ShooterSubsystem, 
       () -> -Constants.Shooter.kShooterReversePower
     ));
   
-    // joystick_9 -> onTrue -> Enter winch mode
     
     // joystick_11 -> whileTrue -> Move climber up
     // joystick_10 -> whileTrue -> Move climber down
