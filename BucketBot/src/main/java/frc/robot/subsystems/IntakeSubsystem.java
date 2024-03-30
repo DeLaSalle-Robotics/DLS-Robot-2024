@@ -26,6 +26,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
   // Median filter to avoid accidentally randomly stopping the intake
   private MedianFilter encoderFilter = new MedianFilter(10);
+
+  // Tells us whether or not the robot has a note in its intake
+  private boolean m_hasNote = false;
   
   
   public IntakeSubsystem(ControllerSubsystem controllerSubsystem) {
@@ -79,6 +82,22 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
 
+  /**
+   * Sets whether or not the robot has a note in its intake.
+   * @param hasNote The value to set to.
+   */
+  public void setHasNote(boolean hasNote){
+    m_hasNote = hasNote;
+  }
+
+
+  /**
+   * Checks whether or not the robot has a note in its intake.
+   * @return True if there is a note in the intake, false otherwise.
+   */
+  public boolean hasNote(){
+    return m_hasNote;
+  }
 
 
 

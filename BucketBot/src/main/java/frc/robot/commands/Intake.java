@@ -64,6 +64,7 @@ public class Intake extends Command {
     // If NOT in feeding mode, end if moving forward and a note is detected.
     } else {
       if (movingForward && m_IntakeSubsystem.noteDetected()) {
+        m_IntakeSubsystem.setHasNote(true);
         SmartDashboard.putString("Robot State", "Have Note");
         return true;
 

@@ -5,11 +5,13 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ControllerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.ShooterAnalog;
+import frc.robot.commands.LED;
 import frc.robot.commands.climber.ClimberTest;
 
 import java.io.File;
@@ -43,6 +45,7 @@ public class RobotContainer {
   private final ControllerSubsystem m_ControllerSubsystem = new ControllerSubsystem();
   private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
   private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
+  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
 
   // These subsystems require other subsystems and MUST be declared after all others
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(m_ControllerSubsystem);
@@ -120,7 +123,7 @@ public class RobotContainer {
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
-    
+
     // Register Named Commands
     NamedCommands.registerCommand("autoShooter", m_ShooterSubsystem.autoShooter(m_IntakeSubsystem));
 
@@ -162,8 +165,11 @@ public class RobotContainer {
     // Command spinShooter = new Shooter(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
     //Command spinShooter = new ShooterAnalog(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
     
-
+    // Set up default command for LED subsystem
+    // Not bound to any controller action, just runs all the time
+    m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_ShooterSubsystem, m_IntakeSubsystem, m_ClimberSubsystem));
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
+    
     //m_ShooterSubsystem.setDefaultCommand(spinShooter);
   }
 
@@ -192,6 +198,13 @@ public class RobotContainer {
       () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower),
       () -> true
     ));
+
+    // Clear hasNote status after running intake backward
+    controller_RB.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
+    joystick_2.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
+
+    // Clear hasNote status after feeding to shooter
+    joystick_1.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
 
     // Zero heading
     controller_Menu.onTrue(new InstantCommand(m_SwerveSubsystem::zeroGyro));

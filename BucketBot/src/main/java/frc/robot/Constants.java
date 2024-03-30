@@ -110,6 +110,18 @@ public final class Constants {
         }
 
 
+        public static final class LED {
+                // PWM port of the LED strip
+                public static final int kLEDPWM = 0;
+
+                // Number of LEDs in the strip
+                public static final int kNumberLEDs = 60;
+
+                // LED colors
+                
+        }
+
+
         public static final class Climber {
 
                 // CAN IDs of the climber motors

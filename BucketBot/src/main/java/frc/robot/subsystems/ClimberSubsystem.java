@@ -329,6 +329,15 @@ public class ClimberSubsystem extends SubsystemBase {
     return Math.abs(m_winchMotor.getTorqueCurrent().getValueAsDouble());
   }
 
+  
+  /**
+   * Returns if the winch is hitting the lower limit.
+    * @return True if the winch is within a cm of the lower limit, false otherwise.
+   */
+  public boolean isWinchAtLowerLimit(){
+    return Math.abs(getWinchPosition() - Constants.Climber.kWinchEndpointDown) < 1.0;
+  }
+
 
 
   // This method will be called once per scheduler run
