@@ -12,6 +12,7 @@ import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.ShooterAnalog;
 import frc.robot.commands.LED;
+import frc.robot.commands.LEDTest;
 import frc.robot.commands.climber.*;
 
 import java.io.File;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -42,7 +44,7 @@ public class RobotContainer {
   private final ControllerSubsystem m_ControllerSubsystem = new ControllerSubsystem();
   private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
   private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
-  // private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
+  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
 
   // These subsystems require other subsystems and MUST be declared after all others
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(m_ControllerSubsystem);
@@ -165,7 +167,7 @@ public class RobotContainer {
     
     // Set up default command for LED subsystem
     // Not bound to any controller action, just runs all the time
-    // m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_ShooterSubsystem, m_IntakeSubsystem, m_ClimberSubsystem));
+    m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_ShooterSubsystem, m_IntakeSubsystem, m_ClimberSubsystem));
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
     
     //m_ShooterSubsystem.setDefaultCommand(spinShooter);
@@ -206,7 +208,6 @@ public class RobotContainer {
 
     // Zero heading
     controller_Menu.onTrue(new InstantCommand(m_SwerveSubsystem::zeroGyro));
-
 
 
     // Feed intake to shooter
@@ -312,6 +313,13 @@ public class RobotContainer {
       () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower),
       () -> false
     ));
+
+    testController_B.onTrue(new LEDTest(m_LEDSubsystem, Color.kBlue));
+    testController_X.onTrue(new LEDTest(m_LEDSubsystem, Color.kBlack));
+    testController_LB.onTrue(new LEDTest(m_LEDSubsystem, Color.kRed));
+    testController_RB.onTrue(new LEDTest(m_LEDSubsystem, Color.kGreen));
+
+    
   }
 
   
