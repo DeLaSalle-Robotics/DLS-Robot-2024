@@ -1,26 +1,23 @@
 package frc.robot.commands.climber;
-
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimberSubsystem;
-
-import java.util.function.BooleanSupplier;
-
+import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
 public class ClimberWinch extends Command {
 
   private final ClimberSubsystem m_ClimberSubsystem;
-  private final BooleanSupplier m_movingUp;
+  private final DoubleSupplierSupplier m_power;
 
   /**
    * 
    * @param subsystem ClimberSubsystem
-   * @param movingUp
+   * @param power
    */
-  public ClimberWinch(ClimberSubsystem subsystem, BooleanSupplier movingUp) {
+  public ClimberWinch(ClimberSubsystem subsystem, DoubleSupplier power) {
     m_ClimberSubsystem = subsystem;
-    m_movingUp = movingUp;
+    m_power = power;
     addRequirements(m_ClimberSubsystem);
   }
 
@@ -35,20 +32,18 @@ public class ClimberWinch extends Command {
   @Override
   public void execute() {
 
-    // Changes the direction that the motors will move in
-    int direction = m_movingUp.getAsBoolean()? 1:-1;
-
-    // Spin winch motor
-    // Raw power because the PID controller is not tuned for heavy loads
-    m_ClimberSubsystem.spinWinchAt(direction * Constants.Climber.kWinchTargetVelocity);
+    // Spin winch motor with soft limits
+    m_ClimberSubsystem.spinWinch(m_power.getAsDouble(),
+        Constants.Climber.kWinchEndpointDown,
+        Constants.Climber.kWinchEndpointUp);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // Stop all motors
-    m_ClimberSubsystem.spinWinchAt(0.0);
+    // Stop winch
+    m_ClimberSubsystem.spinWinch(0.0);
   }
 
   // Returns true when the command should end.

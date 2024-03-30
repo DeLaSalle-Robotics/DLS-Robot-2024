@@ -2,25 +2,23 @@ package frc.robot.commands.climber;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimberSubsystem;
-
-import java.util.function.BooleanSupplier;
-
+import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class ClimberWinch extends Command {
+public class ClimberExtender extends Command {
 
   private final ClimberSubsystem m_ClimberSubsystem;
-  private final BooleanSupplier m_movingUp;
+  private final DoubleSupplier m_power;
 
   /**
    * 
    * @param subsystem ClimberSubsystem
-   * @param movingUp
+   * @param power
    */
-  public ClimberWinch(ClimberSubsystem subsystem, BooleanSupplier movingUp) {
+  public ClimberExtender(ClimberSubsystem subsystem, DoubleSupplier power) {
     m_ClimberSubsystem = subsystem;
-    m_movingUp = movingUp;
+    m_power = power;
     addRequirements(m_ClimberSubsystem);
   }
 
@@ -28,27 +26,32 @@ public class ClimberWinch extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    // Changes the direction that the motors will move in
-    int direction = m_movingUp.getAsBoolean()? 1:-1;
+    // If the limit switch is hit, reset the extender encoder
+    if(m_ClimberSubsystem.getSwitchState()){
+      m_ClimberSubsystem.setExtenderLowerLimit();
+    }
 
-    // Spin winch motor
-    // Raw power because the PID controller is not tuned for heavy loads
-    m_ClimberSubsystem.spinWinchAt(direction * Constants.Climber.kWinchTargetVelocity);
+    // Spin extender motor with soft limits
+    m_ClimberSubsystem.spinExtender(
+      power.getAsDouble(), 
+      Constants.Climber.kExtenderEndpointDown,
+      Constants.Climber.kExtenderEndpointUp
+    );
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // Stop all motors
-    m_ClimberSubsystem.spinWinchAt(0.0);
+    // Stop extender with brake
+    m_ClimberSubsystem.spinExtender(0.0);
   }
 
   // Returns true when the command should end.

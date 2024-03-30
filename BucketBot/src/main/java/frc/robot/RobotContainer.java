@@ -212,10 +212,31 @@ public class RobotContainer {
       m_ShooterSubsystem, 
       () -> -Constants.Shooter.kShooterReversePower
     ));
-  
-    
-    // joystick_11 -> whileTrue -> Move climber up
-    // joystick_10 -> whileTrue -> Move climber down
+
+    // Move extender down
+    joystick_6.whileTrue(new ClimberExtenderSimple(
+      m_ShooterSubsystem, 
+      () -> Constants.Climber.kExtenderExtendPower
+    ));
+
+    // Move extender down
+    joystick_7.whileTrue(new ClimberExtenderSimple(
+      m_ShooterSubsystem, 
+      () -> Constants.Climber.kExtenderRetractPower
+    ));
+
+    // Move winch up
+    joystick_11.whileTrue(new ClimberWinchSimple(
+      m_ShooterSubsystem, 
+      () -> Constants.Climber.kWinchExtendPower
+    ));
+
+    // Move winch down
+    joystick_10.whileTrue(new ClimberWinchSimple(
+      m_ShooterSubsystem, 
+      () -> Constants.Climber.kWinchRetractPower
+    ));
+
   }
 
 

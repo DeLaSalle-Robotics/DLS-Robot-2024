@@ -140,21 +140,11 @@ public final class Constants {
                 public static final double kExtenderTargetVelocity = 3.0; // cm/s
                 public static final double kWinchTargetVelocity = 3.0; // cm/s
 
-                // Old feed forward of the extender motor
-                public static final double kExtenderFeedForwardUp = 0.06;
-                public static final double kExtenderFeedForwardDown = -0.1;
-
-                // Old feed forward of the winch motor
-                public static final double kWinchFeedForwardUp = -0.2; // -0.244
-                public static final double kWinchFeedForwardDown = 0.244;
-
-                // Old kP of the extender motor
-                public static final double kPExtenderDown = 0.00001;
-                public static final double kPExtenderUp = 0.00001;
-
-                // Old kP of the winch motor
-                public static final double kPWinchUp = 0.00001;
-                public static final double kPWinchDown = 0.00002;
+                // Simple climber power constants
+                public static final double kExtenderExtendPower = 0.1;
+                public static final double kExtenderRetractPower = -0.2;
+                public static final double kWinchExtendPower = 0.01;
+                public static final double kWinchRetractPower = -0.15;
 
                 // Feedforward and PID for extender motor
                 public static final double kExtenderFFS = 0.0;
