@@ -112,7 +112,7 @@ public final class Constants {
 
         public static final class LED {
                 // PWM port of the LED strip
-                public static final int kLEDPWM = 0;
+                public static final int kLEDPWM = 9;
 
                 // Number of LEDs in the strip
                 public static final int kNumberLEDs = 60;
@@ -133,9 +133,9 @@ public final class Constants {
                 public static final double kWinchTargetVelocity = 3.0; // cm/s
 
                 // Simple climber power constants
-                public static final double kExtenderExtendPower = 0.1;
-                public static final double kExtenderRetractPower = -0.2;
-                public static final double kWinchExtendPower = 0.01;
+                public static final double kExtenderExtendPower = 0.088;
+                public static final double kExtenderRetractPower = -0.2; // incorrect
+                public static final double kWinchExtendPower = 0.09;
                 public static final double kWinchRetractPower = -0.15;
 
                 // Feedforward and PID for extender motor
@@ -155,16 +155,16 @@ public final class Constants {
                 public static final double kWinchKD = 0.0;
 
                 // Endpoints for extender motor
-                public static final double kExtenderEndpointUp = 44.0; //cm
+                public static final double kExtenderEndpointUp = 34.23; //cm; 19in slider - 0.5in buffer - slider locks up 5.5in from top
                 public static final double kExtenderEndpointDown = 0.0;
 
                 // Endpoints for winch motor
-                public static final double kWinchEndpointUp = 0;
-                public static final double kWinchEndpointDown = -91.0; //cm
+                public static final double kWinchEndpointUp = 0; // incorrect
+                public static final double kWinchEndpointDown = -91.0; //cm (incorrect)
 
                 // Conversion factors
-                public static final double kExtenderCmPerRotation = 0.59;
-                public static final double kWinchCmPerRotation = 0.392;
+                public static final double kExtenderCmPerRotation = 0.635;
+                public static final double kWinchCmPerRotation = 0.392; // incorrect
 
         }
 }

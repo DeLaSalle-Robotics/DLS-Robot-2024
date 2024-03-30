@@ -79,6 +79,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
     // Reset the position of the winch motor encoder on startup when using Teleop
     if(RobotState.isTeleop()){
+      m_extenderMotor.getEncoder().setPosition(0.0);
       m_winchMotor.setPosition(0.0);
     }
 
@@ -343,8 +344,16 @@ public class ClimberSubsystem extends SubsystemBase {
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    // SmartDashboard.putNumber("extenderVelocity", this.getExtenderVelocity());
-    // SmartDashboard.putNumber("climberVelocity", this.getClimberVelocity());
+    SmartDashboard.putBoolean("Climb Limit Switch", this.getSwitchState());
+    SmartDashboard.putNumber("Extender Speed", this.getExtenderVelocity());
+    SmartDashboard.putNumber("Winch Speed", this.getWinchVelocity());
+    SmartDashboard.putNumber("Winch Current", this.getWinchCurrent());
+    SmartDashboard.putBoolean("Is Winch at Lower Limit", this.isWinchAtLowerLimit());
+    SmartDashboard.putNumber("Extender Position Cm", this.getExtenderPosition());
+    SmartDashboard.putNumber("Winch Position Cm", this.getWinchPosition());
+    SmartDashboard.putNumber("Extender Position Raw", m_extenderMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Winch Position Raw", m_winchMotor.getPosition().getValueAsDouble());
+
   }
 
 

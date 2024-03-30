@@ -167,7 +167,7 @@ public class RobotContainer {
     
     // Set up default command for LED subsystem
     // Not bound to any controller action, just runs all the time
-    m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_ShooterSubsystem, m_IntakeSubsystem, m_ClimberSubsystem));
+    // m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_ShooterSubsystem, m_IntakeSubsystem, m_ClimberSubsystem));
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
     
     //m_ShooterSubsystem.setDefaultCommand(spinShooter);
@@ -269,7 +269,7 @@ public class RobotContainer {
     Command climbTestMode = new ClimberTest(
       m_ClimberSubsystem,
       () -> -MathUtil.applyDeadband(m_testController.getRawAxis(5), Constants.OperatorConstants.kRightYDeadband) * 0.2, // RightY
-      () -> -MathUtil.applyDeadband(m_testController.getRawAxis(1), Constants.OperatorConstants.kLeftYDeadband) // LeftY
+      () -> -MathUtil.applyDeadband(m_testController.getRawAxis(1), Constants.OperatorConstants.kLeftYDeadband) * 0.3 // LeftY
     );
 
     // Spin shooter motor at variable power
@@ -314,10 +314,10 @@ public class RobotContainer {
       () -> false
     ));
 
-    testController_B.onTrue(new LEDTest(m_LEDSubsystem, Color.kBlue));
-    testController_X.onTrue(new LEDTest(m_LEDSubsystem, Color.kBlack));
-    testController_LB.onTrue(new LEDTest(m_LEDSubsystem, Color.kRed));
-    testController_RB.onTrue(new LEDTest(m_LEDSubsystem, Color.kGreen));
+    testController_B.whileTrue(new LEDTest(m_LEDSubsystem, Color.kOrange));
+    testController_Start.whileTrue(new LEDTest(m_LEDSubsystem, Color.kFuchsia));
+    testController_X.whileTrue(new LEDTest(m_LEDSubsystem, Color.kMediumAquamarine));
+    testController_RB.whileTrue(new LEDTest(m_LEDSubsystem, Color.kLightGoldenrodYellow));
   }
 
   

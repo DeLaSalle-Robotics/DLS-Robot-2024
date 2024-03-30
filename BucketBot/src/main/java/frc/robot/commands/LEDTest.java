@@ -28,7 +28,6 @@ public class LEDTest extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_LEDSubsystem.set(m_color);
   }
 
   /**
@@ -40,6 +39,7 @@ public class LEDTest extends Command {
    */
   @Override
   public void execute() {
+    m_LEDSubsystem.set(m_color);
   }
 
   // Called once the command ends or is interrupted.
@@ -52,6 +52,6 @@ public class LEDTest extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }
