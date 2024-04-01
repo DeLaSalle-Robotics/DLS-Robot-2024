@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -46,6 +47,10 @@ public class ClimberSubsystem extends SubsystemBase {
     m_winchMotor = new TalonFX(Constants.Climber.kWinchMotorID);
     m_limitSwitch = new DigitalInput(Constants.Climber.kLimitSwitchID);
 
+    // reset motor configurations to avoid uncertain configurations
+    m_extenderMotor.restoreFactoryDefaults();
+    m_winchMotor.getConfigurator().apply(new TalonFXConfiguration());
+    
     // Invert winch motor
     m_winchMotor.setInverted(true);
 
