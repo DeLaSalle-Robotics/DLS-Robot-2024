@@ -134,7 +134,7 @@ public final class Constants {
 
                 // Simple climber power constants
                 public static final double kExtenderExtendPower = 0.088;
-                public static final double kExtenderRetractPower = -0.2; // incorrect
+                public static final double kExtenderRetractPower = -0.15;
                 public static final double kWinchExtendPower = 0.09;
                 public static final double kWinchRetractPower = -0.15;
 
@@ -155,16 +155,16 @@ public final class Constants {
                 public static final double kWinchKD = 0.0;
 
                 // Endpoints for extender motor
-                public static final double kExtenderEndpointUp = 34.23; //cm; 19in slider - 0.5in buffer - slider locks up 5.5in from top
+                public static final double kExtenderEndpointUp = 30; //cm; 19in slider - 0.5in buffer - slider locks up 5.5in from top
                 public static final double kExtenderEndpointDown = 0.0;
 
                 // Endpoints for winch motor
-                public static final double kWinchEndpointUp = 0; // incorrect
-                public static final double kWinchEndpointDown = -91.0; //cm (incorrect)
+                public static final double kWinchEndpointUp = 0; // cm
+                public static final double kWinchEndpointDown = -75; //cm
 
                 // Conversion factors
                 public static final double kExtenderCmPerRotation = 0.635;
-                public static final double kWinchCmPerRotation = 0.392; // incorrect
+                public static final double kWinchCmPerRotation = 0.404;
 
         }
 }

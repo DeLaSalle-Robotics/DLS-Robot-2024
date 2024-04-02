@@ -50,8 +50,8 @@ public class ClimberSubsystem extends SubsystemBase {
     // reset motor configurations to avoid uncertain configurations
     m_extenderMotor.restoreFactoryDefaults();
     m_winchMotor.getConfigurator().apply(new TalonFXConfiguration());
-    
-    // Invert winch motor
+
+    // Invert the winch motor
     m_winchMotor.setInverted(true);
 
     // Set brake mode
@@ -81,13 +81,6 @@ public class ClimberSubsystem extends SubsystemBase {
 
     // Send the currently active motor to SmartDashboard for test mode
     SmartDashboard.putBoolean("Using Extender", true);
-
-    // Reset the position of the winch motor encoder on startup when using Teleop
-    if(RobotState.isTeleop()){
-      m_extenderMotor.getEncoder().setPosition(0.0);
-      m_winchMotor.setPosition(0.0);
-    }
-
   }
 
   /**
@@ -320,10 +313,10 @@ public class ClimberSubsystem extends SubsystemBase {
 
 
   /**
-   * Resets the winch motor encoder to zero.
+   * Resets the winch motor encoder to its default value.
    */
-  public void setWinchLowerLimit(){
-    m_winchMotor.setPosition(Constants.Climber.kWinchEndpointDown);
+  public void setWinchUpperLimit(){
+    m_winchMotor.setPosition(Constants.Climber.kWinchEndpointUp);
   }
 
 

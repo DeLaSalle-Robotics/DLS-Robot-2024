@@ -41,6 +41,11 @@ public class ClimberTest extends Command {
     double extenderPower = m_extenderPower.getAsDouble();
     double winchPower = m_winchPower.getAsDouble();
 
+    // If the limit switch is hit, reset the extender encoder
+    if(m_ClimberSubsystem.getSwitchState()){
+      m_ClimberSubsystem.setExtenderLowerLimit();
+    }
+
     // Extender is moving down and limit switch is down, stop the motor
     if(extenderPower < 0 && m_ClimberSubsystem.getSwitchState()){
       m_ClimberSubsystem.spinExtender(0.0);

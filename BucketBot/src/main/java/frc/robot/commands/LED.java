@@ -30,9 +30,6 @@ public class LED extends Command {
     m_ClimberSubsystem = climberSubsystem;
 
     addRequirements(m_LEDSubsystem);
-    addRequirements(m_ShooterSubsystem);
-    addRequirements(m_IntakeSubsystem);
-    addRequirements(m_ClimberSubsystem);
   }
 
 

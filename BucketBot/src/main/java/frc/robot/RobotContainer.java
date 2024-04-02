@@ -234,7 +234,7 @@ public class RobotContainer {
     ));
   
 
-    // Move extender down
+    // Move extender up
     joystick_6.whileTrue(new ClimberExtenderSimple(
       m_ClimberSubsystem, 
       () -> Constants.Climber.kExtenderExtendPower
@@ -247,16 +247,16 @@ public class RobotContainer {
     ));
 
     // Move winch up
-    joystick_11.whileTrue(new ClimberWinchSimple(
+    /*joystick_11.whileTrue(new ClimberWinchSimple(
       m_ClimberSubsystem, 
       () -> Constants.Climber.kWinchExtendPower
-    ));
+    ));*/
 
     // Move winch down
-    joystick_10.whileTrue(new ClimberWinchSimple(
+    /* joystick_10.whileTrue(new ClimberWinchSimple(
       m_ClimberSubsystem, 
       () -> Constants.Climber.kWinchRetractPower
-    ));
+    ));*/
   }
 
 
@@ -334,6 +334,11 @@ public class RobotContainer {
   public void setMotorBrake(boolean brake)
   {
     m_SwerveSubsystem.setMotorBrake(brake);
+  }
+
+
+  public void resetWinch(){
+    m_ClimberSubsystem.setWinchUpperLimit();
   }
 }
 

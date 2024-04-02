@@ -137,6 +137,9 @@ public class Robot extends TimedRobot
 
     m_robotContainer.setMotorBrake(true);
 
+    // Reset the climber winch encoder to its default position.
+    m_robotContainer.resetWinch();
+
   }
 
   /**
@@ -163,9 +166,7 @@ public class Robot extends TimedRobot
     }
 
     // Create controller bindings
-    m_robotContainer.
-    
-    configureAnalogTest();
+    m_robotContainer.configureAnalogTest();
     m_robotContainer.configureBindingsTest();
   }
 
