@@ -110,7 +110,7 @@ public class IntakeSubsystem extends SubsystemBase {
     return m_hasNote;
   }
 
-  public Command autoIntake(IntakeSubsystem intake){
+  public Command autoIntake(){
     return Commands.sequence(
       new Intake(this, () -> Constants.Intake.kIntakePower, () -> false).withTimeout(5.0),
       new Intake(this, () -> -Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.25),

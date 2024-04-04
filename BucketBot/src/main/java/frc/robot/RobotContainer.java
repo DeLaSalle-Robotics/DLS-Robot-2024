@@ -125,7 +125,7 @@ public class RobotContainer {
 
     // Register Named Commands
     NamedCommands.registerCommand("autoShooter", m_ShooterSubsystem.autoShooter(m_IntakeSubsystem));
-    NamedCommands.registerCommand("autoIntake", new Intake(m_IntakeSubsystem, () -> Constants.Intake.kIntakePower, () -> false));
+    NamedCommands.registerCommand("autoIntake", m_IntakeSubsystem.autoIntake());
 
     // Build an auto chooser
     m_autoChooser = AutoBuilder.buildAutoChooser();
