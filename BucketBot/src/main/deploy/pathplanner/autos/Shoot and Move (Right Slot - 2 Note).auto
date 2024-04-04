@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.9421840312607177,
+      "y": 7.015006120407722
+    },
+    "rotation": 60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "autoShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back up Right (2 Note)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "autoShooter"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -36,7 +36,6 @@ public class Intake extends Command {
   @Override
   public void initialize() {
     movingForward = (m_speed.getAsDouble() > 0);
-    SmartDashboard.putString("Robot State", "Empty");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,7 +64,6 @@ public class Intake extends Command {
     } else {
       if (movingForward && m_IntakeSubsystem.noteDetected()) {
         m_IntakeSubsystem.setHasNote(true);
-        SmartDashboard.putString("Robot State", "Have Note");
         return true;
 
       } else {

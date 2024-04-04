@@ -12,7 +12,6 @@ import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.ShooterAnalog;
 import frc.robot.commands.LED;
-import frc.robot.commands.LEDTest;
 import frc.robot.commands.climber.*;
 
 import java.io.File;
@@ -126,14 +125,11 @@ public class RobotContainer {
 
     // Register Named Commands
     NamedCommands.registerCommand("autoShooter", m_ShooterSubsystem.autoShooter(m_IntakeSubsystem));
+    NamedCommands.registerCommand("autoIntake", new Intake(m_IntakeSubsystem, () -> Constants.Intake.kIntakePower, () -> false));
 
     // Build an auto chooser
     m_autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
-
-    SmartDashboard.putNumber("Intake Target Speed", Constants.Intake.kIntakePower);
-    SmartDashboard.putNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower);
-    SmartDashboard.putNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederPower);
 
     SmartDashboard.putString("Robot State", "Have Note");
   }
@@ -150,24 +146,10 @@ public class RobotContainer {
       () -> -MathUtil.applyDeadband(m_controller.getRightX(), OperatorConstants.kRightXDeadband),
       () -> m_controller.getLeftTriggerAxis()
     );
-
-    // Vision drive command
-    // Watches an april tag while still allowing movement
-    /*
-    Command driveFieldOrientedWatchTarget = m_SwerveSubsystem.driveAutoAimCommand(
-      () -> -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kLeftYDeadband),
-      () -> -MathUtil.applyDeadband(m_controller.getLeftX(), OperatorConstants.kLeftXDeadband),
-      m_VisionSubsystem.getPhotonCamera()
-    );
-    */
-
-    // Spin the shooter motors depending on the state of the right analog trigger (RT)
-    // Command spinShooter = new Shooter(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
-    //Command spinShooter = new ShooterAnalog(m_ShooterSubsystem, () -> m_controller.getRightTriggerAxis());
     
     // Set up default command for LED subsystem
     // Not bound to any controller action, just runs all the time
-    // m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_ShooterSubsystem, m_IntakeSubsystem, m_ClimberSubsystem));
+    m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_IntakeSubsystem));
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
     
     //m_ShooterSubsystem.setDefaultCommand(spinShooter);
@@ -188,23 +170,21 @@ public class RobotContainer {
     controller_RT.whileTrue(
       new Intake(
         m_IntakeSubsystem, 
-        () -> SmartDashboard.getNumber("Intake Target Speed", Constants.Intake.kIntakePower),
+        () -> Constants.Intake.kIntakePower,
         () -> false
     ));
 
     // Run intake backward
     controller_RB.whileTrue(new Intake(
       m_IntakeSubsystem, 
-      () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower),
+      () -> -Constants.Intake.kIntakeReversePower,
       () -> true
+    ).andThen(
+      new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false))
     ));
 
-    // Clear hasNote status after running intake backward
-    controller_RB.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
-    joystick_2.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
-
     // Clear hasNote status after feeding to shooter
-    joystick_1.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
+    // joystick_1.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
 
     // Zero heading
     controller_Menu.onTrue(new InstantCommand(m_SwerveSubsystem::zeroGyro));
@@ -215,6 +195,8 @@ public class RobotContainer {
       m_IntakeSubsystem, 
       () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederPower), 
       () -> true
+    ).andThen(
+      new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false))
     ));
 
     // Spin shooter forward
@@ -231,6 +213,8 @@ public class RobotContainer {
       m_IntakeSubsystem, 
       () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower), 
       () -> true
+    ).andThen(
+      new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false))
     ));
   
 
@@ -313,11 +297,6 @@ public class RobotContainer {
       () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower),
       () -> false
     ));
-
-    testController_B.whileTrue(new LEDTest(m_LEDSubsystem, Color.kOrange));
-    testController_Start.whileTrue(new LEDTest(m_LEDSubsystem, Color.kFuchsia));
-    testController_X.whileTrue(new LEDTest(m_LEDSubsystem, Color.kMediumAquamarine));
-    testController_RB.whileTrue(new LEDTest(m_LEDSubsystem, Color.kLightGoldenrodYellow));
   }
 
   
@@ -339,6 +318,10 @@ public class RobotContainer {
 
   public void resetWinch(){
     m_ClimberSubsystem.setWinchUpperLimit();
+  }
+
+  public void initHasNote(){
+    m_IntakeSubsystem.setHasNote(true);
   }
 }
 

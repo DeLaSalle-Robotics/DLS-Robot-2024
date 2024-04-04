@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.76,
-      "y": 6.73
+      "x": 0.94,
+      "y": 7.02
     },
     "rotation": 60.0
   },
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Back up Right"
+            "pathName": "Back up Right (1 Note)"
           }
         }
       ]

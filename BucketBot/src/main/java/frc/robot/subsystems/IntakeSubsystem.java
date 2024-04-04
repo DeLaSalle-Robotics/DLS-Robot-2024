@@ -88,6 +88,11 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   public void setHasNote(boolean hasNote){
     m_hasNote = hasNote;
+    if (hasNote){
+      SmartDashboard.putString("Note Status", "Has Note");
+    } else {
+      SmartDashboard.putString("Note Status", "Empty");
+    }
   }
 
 

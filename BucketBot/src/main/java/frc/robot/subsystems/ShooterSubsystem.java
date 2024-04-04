@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -107,6 +108,8 @@ public Command autoShooter(IntakeSubsystem intake){
             () -> 0.5, 
             () -> true
           ).withTimeout(2)
+        ).andThen(
+          new InstantCommand(() -> intake.setHasNote(false))
         ),
 
         // Command B: Spin shooter until intake command is complete
