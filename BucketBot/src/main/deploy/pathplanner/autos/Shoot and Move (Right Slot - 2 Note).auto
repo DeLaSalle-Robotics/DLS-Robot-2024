@@ -20,13 +20,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Back up Right (2 Note)"
+            "pathName": "Back up Right (2 Note) - Part 1"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "autoShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back up Right (2 Note) - Part 2"
           }
         }
       ]
