@@ -7,11 +7,17 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.Constants;
+import frc.robot.commands.Intake;
 import frc.robot.commands.Rumble;
+import frc.robot.commands.Shooter;
 
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -104,7 +110,15 @@ public class IntakeSubsystem extends SubsystemBase {
     return m_hasNote;
   }
 
-
+  public Command autoIntake(IntakeSubsystem intake){
+    return Commands.sequence(
+      new Intake(this, () -> Constants.Intake.kIntakePower, () -> false).withTimeout(5.0),
+      new Intake(this, () -> -Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.25),
+      new Intake(this, () -> Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.25),
+      new Intake(this, () -> -Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.25),
+      new Intake(this, () -> Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.25)
+    );
+  }
 
 
   // Default subsystem methods

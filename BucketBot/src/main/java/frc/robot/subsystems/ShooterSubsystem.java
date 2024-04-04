@@ -99,7 +99,7 @@ public Command autoShooter(IntakeSubsystem intake){
         )
         // Wait a second for speed to stabilize
         .andThen(
-          new WaitCommand(1)
+          new WaitCommand(0.5)
         )
         // Then feed intake
         .andThen(
@@ -107,7 +107,7 @@ public Command autoShooter(IntakeSubsystem intake){
             intake, 
             () -> 0.5, 
             () -> true
-          ).withTimeout(2)
+          ).withTimeout(1)
         ).andThen(
           new InstantCommand(() -> intake.setHasNote(false))
         ),

@@ -181,9 +181,7 @@ public class RobotContainer {
       () -> true
     ));
 
-    // Clear hasNote status after feeding to shooter or running backwards
-    controller_RB.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
-    joystick_2.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
+    // Clear hasNote status after feeding to shooter
     joystick_1.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
 
     // Zero heading
