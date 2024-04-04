@@ -179,12 +179,12 @@ public class RobotContainer {
       m_IntakeSubsystem, 
       () -> -Constants.Intake.kIntakeReversePower,
       () -> true
-    ).andThen(
-      new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false))
     ));
 
-    // Clear hasNote status after feeding to shooter
-    // joystick_1.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
+    // Clear hasNote status after feeding to shooter or running backwards
+    controller_RB.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
+    joystick_2.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
+    joystick_1.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
 
     // Zero heading
     controller_Menu.onTrue(new InstantCommand(m_SwerveSubsystem::zeroGyro));
@@ -195,8 +195,6 @@ public class RobotContainer {
       m_IntakeSubsystem, 
       () -> SmartDashboard.getNumber("Intake Feeder Speed", Constants.Intake.kIntakeFeederPower), 
       () -> true
-    ).andThen(
-      new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false))
     ));
 
     // Spin shooter forward
@@ -213,8 +211,6 @@ public class RobotContainer {
       m_IntakeSubsystem, 
       () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower), 
       () -> true
-    ).andThen(
-      new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false))
     ));
   
 
