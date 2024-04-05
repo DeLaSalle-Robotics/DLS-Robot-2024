@@ -8,9 +8,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
@@ -19,11 +19,11 @@ import swervelib.math.SwerveMath;
 /**
  * An example command that uses an example subsystem.
  */
-public class AbsoluteFieldDrive extends CommandBase
+public class DriveAndPoint extends Command
 {
 
   private final SwerveSubsystem m_swerve;
-  private final DoubleSupplier  vX, vY, heading;
+  private final DoubleSupplier vX, vY, heading;
 
   /**
    * Used to drive a swerve robot in full field-centric mode.  vX and vY supply translation inputs, where x is
@@ -37,7 +37,7 @@ public class AbsoluteFieldDrive extends CommandBase
    *                station glass.
    * @param heading DoubleSupplier that supplies the robot's heading angle in degrees
    */
-  public AbsoluteFieldDrive(SwerveSubsystem m_swerve, DoubleSupplier vX, DoubleSupplier vY,
+  public DriveAndPoint(SwerveSubsystem m_swerve, DoubleSupplier vX, DoubleSupplier vY,
                             DoubleSupplier heading)
   {
     this.m_swerve = m_swerve;
@@ -64,7 +64,7 @@ public class AbsoluteFieldDrive extends CommandBase
                                                          new Rotation2d(heading.getAsDouble()/180.0 * Math.PI));
 
     // Make the robot move
-    m_swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);
+    m_swerve.drive(SwerveController.getTranslation2d(desiredSpeeds), desiredSpeeds.omegaRadiansPerSecond, true);
 
   }
 
