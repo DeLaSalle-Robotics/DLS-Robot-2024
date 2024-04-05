@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1972751629119076,
-      "y": 6.864270451704745
+      "x": 0.78,
+      "y": 6.73
     },
     "rotation": 60.0
   },
@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Back up Right (2 Note part 1)"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "autoShooter"
@@ -20,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Back up Right (2 Note) - Part 1"
+            "pathName": "Back up Right (2 Note part 2)"
           }
         },
         {
@@ -32,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Back up Right (2 Note) - Part 2"
+            "pathName": "Back up Right (2 Note part 3)"
           }
         }
       ]

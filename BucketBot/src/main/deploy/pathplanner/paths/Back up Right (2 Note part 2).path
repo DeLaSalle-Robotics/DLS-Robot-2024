@@ -16,16 +16,32 @@
     },
     {
       "anchor": {
-        "x": 3.6902112222303542,
-        "y": 7.154146737672006
+        "x": 2.171922058129831,
+        "y": 7.007220871584601
       },
       "prevControl": {
-        "x": 2.426350615413095,
-        "y": 7.130956634794626
+        "x": 1.8719220581298313,
+        "y": 7.007220871584601
       },
       "nextControl": {
-        "x": 3.956649645669009,
-        "y": 7.1590355160837245
+        "x": 2.471922058129831,
+        "y": 7.007220871584601
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.725824594506332,
+        "y": 7.007220871584601
+      },
+      "prevControl": {
+        "x": 2.4619639876890727,
+        "y": 6.984030768707221
+      },
+      "nextControl": {
+        "x": 3.9922630179449867,
+        "y": 7.01210964999632
       },
       "isLocked": false,
       "linkedName": null
@@ -40,18 +56,18 @@
         "y": 6.86
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.1,
+      "waypointRelativePos": 0.2,
       "rotationDegrees": 0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1,
+      "waypointRelativePos": 2.0,
       "rotationDegrees": 0,
       "rotateFast": false
     }
@@ -60,7 +76,7 @@
   "eventMarkers": [
     {
       "name": "Spin Intake",
-      "waypointRelativePos": 0.25,
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "sequential",
         "data": {
