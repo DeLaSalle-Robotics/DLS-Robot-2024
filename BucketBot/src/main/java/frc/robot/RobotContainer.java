@@ -225,6 +225,14 @@ public class RobotContainer {
       () -> Constants.Climber.kExtenderRetractPower
     ));
 
+    // Drive pointing at alliance wall
+    controller_X.whileTrue(new DriveAndPoint(
+      m_SwerveSubsystem,
+      () -> -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kLeftYDeadband),
+      () -> -MathUtil.applyDeadband(m_controller.getLeftX(), OperatorConstants.kLeftXDeadband),
+      () -> 180.0
+    ))
+
     // Move winch up
     /*joystick_11.whileTrue(new ClimberWinchSimple(
       m_ClimberSubsystem, 
