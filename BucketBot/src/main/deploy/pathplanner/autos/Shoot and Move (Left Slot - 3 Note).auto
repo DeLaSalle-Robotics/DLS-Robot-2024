@@ -26,6 +26,18 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Back up Left (2 Note Part 2)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "autoShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "ayo 3 note auto!!!!!!! part 1"
           }
         },
