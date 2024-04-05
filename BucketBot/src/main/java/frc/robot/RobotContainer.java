@@ -212,7 +212,26 @@ public class RobotContainer {
       () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower), 
       () -> true
     ));
+
+
+    // Run intake with auto-stop
+    joystick_4.whileTrue(
+      new Intake(
+        m_IntakeSubsystem, 
+        () -> Constants.Intake.kIntakePower,
+        () -> false
+    ));
+
+    joystick_5.whileTrue(
+      new Intake(
+        m_IntakeSubsystem, 
+        () -> Constants.Intake.kIntakePower,
+        () -> false
+    ));
+
+    
   
+    
 
     // Move extender up
     joystick_6.whileTrue(new ClimberExtenderSimple(
