@@ -113,10 +113,10 @@ public class IntakeSubsystem extends SubsystemBase {
   public Command autoIntake(){
     return Commands.sequence(
       new Intake(this, () -> Constants.Intake.kIntakePower, () -> false).withTimeout(5.0),
-      new Intake(this, () -> -Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.25),
-      new Intake(this, () -> Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.25),
-      new Intake(this, () -> -Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.25),
-      new Intake(this, () -> Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.25)
+      new Intake(this, () -> -Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.5),
+      new Intake(this, () -> Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.5),
+      new Intake(this, () -> -Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.5),
+      new Intake(this, () -> Constants.Intake.kIntakeReversePower, () -> true).withTimeout(0.5)
     );
   }
 

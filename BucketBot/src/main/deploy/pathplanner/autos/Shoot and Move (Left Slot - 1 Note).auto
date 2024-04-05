@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7059762690953959,
-      "y": 4.3245400776515845
+      "x": 0.8610186711898846,
+      "y": 4.035077900664277
     },
     "rotation": -60.0
   },
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Back up Left"
+            "pathName": "Back up Left (1 Note & 2 Note Part 3)"
           }
         }
       ]

@@ -2,16 +2,22 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1972751629119076,
-      "y": 6.864270451704745
+      "x": 0.78,
+      "y": 4.37
     },
-    "rotation": 60.0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Back up Left (2 Note part 1)"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "autoShooter"
@@ -20,19 +26,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Back up Right (2 Note) - Part 1"
+            "pathName": "Back up Left (2 Note Part 2)"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "autoShooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Back up Right (2 Note) - Part 2"
           }
         }
       ]
