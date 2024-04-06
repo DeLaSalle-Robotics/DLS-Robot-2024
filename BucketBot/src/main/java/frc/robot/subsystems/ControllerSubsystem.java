@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -13,7 +12,7 @@ public class ControllerSubsystem extends SubsystemBase {
 
   private final XboxController m_controller;
   private final Joystick m_flightJoystick;
-  private final GenericHID m_testController;
+  // private final GenericHID m_testController;
 
   /**
    * Currently only used for global rumble functionality.
@@ -22,7 +21,7 @@ public class ControllerSubsystem extends SubsystemBase {
     super();
     m_controller = new XboxController(Constants.OperatorConstants.kDriverControllerPort);
     m_flightJoystick = new Joystick(Constants.OperatorConstants.kClimbControllerPort);
-    m_testController = new GenericHID(Constants.OperatorConstants.kTestControllerPort);
+    // m_testController = new GenericHID(Constants.OperatorConstants.kTestControllerPort);
   }
 
   /**
@@ -46,9 +45,11 @@ public class ControllerSubsystem extends SubsystemBase {
    * Returns the controller used for test mode.
    * @return The controller in port 3.
    */
+  /*
   public GenericHID getTestController(){
     return m_testController;
   }
+  */
 
 
 

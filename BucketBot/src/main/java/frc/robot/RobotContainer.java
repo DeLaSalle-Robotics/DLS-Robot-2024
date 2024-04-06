@@ -1,19 +1,15 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ControllerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.ShooterAnalog;
 import frc.robot.commands.LED;
-import frc.robot.commands.climber.*;
-import frc.robot.commands.swervedrive.drivebase.DriveAndPoint;
 
 import java.io.File;
 
@@ -22,18 +18,13 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
@@ -44,7 +35,7 @@ public class RobotContainer {
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   private final ControllerSubsystem m_ControllerSubsystem = new ControllerSubsystem();
   private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
-  private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
+  // private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
   private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
 
   // These subsystems require other subsystems and MUST be declared after all others
@@ -57,33 +48,33 @@ public class RobotContainer {
   // Setting up controllers and flight joysticks
   private final XboxController m_controller = m_ControllerSubsystem.getDriveController();
   private final Joystick m_flightJoystick = m_ControllerSubsystem.getClimbController();
-  private final GenericHID m_testController = m_ControllerSubsystem.getTestController();
+  // private final GenericHID m_testController = m_ControllerSubsystem.getTestController();
   
 
   // Xbox Controller buttons:
 
-  private Trigger controller_A = new JoystickButton(m_controller, 1);
-  private Trigger controller_B = new JoystickButton(m_controller, 2);
-  private Trigger controller_X = new JoystickButton(m_controller, 3);
-  private Trigger controller_Y = new JoystickButton(m_controller, 4);
+  // private Trigger controller_A = new JoystickButton(m_controller, 1);
+  // private Trigger controller_B = new JoystickButton(m_controller, 2);
+  // private Trigger controller_X = new JoystickButton(m_controller, 3);
+  // private Trigger controller_Y = new JoystickButton(m_controller, 4);
 
-  private Trigger controller_LB = new JoystickButton(m_controller, 5);
+  // private Trigger controller_LB = new JoystickButton(m_controller, 5);
   private Trigger controller_RB = new JoystickButton(m_controller, 6);
 
-  private Trigger controller_Share = new JoystickButton(m_controller, 7);
+  // private Trigger controller_Share = new JoystickButton(m_controller, 7);
   private Trigger controller_Menu = new JoystickButton(m_controller, 8);
 
-  private Trigger controller_LStick = new JoystickButton(m_controller, 9);
-  private Trigger controller_RStick = new JoystickButton(m_controller, 10);
+  // private Trigger controller_LStick = new JoystickButton(m_controller, 9);
+  // private Trigger controller_RStick = new JoystickButton(m_controller, 10);
 
-  private Trigger controller_dpad_N = new POVButton(m_controller, 0);
-  private Trigger controller_dpad_NE = new POVButton(m_controller, 45);
-  private Trigger controller_dpad_E = new POVButton(m_controller, 90);
-  private Trigger controller_dpad_SE = new POVButton(m_controller, 135);
-  private Trigger controller_dpad_S = new POVButton(m_controller, 180);
-  private Trigger controller_dpad_SW = new POVButton(m_controller, 225);
-  private Trigger controller_dpad_W = new POVButton(m_controller, 270);
-  private Trigger controller_dpad_NW = new POVButton(m_controller, 315);
+  // private Trigger controller_dpad_N = new POVButton(m_controller, 0);
+  // private Trigger controller_dpad_NE = new POVButton(m_controller, 45);
+  // private Trigger controller_dpad_E = new POVButton(m_controller, 90);
+  // private Trigger controller_dpad_SE = new POVButton(m_controller, 135);
+  // private Trigger controller_dpad_S = new POVButton(m_controller, 180);
+  // private Trigger controller_dpad_SW = new POVButton(m_controller, 225);
+  // private Trigger controller_dpad_W = new POVButton(m_controller, 270);
+  // private Trigger controller_dpad_NW = new POVButton(m_controller, 315);
 
   // Other triggers
   private Trigger controller_RT = new Trigger(() -> m_controller.getRightTriggerAxis() > 0.1);
@@ -96,16 +87,17 @@ public class RobotContainer {
   private Trigger joystick_3 = new JoystickButton(m_flightJoystick, 3);
   private Trigger joystick_4 = new JoystickButton(m_flightJoystick, 4);
   private Trigger joystick_5 = new JoystickButton(m_flightJoystick, 5);
-  private Trigger joystick_6 = new JoystickButton(m_flightJoystick, 6);
-  private Trigger joystick_7 = new JoystickButton(m_flightJoystick, 7);
+  // private Trigger joystick_6 = new JoystickButton(m_flightJoystick, 6);
+  // private Trigger joystick_7 = new JoystickButton(m_flightJoystick, 7);
   private Trigger joystick_8 = new JoystickButton(m_flightJoystick, 8);
-  private Trigger joystick_9 = new JoystickButton(m_flightJoystick, 9);
-  private Trigger joystick_10 = new JoystickButton(m_flightJoystick, 10);
-  private Trigger joystick_11 = new JoystickButton(m_flightJoystick, 11);
+  // private Trigger joystick_9 = new JoystickButton(m_flightJoystick, 9);
+  // private Trigger joystick_10 = new JoystickButton(m_flightJoystick, 10);
+  // private Trigger joystick_11 = new JoystickButton(m_flightJoystick, 11);
 
 
   // Test controller buttons
   // A is skipped because it doesn't work well
+  /*
   private Trigger testController_B = new JoystickButton(m_testController, 2);
   private Trigger testController_X = new JoystickButton(m_testController, 3);
   private Trigger testController_Y = new JoystickButton(m_testController, 4);
@@ -115,7 +107,7 @@ public class RobotContainer {
   private Trigger testController_Start = new JoystickButton(m_testController, 8);
   private Trigger testController_LStick = new JoystickButton(m_testController, 9);
   private Trigger testController_RStick = new JoystickButton(m_testController, 10);
-
+*/
   
 
 
@@ -237,24 +229,30 @@ public class RobotContainer {
     
 
     // Move extender up
+    /*
     joystick_6.whileTrue(new ClimberExtenderSimple(
       m_ClimberSubsystem, 
       () -> Constants.Climber.kExtenderExtendPower
     ));
+    */
 
     // Move extender down
+    /*
     joystick_7.whileTrue(new ClimberExtenderSimple(
       m_ClimberSubsystem, 
       () -> Constants.Climber.kExtenderRetractPower
     ));
+    */
 
     // Drive pointing at alliance wall
+    /*
     controller_X.whileTrue(new DriveAndPoint(
       m_SwerveSubsystem,
       () -> -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kLeftYDeadband),
       () -> -MathUtil.applyDeadband(m_controller.getLeftX(), OperatorConstants.kLeftXDeadband),
       () -> 180.0
     ));
+    */
 
     // Move winch up
     /*joystick_11.whileTrue(new ClimberWinchSimple(
@@ -274,7 +272,7 @@ public class RobotContainer {
    * Analog controller bindings for test mode.
    */
   public void configureAnalogTest(){
-
+    /*
     // Controls the climber motors
     Command climbTestMode = new ClimberTest(
       m_ClimberSubsystem,
@@ -302,6 +300,7 @@ public class RobotContainer {
 
     // Cancel swerve's command if it still exists from switching modes
     CommandScheduler.getInstance().unregisterSubsystem(m_SwerveSubsystem);
+    */
   }
 
 
@@ -309,7 +308,7 @@ public class RobotContainer {
    * Digital controller bindings for test mode.
    */
   public void configureBindingsTest(){
-    
+    /*
     // Fire shooter
     testController_Y.whileTrue(new Intake(
       m_IntakeSubsystem, 
@@ -323,6 +322,7 @@ public class RobotContainer {
       () -> -SmartDashboard.getNumber("Intake Reverse Speed", Constants.Intake.kIntakeReversePower),
       () -> false
     ));
+    */
   }
 
   
@@ -343,7 +343,7 @@ public class RobotContainer {
 
 
   public void resetWinch(){
-    m_ClimberSubsystem.setWinchUpperLimit();
+    // m_ClimberSubsystem.setWinchUpperLimit();
   }
 
   public void initHasNote(){
