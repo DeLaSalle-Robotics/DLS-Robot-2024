@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -183,8 +184,10 @@ public class RobotContainer {
       () -> true
     ));
 
-    // Clear hasNote status after feeding to shooter
-    joystick_1.onFalse(new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false)));
+    // Clear hasNote status when pressing shooter motor and fire
+    joystick_1.and(()->joystick_3.getAsBoolean()).onFalse(
+      new InstantCommand(() -> m_IntakeSubsystem.setHasNote(false))
+    );
 
     // Zero heading
     controller_Menu.onTrue(new InstantCommand(m_SwerveSubsystem::zeroGyro));
