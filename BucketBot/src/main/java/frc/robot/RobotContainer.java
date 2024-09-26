@@ -6,20 +6,26 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.ShooterAnalog;
+import frc.robot.commands.TargetPose;
 import frc.robot.commands.LED;
 
 import java.io.File;
+
+import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,7 +46,10 @@ public class RobotContainer {
 
   // These subsystems require other subsystems and MUST be declared after all others
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(m_ControllerSubsystem);
-  // private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
+  
+  private final PhotonCamera camera = new PhotonCamera("Logitech_Webcam_C930e");
+  
+  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(camera, m_SwerveSubsystem);
 
   // Allows picking autonomous routines from SmartDashboard
   private final SendableChooser<Command> m_autoChooser;
@@ -94,7 +103,7 @@ public class RobotContainer {
   // private Trigger joystick_10 = new JoystickButton(m_flightJoystick, 10);
   // private Trigger joystick_11 = new JoystickButton(m_flightJoystick, 11);
 
-
+  
   // Test controller buttons
   // A is skipped because it doesn't work well
   /*
@@ -126,6 +135,9 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
     SmartDashboard.putString("Robot State", "Have Note");
+
+
+  
   }
 
   /**
@@ -134,7 +146,7 @@ public class RobotContainer {
   public void configureAnalogTeleop(){
 
     // Default drive command
-    Command driveFieldOrientedAngularVelocity = m_SwerveSubsystem.driveCommand(
+    final Command driveFieldOrientedAngularVelocity = m_SwerveSubsystem.driveCommand(
       () -> -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kLeftYDeadband),
       () -> -MathUtil.applyDeadband(m_controller.getLeftX(), OperatorConstants.kLeftXDeadband),
       () -> -MathUtil.applyDeadband(m_controller.getRightX(), OperatorConstants.kRightXDeadband),
@@ -146,7 +158,9 @@ public class RobotContainer {
     // Not bound to any controller action, just runs all the time
     m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_IntakeSubsystem));
     m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
-    
+    m_VisionSubsystem.setDefaultCommand(new TargetPose(m_VisionSubsystem));
+      
+  
     //m_ShooterSubsystem.setDefaultCommand(spinShooter);
   }
 
@@ -170,7 +184,8 @@ public class RobotContainer {
     ));
 
     // Run intake backward
-    controller_RB.whileTrue(new Intake(
+    controller_RB.whileTrue(
+      new Intake(
       m_IntakeSubsystem, 
       () -> -Constants.Intake.kIntakeReversePower,
       () -> true

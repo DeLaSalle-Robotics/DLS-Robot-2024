@@ -1,115 +1,130 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants.VisionConstants;
-import frc.robot.Robot;
+import java.util.Optional;
 
 import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
-import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.VisionConstants;
 
 // 6 inches up, 6 inches to the side for testing
 
 public class VisionSubsystem extends SubsystemBase {
 
-  /** Vision simulator */
-  private final VisionSystemSim visionSim = new VisionSystemSim("john");
+  private final PhotonCamera camera;
+  private final SwerveSubsystem swerveSubsystem;
+  private final AprilTagFieldLayout aprilTagFieldLayout;
 
-  /** Camera simulator */
-  private final PhotonCamera camera = new PhotonCamera("jane");
-  private final PhotonCameraSim vs_camera;
+  private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(5));
 
-  // Simulation camera properties
-  private final SimCameraProperties vs_camProperties = new SimCameraProperties();
+  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.25, 0.25, Units.degreesToRadians(10));
 
-  // April tag model and field layout
-  // private final TargetModel vs_targetModel = TargetModel.kAprilTag36h11;
-  private final AprilTagFieldLayout vs_layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+  private final SwerveDrivePoseEstimator poseEstimator; 
+  
+  private final Field2d field2d = new Field2d();
 
-  // Swerve subsystem to be passed through the constructor
-  private final SwerveSubsystem m_swerveSubsystem;
+  private double previousPipelineTimeStamp = 0;
 
-  // Position and orientation of the camera, robot-relative
-  private final Transform3d vs_camTranslation;
+// VisionSubsystem constructor
+public VisionSubsystem(PhotonCamera camera, SwerveSubsystem swerveSubsystem) {
+ 
+  this.camera = camera;
+  this.swerveSubsystem = swerveSubsystem;
+  var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+  layout.setOrigin( OriginPosition.kBlueAllianceWallRightSide); 
+  this.aprilTagFieldLayout = layout;
 
+  ShuffleboardTab tab = Shuffleboard.getTab("Vision");
 
+  poseEstimator = new SwerveDrivePoseEstimator(
+   swerveSubsystem.getKinematics() ,
+   swerveSubsystem.getHeading(),
+    swerveSubsystem.getSwerveModulePositions(),
+     new Pose2d(),
+     stateStdDevs,
+     visionMeasurementStdDevs);
 
-  // VisionSubsystem constructor
-  public VisionSubsystem(SwerveSubsystem swerve) {
-
-    // Define swerve subsystem, we need methods from it for vision to work
-    m_swerveSubsystem = swerve;
-
-    // Add april tags from the april tag layout
-    visionSim.addAprilTags(vs_layout);
-
-    // Set resolution and FOV calibration errors, FPS, and average latency
-    vs_camProperties.setCalibration(
-      VisionConstants.kResWidth,
-      VisionConstants.kResHeight, 
-      Rotation2d.fromDegrees(VisionConstants.kFovDiagDegrees)
-    );
-
-    // Set calibration errors
-    vs_camProperties.setCalibError(
-      VisionConstants.kCalibErrorPx, 
-      VisionConstants.kCalibErrorStdDev
-    );
-
-    // Set FPS and average latency
-    vs_camProperties.setFPS(VisionConstants.kFps);
-    vs_camProperties.setAvgLatencyMs(VisionConstants.kAvgLatencyMs);
-
-    // Add the properties to the simulated camera
-    vs_camera = new PhotonCameraSim(camera, vs_camProperties);
-
-    // Allow the simulated camera to draw a wireframe visualization of the field to the camera streams
-    // This is very resource intensive and reccomended to be left off
-    vs_camera.enableDrawWireframe(false);
-
-    // Position and rotation of the camera relative to the robot pose
-    Translation3d vs_camPosition = VisionConstants.kCameraPosition;
-    Rotation3d vs_camRotation = VisionConstants.kCameraRotation; // Note that this is in radians - use Math.toRadians to enter degree values
-    vs_camTranslation = new Transform3d(vs_camPosition, vs_camRotation);
-
-    // Add the camera to the vision simulator
-    visionSim.addCamera(vs_camera, vs_camTranslation);
-  }
-
-
-
-  public void watchAprilTag(int aprilTagID){
-    
-    // Find the specified april tag
-    Pose3d tagPose = vs_layout.getTagPose(aprilTagID).get();
-
-    // Get the rotation to the april tag
-    Rotation2d rotationToTag = PhotonUtils.getYawToPose(m_swerveSubsystem.getPose(), tagPose.toPose2d());
-
-    // Set heading to the specified tag
-    m_swerveSubsystem.driveCommand(
-      () -> 0.0, 
-      () -> 0.0, 
-      () -> rotationToTag.getRotations(),
-      () -> 0.0
-    );
-
-  }
+  tab.addString("Pose", this::getFomattedPose).withPosition(0,0).withSize(2,0);
+  tab.add("Field-Check", field2d).withPosition(2, 0).withSize(6, 4);
 
   
+} 
 
+@Override
+public void periodic() {
+  // Update pose estimator with best visible target
+  PhotonPipelineResult pipelineResult = camera.getLatestResult();
+  double resultTimestamp = pipelineResult.getTimestampSeconds();
+  if (resultTimestamp != previousPipelineTimeStamp && pipelineResult.hasTargets()) {
+    previousPipelineTimeStamp = resultTimestamp;
+    PhotonTrackedTarget target = pipelineResult.getBestTarget();
+    int fiducialId = target.getFiducialId();
+    // Get the tag pose from the filed layout - will be null if layout failed to load.
+    Optional<Pose3d> tagPose = aprilTagFieldLayout == null ? Optional.empty() : aprilTagFieldLayout.getTagPose(fiducialId);
+    if (target.getPoseAmbiguity() <= 0.2 && fiducialId >= 0 && tagPose.isPresent()) {
+      Pose3d targetPose = tagPose.get();
+      Transform3d camToTarget = target.getBestCameraToTarget();
+      Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
+
+      Pose3d visionMeasurement = camPose.transformBy(VisionConstants.CAMERA_TO_ROBOT);
+
+      poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), resultTimestamp);
+    }
+  } 
+  //Update pose estimator
+  poseEstimator.update(
+    swerveSubsystem.getHeading(),
+    swerveSubsystem.getSwerveModulePositions());
+  field2d.setRobotPose(getCurrentPose());
+}
+
+
+private String getFomattedPose() {
+  var pose = getCurrentPose();
+  return String.format("(%.2f, %.2f) %.2f degrees", 
+      pose.getX(), 
+      pose.getY(),
+      pose.getRotation().getDegrees());
+}
+
+public Pose2d getCurrentPose() {
+  return poseEstimator.getEstimatedPosition();
+}
+
+    
+  
+  public int getPoseViaTag(){
+    PhotonPipelineResult result = camera.getLatestResult();
+    if (result.hasTargets()) {
+      PhotonTrackedTarget target = result.getBestTarget();
+      return target.getFiducialId();
+    } else {
+      return 99;
+    }
+  }
+
+
+
+public void takePict(){
+  camera.takeOutputSnapshot();
+}
 
  public PhotonCamera getPhotonCamera(){
     return camera;
@@ -134,24 +149,18 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
 
-  // This method will be called once per scheduler run
-  @Override
-  public void periodic() {
-
-  }
-
 
   // This method will be called once per scheduler run during simulation
   @Override
   public void simulationPeriodic() {
-    visionSim.update(m_swerveSubsystem.getPose());
+    //visionSim.update(m_swerveSubsystem.getPose());
   }
 
 
-
+/*
   public Field2d getSimDebugField() {
     if (!Robot.isSimulation()) return null;
     return visionSim.getDebugField();
   }
-
+*/
 }

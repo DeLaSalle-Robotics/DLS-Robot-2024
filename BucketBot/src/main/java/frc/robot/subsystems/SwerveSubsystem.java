@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -89,7 +90,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
 
-    setupPathPlanner();
+       setupPathPlanner();
   }
 
 
@@ -215,6 +216,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   /**
+   * This is the command that is actually used.
    * Command to drive the robot using translative values and heading as angular velocity.
    *
    * @param translationX     Translation in the X direction. Cubed for smoother controls.
@@ -407,6 +409,10 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public Rotation2d getHeading(){
     return getPose().getRotation();
+  }
+
+  public SwerveModulePosition[] getSwerveModulePositions() {
+    return swerveDrive.getModulePositions();
   }
 
   /**
