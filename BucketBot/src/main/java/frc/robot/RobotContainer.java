@@ -1,37 +1,32 @@
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.ControllerSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.commands.Intake;
-import frc.robot.commands.Shooter;
-import frc.robot.commands.ShooterAnalog;
-import frc.robot.commands.TargetPose;
-import frc.robot.commands.LED;
-
 import java.io.File;
-
-import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Intake;
+import frc.robot.commands.LED;
+import frc.robot.commands.Shooter;
+import frc.robot.commands.ShooterAnalog;
+import frc.robot.commands.TargetPose;
+import frc.robot.subsystems.ControllerSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 
 public class RobotContainer {
@@ -47,9 +42,8 @@ public class RobotContainer {
   // These subsystems require other subsystems and MUST be declared after all others
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(m_ControllerSubsystem);
   
-  private final PhotonCamera camera = new PhotonCamera("Logitech_Webcam_C930e");
   
-  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(camera, m_SwerveSubsystem);
+  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
 
   // Allows picking autonomous routines from SmartDashboard
   private final SendableChooser<Command> m_autoChooser;

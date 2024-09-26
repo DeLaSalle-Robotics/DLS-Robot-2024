@@ -1,135 +1,38 @@
 {
-  "NTProvider": {
-    "types": {
-      "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Auto Chooser": "String Chooser",
-      "/SmartDashboard/Field": "Field2d",
-      "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro",
-      "/SmartDashboard/VisionSystemSim-john/Sim Field": "Field2d",
-      "/SmartDashboard/navX-Sensor[4]": "Gyro"
-    },
-    "windows": {
-      "/SmartDashboard/Field": {
-        "Robot": {
-          "style": "Box/Image"
-        },
-        "bottom": 1476,
-        "height": 8.210550308227539,
-        "left": 150,
-        "right": 2961,
-        "top": 79,
-        "width": 16.541748046875,
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/VisionSystemSim-john/Sim Field": {
-        "bottom": 1476,
-        "height": 8.210550308227539,
-        "left": 150,
-        "right": 2961,
-        "top": 79,
-        "visibleTargetPoses": {
-          "arrowColor": [
-            0.946078360080719,
-            0.08333331346511841,
-            1.0,
-            255.0
-          ],
-          "color": [
-            0.008506352081894875,
-            0.4275689721107483,
-            0.5784313678741455,
-            255.0
-          ]
-        },
-        "width": 16.541748046875,
-        "window": {
-          "visible": true
-        }
-      }
-    }
-  },
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
-    "Retained Values": {
-      "open": false
-    },
     "transitory": {
-      "CameraPublisher": {
-        "jane-processed": {
-          "open": true,
-          "string[]##v_/CameraPublisher/jane-processed/streams": {
-            "open": true
-          }
-        },
-        "jane-raw": {
-          "open": true,
-          "string[]##v_/CameraPublisher/jane-raw/streams": {
-            "open": true
-          }
-        },
-        "open": true
-      },
       "PathPlanner": {
         "double[]##v_/PathPlanner/activePath": {
-          "open": true
+          "open": false
         },
         "double[]##v_/PathPlanner/targetPose": {
-          "open": true
+          "open": false
         },
         "double[]##v_/PathPlanner/vel": {
-          "open": true
+          "open": false
         }
       },
       "SmartDashboard": {
-        "Field": {
-          "double[]##v_/SmartDashboard/Field/Robot": {
-            "open": true
-          },
-          "double[]##v_/SmartDashboard/Field/XModules": {
-            "open": true
-          },
-          "open": true
-        },
-        "Swerve Drive": {
-          "open": true
-        },
         "VisionSystemSim-john": {
           "Sim Field": {
             "double[]##v_/SmartDashboard/VisionSystemSim-john/Sim Field/Robot": {
-              "open": true
+              "open": false
             },
             "double[]##v_/SmartDashboard/VisionSystemSim-john/Sim Field/visibleTargetPoses": {
-              "open": true
-            },
-            "open": true
-          }
-        },
-        "open": true,
-        "swerve": {
-          "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
-            "open": true
+              "open": false
+            }
           },
-          "double[]##v_/SmartDashboard/swerve/measuredStates": {
-            "open": true
-          },
-          "open": true
+          "open": false
         }
       },
       "photonvision": {
         "jane": {
           "double[]##v_/photonvision/jane/targetPose": {
-            "open": true
-          }
-        },
-        "open": true
+            "open": false
+          },
+          "open": false
+        }
       }
     }
-  },
-  "NetworkTables Info": {
-    "visible": true
   }
 }

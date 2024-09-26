@@ -2,7 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -17,100 +20,94 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants;
 
 // 6 inches up, 6 inches to the side for testing
 
 public class VisionSubsystem extends SubsystemBase {
 
   private final PhotonCamera camera;
-  private final SwerveSubsystem swerveSubsystem;
-  private final AprilTagFieldLayout aprilTagFieldLayout;
 
+  private final SwerveSubsystem swerveSubsystem;
+
+  public PhotonPoseEstimator photonPoseEstimator;
+
+  private AprilTagFieldLayout aprilTagFieldLayout;
+  
   private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(5));
 
   private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.25, 0.25, Units.degreesToRadians(10));
 
-  private final SwerveDrivePoseEstimator poseEstimator; 
-  
   private final Field2d field2d = new Field2d();
+
+  private Transform3d robotToCam;
 
   private double previousPipelineTimeStamp = 0;
 
+  private final SwerveDrivePoseEstimator poseEstimator;
+
 // VisionSubsystem constructor
-public VisionSubsystem(PhotonCamera camera, SwerveSubsystem swerveSubsystem) {
- 
-  this.camera = camera;
+public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
+  // Load the camera
+  camera = new PhotonCamera("Logitech_Webcam_C930e");
+// Adding the swerve subsystem to this class
   this.swerveSubsystem = swerveSubsystem;
-  var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+  //Load field layout
+  AprilTagFieldLayout layout;
+  layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
   layout.setOrigin( OriginPosition.kBlueAllianceWallRightSide); 
-  this.aprilTagFieldLayout = layout;
-
-  ShuffleboardTab tab = Shuffleboard.getTab("Vision");
-
-  poseEstimator = new SwerveDrivePoseEstimator(
-   swerveSubsystem.getKinematics() ,
-   swerveSubsystem.getHeading(),
-    swerveSubsystem.getSwerveModulePositions(),
-     new Pose2d(),
-     stateStdDevs,
-     visionMeasurementStdDevs);
-
-  tab.addString("Pose", this::getFomattedPose).withPosition(0,0).withSize(2,0);
-  tab.add("Field-Check", field2d).withPosition(2, 0).withSize(6, 4);
-
+  //Camera Position Relative to center of robot.
+  robotToCam = new Transform3d(Constants.VisionConstants.kCameraPosition, Constants.VisionConstants.kCameraRotation);
+  // Construct PhotonPoseEstimator
+  PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCam);
   
+  poseEstimator = new SwerveDrivePoseEstimator(swerveSubsystem.getKinematics(),
+   swerveSubsystem.getHeading(), swerveSubsystem.getSwerveModulePositions(), 
+   new Pose2d(), 
+   stateStdDevs, 
+   visionMeasurementStdDevs);
+
 } 
 
 @Override
 public void periodic() {
-  // Update pose estimator with best visible target
-  PhotonPipelineResult pipelineResult = camera.getLatestResult();
-  double resultTimestamp = pipelineResult.getTimestampSeconds();
-  if (resultTimestamp != previousPipelineTimeStamp && pipelineResult.hasTargets()) {
-    previousPipelineTimeStamp = resultTimestamp;
-    PhotonTrackedTarget target = pipelineResult.getBestTarget();
-    int fiducialId = target.getFiducialId();
-    // Get the tag pose from the filed layout - will be null if layout failed to load.
-    Optional<Pose3d> tagPose = aprilTagFieldLayout == null ? Optional.empty() : aprilTagFieldLayout.getTagPose(fiducialId);
-    if (target.getPoseAmbiguity() <= 0.2 && fiducialId >= 0 && tagPose.isPresent()) {
-      Pose3d targetPose = tagPose.get();
-      Transform3d camToTarget = target.getBestCameraToTarget();
-      Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
 
-      Pose3d visionMeasurement = camPose.transformBy(VisionConstants.CAMERA_TO_ROBOT);
+  var pipelineResult = camera.getLatestResult();
+  var resultTimestamp = pipelineResult.getTimestampSeconds();
+    if (resultTimestamp != previousPipelineTimeStamp && pipelineResult.hasTargets()) {
+      previousPipelineTimeStamp = resultTimestamp;
+      var target = pipelineResult.getBestTarget();
+      var fiducialId = target.getFiducialId();
+      // Get the tag pose from field layout - consider that the layout will be null if it failed to load
+      Optional<Pose3d> tagPose = aprilTagFieldLayout == null ? Optional.empty() : aprilTagFieldLayout.getTagPose(fiducialId);
+      if (target.getPoseAmbiguity() <= .2 && fiducialId >= 0 && tagPose.isPresent()) {
+        var targetPose = tagPose.get();
+        Transform3d camToTarget = target.getBestCameraToTarget();
+        Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
 
-      poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), resultTimestamp);
+        var visionMeasurement = camPose.transformBy(robotToCam);
+        poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), resultTimestamp);        
+      }
     }
-  } 
-  //Update pose estimator
+  
+  photonPoseEstimator.update();
+
   poseEstimator.update(
     swerveSubsystem.getHeading(),
     swerveSubsystem.getSwerveModulePositions());
-  field2d.setRobotPose(getCurrentPose());
-}
-
-
-private String getFomattedPose() {
-  var pose = getCurrentPose();
-  return String.format("(%.2f, %.2f) %.2f degrees", 
-      pose.getX(), 
-      pose.getY(),
-      pose.getRotation().getDegrees());
-}
-
-public Pose2d getCurrentPose() {
-  return poseEstimator.getEstimatedPosition();
-}
-
-    
   
-  public int getPoseViaTag(){
+}
+
+public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+  photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+  return photonPoseEstimator.update();
+}
+  
+  
+public int getPoseViaTag(){
     PhotonPipelineResult result = camera.getLatestResult();
     if (result.hasTargets()) {
       PhotonTrackedTarget target = result.getBestTarget();
