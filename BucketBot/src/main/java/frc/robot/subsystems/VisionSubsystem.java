@@ -83,7 +83,8 @@ public void periodic() {
       var fiducialId = target.getFiducialId();
       // Get the tag pose from field layout - consider that the layout will be null if it failed to load
       Optional<Pose3d> tagPose = aprilTagFieldLayout == null ? Optional.empty() : aprilTagFieldLayout.getTagPose(fiducialId);
-      if (target.getPoseAmbiguity() <= .2 && fiducialId >= 0 && tagPose.isPresent()) {
+      if (target.getPoseAmbiguity() <= .2 &&
+       fiducialId >= 0 && tagPose.isPresent()) {
         var targetPose = tagPose.get();
         Transform3d camToTarget = target.getBestCameraToTarget();
         Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
@@ -93,7 +94,7 @@ public void periodic() {
       }
     }
   
-  photonPoseEstimator.update();
+  //photonPoseEstimator.update();
 
   poseEstimator.update(
     swerveSubsystem.getHeading(),
