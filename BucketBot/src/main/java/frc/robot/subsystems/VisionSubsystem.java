@@ -14,13 +14,14 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -31,8 +32,6 @@ public class VisionSubsystem extends SubsystemBase {
 
   private final PhotonCamera camera;
 
-  private final SwerveSubsystem swerveSubsystem;
-
   public PhotonPoseEstimator photonPoseEstimator;
 
   private AprilTagFieldLayout aprilTagFieldLayout;
@@ -41,34 +40,28 @@ public class VisionSubsystem extends SubsystemBase {
 
   private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.25, 0.25, Units.degreesToRadians(10));
 
-  private final Field2d field2d = new Field2d();
+  private final Field2d field2d_Vis = new Field2d();
 
   private Transform3d robotToCam;
 
   private double previousPipelineTimeStamp = 0;
 
-  private final SwerveDrivePoseEstimator poseEstimator;
-
 // VisionSubsystem constructor
-public VisionSubsystem(SwerveSubsystem swerveSubsystem) {
+public VisionSubsystem() {
   // Load the camera
   camera = new PhotonCamera("Logitech_Webcam_C930e");
-// Adding the swerve subsystem to this class
-  this.swerveSubsystem = swerveSubsystem;
-  //Load field layout
+//Load field layout
   AprilTagFieldLayout layout;
   layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
   layout.setOrigin( OriginPosition.kBlueAllianceWallRightSide); 
   //Camera Position Relative to center of robot.
   robotToCam = new Transform3d(Constants.VisionConstants.kCameraPosition, Constants.VisionConstants.kCameraRotation);
+  // Create Vision Smart Dashboard
+  SmartDashboard.putData("Vision_Field",field2d_Vis);
   // Construct PhotonPoseEstimator
   PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCam);
   
-  poseEstimator = new SwerveDrivePoseEstimator(swerveSubsystem.getKinematics(),
-   swerveSubsystem.getHeading(), swerveSubsystem.getSwerveModulePositions(), 
-   new Pose2d(), 
-   stateStdDevs, 
-   visionMeasurementStdDevs);
+  
 
 } 
 
@@ -90,15 +83,13 @@ public void periodic() {
         Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
 
         var visionMeasurement = camPose.transformBy(robotToCam);
-        poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), resultTimestamp);        
+        SmartDashboard.putNumber("Vision_x", visionMeasurement.getX());
+        SmartDashboard.putNumber("Vision_y", visionMeasurement.getY());
+        field2d_Vis.setRobotPose(visionMeasurement.toPose2d());
       }
     }
   
-  //photonPoseEstimator.update();
-
-  poseEstimator.update(
-    swerveSubsystem.getHeading(),
-    swerveSubsystem.getSwerveModulePositions());
+  
   
 }
 
@@ -108,13 +99,13 @@ public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedR
 }
   
   
-public int getPoseViaTag(){
+public Pose2d getPoseViaTag(){
     PhotonPipelineResult result = camera.getLatestResult();
     if (result.hasTargets()) {
       PhotonTrackedTarget target = result.getBestTarget();
-      return target.getFiducialId();
+      return photonPoseEstimator.getReferencePose().toPose2d();
     } else {
-      return 99;
+      return new Pose2d(10,10, Rotation2d.fromDegrees(180));
     }
   }
 

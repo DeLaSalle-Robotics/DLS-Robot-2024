@@ -4,6 +4,14 @@
 
 package frc.robot.subsystems;
 
+import java.io.File;
+import java.util.List;
+import java.util.function.DoubleSupplier;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -20,19 +28,11 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
-import java.io.File;
-import java.util.List;
-import java.util.function.DoubleSupplier;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -48,7 +48,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
   // Swerve drive object.
   private final SwerveDrive swerveDrive;
+  // Field object
 
+  private final Field2d m_field = new Field2d();
   // Maximum speed of the robot in meters per second, used to limit acceleration.
   public double maximumSpeed = Units.feetToMeters(Constants.Drivebase.kMaxSpeed);
 
@@ -77,6 +79,10 @@ public class SwerveSubsystem extends SubsystemBase {
     System.out.println("\t\"drive\": " + driveConversionFactor);
     System.out.println("}");
 
+    // Creates a field for tracking pose estimation
+
+    SmartDashboard.putData("Field", m_field);
+
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
@@ -90,7 +96,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
 
-       setupPathPlanner();
+    // Calls a method that creates the AutoBuilder
+    setupPathPlanner();
   }
 
 
@@ -329,9 +336,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic(){
-    // SmartDashboard.putNumber("Robot Pose X", this.getPose().getX());
-    // SmartDashboard.putNumber("Robot Pose Y", this.getPose().getY());
-  }
+     SmartDashboard.putNumber("Robot Pose X", this.getPose().getX());
+     SmartDashboard.putNumber("Robot Pose Y", this.getPose().getY());
+    m_field.setRobotPose(this.getPose());
+    
+    }
 
   @Override
   public void simulationPeriodic(){

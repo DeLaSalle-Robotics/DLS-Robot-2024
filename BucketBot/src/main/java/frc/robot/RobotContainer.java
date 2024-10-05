@@ -43,7 +43,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(m_ControllerSubsystem);
   
   
-  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(m_SwerveSubsystem);
+  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
 
   // Allows picking autonomous routines from SmartDashboard
   private final SendableChooser<Command> m_autoChooser;
