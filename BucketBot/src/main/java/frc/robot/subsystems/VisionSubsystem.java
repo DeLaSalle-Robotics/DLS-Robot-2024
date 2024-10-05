@@ -34,7 +34,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   public PhotonPoseEstimator photonPoseEstimator;
 
-  private AprilTagFieldLayout aprilTagFieldLayout;
+  private AprilTagFieldLayout layout;
   
   private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(5));
 
@@ -51,8 +51,10 @@ public VisionSubsystem() {
   // Load the camera
   camera = new PhotonCamera("Logitech_Webcam_C930e");
 //Load field layout
-  AprilTagFieldLayout layout;
-  layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+  AprilTagFieldLayout layout;  
+  layout = new AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+  System.out.println(layout.getFieldLength());
+//  AprilTagFieldLayout layout = new AprilTagFieldLayout(layout_test);
   layout.setOrigin( OriginPosition.kBlueAllianceWallRightSide); 
   //Camera Position Relative to center of robot.
   robotToCam = new Transform3d(Constants.VisionConstants.kCameraPosition, Constants.VisionConstants.kCameraRotation);
@@ -60,7 +62,7 @@ public VisionSubsystem() {
   SmartDashboard.putData("Vision_Field",field2d_Vis);
   // Construct PhotonPoseEstimator
   PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCam);
-  
+
   
 
 } 
@@ -75,9 +77,12 @@ public void periodic() {
       var target = pipelineResult.getBestTarget();
       var fiducialId = target.getFiducialId();
       // Get the tag pose from field layout - consider that the layout will be null if it failed to load
-      Optional<Pose3d> tagPose = aprilTagFieldLayout == null ? Optional.empty() : aprilTagFieldLayout.getTagPose(fiducialId);
+      Optional<Pose3d> tagPose = this.layout == null ? Optional.empty() : this.layout.getTagPose(fiducialId);
+      System.out.println("field length is: " + this.layout.getFieldLength());
+      System.out.println("Good empty is: " + tagPose.isEmpty());
+      System.out.println("Good present is: " + tagPose.isPresent());
       if (target.getPoseAmbiguity() <= .2 &&
-       fiducialId >= 0 && tagPose.isPresent()) {
+      fiducialId >= 0 && tagPose.isPresent()) {
         var targetPose = tagPose.get();
         Transform3d camToTarget = target.getBestCameraToTarget();
         Pose3d camPose = targetPose.transformBy(camToTarget.inverse());

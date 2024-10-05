@@ -4,14 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.io.File;
-import java.util.List;
-import java.util.function.DoubleSupplier;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -33,6 +25,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
+import java.io.File;
+import java.util.List;
+import java.util.function.DoubleSupplier;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -48,12 +49,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
   // Swerve drive object.
   private final SwerveDrive swerveDrive;
-  // Field object
 
-  private final Field2d m_field = new Field2d();
   // Maximum speed of the robot in meters per second, used to limit acceleration.
   public double maximumSpeed = Units.feetToMeters(Constants.Drivebase.kMaxSpeed);
 
+  //Adding a field for drivetrain positioning
+
+  private final Field2d m_field = new Field2d();
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -73,15 +75,14 @@ public class SwerveSubsystem extends SubsystemBase {
     // The encoder resolution per motor revolution is 1 per motor revolution.
     double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
 
+    //Creating Field object
+    SmartDashboard.putData("Field", m_field);
+
     // Print this data to output
     System.out.println("\"conversionFactor\": {");
     System.out.println("\t\"angle\": " + angleConversionFactor + ",");
     System.out.println("\t\"drive\": " + driveConversionFactor);
     System.out.println("}");
-
-    // Creates a field for tracking pose estimation
-
-    SmartDashboard.putData("Field", m_field);
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -336,11 +337,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic(){
-     SmartDashboard.putNumber("Robot Pose X", this.getPose().getX());
-     SmartDashboard.putNumber("Robot Pose Y", this.getPose().getY());
+    SmartDashboard.putNumber("Robot Pose X", this.getPose().getX());
+    SmartDashboard.putNumber("Robot Pose Y", this.getPose().getY());
     m_field.setRobotPose(this.getPose());
-    
-    }
+  }
 
   @Override
   public void simulationPeriodic(){
