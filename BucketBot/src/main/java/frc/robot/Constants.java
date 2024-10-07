@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-
 import swervelib.math.Matter;
 
 public final class Constants {
@@ -107,7 +106,9 @@ public final class Constants {
                 // Y: Left/Right
                 // Z: Up/Down
                 public static final Translation3d kCameraPosition = new Translation3d(0.0, 0.5, 0.381);
-                public static final Rotation3d kCameraRotation = new Rotation3d(0.0, Units.degreesToRadians(30), 0.0);
+                public static final Rotation3d kCameraRotation = new Rotation3d(Units.degreesToRadians(180),
+                                                                                Units.degreesToRadians(30), 
+                                                                                Units.degreesToRadians(0));
                 public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(kCameraPosition, kCameraRotation);
                 
         }

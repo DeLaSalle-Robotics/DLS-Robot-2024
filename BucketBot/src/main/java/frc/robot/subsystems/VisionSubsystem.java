@@ -1,11 +1,11 @@
 package frc.robot.subsystems;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -42,28 +42,30 @@ public class VisionSubsystem extends SubsystemBase {
 
   private final Field2d field2d_Vis = new Field2d();
 
-  private Transform3d robotToCam;
-
-  private double previousPipelineTimeStamp = 0;
+   private double previousPipelineTimeStamp = 0;
 
 // VisionSubsystem constructor
 public VisionSubsystem() {
   // Load the camera
   camera = new PhotonCamera("Logitech_Webcam_C930e");
 //Load field layout
-  AprilTagFieldLayout layout;  
-  layout = new AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-  System.out.println(layout.getFieldLength());
+  //AprilTagFieldLayout layout =  AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+  try {
+        layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+      } catch (IOException e) {
+        e.printStackTrace();
+    }
+  
+  System.out.println(this.layout.getFieldLength());
 //  AprilTagFieldLayout layout = new AprilTagFieldLayout(layout_test);
   layout.setOrigin( OriginPosition.kBlueAllianceWallRightSide); 
-  //Camera Position Relative to center of robot.
-  robotToCam = new Transform3d(Constants.VisionConstants.kCameraPosition, Constants.VisionConstants.kCameraRotation);
-  // Create Vision Smart Dashboard
+    // Create Vision Smart Dashboard
   SmartDashboard.putData("Vision_Field",field2d_Vis);
   // Construct PhotonPoseEstimator
-  PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCam);
+  //PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCam);
 
-  
+  // Adding Fake ID to test posing
+  SmartDashboard.putNumber("Fake ID", 3);
 
 } 
 
@@ -75,23 +77,27 @@ public void periodic() {
     if (resultTimestamp != previousPipelineTimeStamp && pipelineResult.hasTargets()) {
       previousPipelineTimeStamp = resultTimestamp;
       var target = pipelineResult.getBestTarget();
+      //var fiducialId = 3; //SmartDashboard.getNumber("Fake ID", 1); 
       var fiducialId = target.getFiducialId();
       // Get the tag pose from field layout - consider that the layout will be null if it failed to load
       Optional<Pose3d> tagPose = this.layout == null ? Optional.empty() : this.layout.getTagPose(fiducialId);
       System.out.println("field length is: " + this.layout.getFieldLength());
-      System.out.println("Good empty is: " + tagPose.isEmpty());
-      System.out.println("Good present is: " + tagPose.isPresent());
+      System.out.println("ID is: " + fiducialId);
+      System.out.println("Tag Y is: " + tagPose.get().getY());
       if (target.getPoseAmbiguity() <= .2 &&
       fiducialId >= 0 && tagPose.isPresent()) {
         var targetPose = tagPose.get();
         Transform3d camToTarget = target.getBestCameraToTarget();
         Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
 
-        var visionMeasurement = camPose.transformBy(robotToCam);
+        var visionMeasurement = camPose.transformBy(Constants.VisionConstants.CAMERA_TO_ROBOT);
         SmartDashboard.putNumber("Vision_x", visionMeasurement.getX());
         SmartDashboard.putNumber("Vision_y", visionMeasurement.getY());
         field2d_Vis.setRobotPose(visionMeasurement.toPose2d());
-      }
+        SmartDashboard.putNumber("Target_x", targetPose.getX());
+        SmartDashboard.putNumber("Target_y", targetPose.getY());
+        //field2d_Vis.setRobotPose(targetPose.toPose2d()); 
+      } 
     }
   
   
@@ -99,7 +105,7 @@ public void periodic() {
 }
 
 public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-  photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+  this.photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
   return photonPoseEstimator.update();
 }
   
@@ -108,7 +114,7 @@ public Pose2d getPoseViaTag(){
     PhotonPipelineResult result = camera.getLatestResult();
     if (result.hasTargets()) {
       PhotonTrackedTarget target = result.getBestTarget();
-      return photonPoseEstimator.getReferencePose().toPose2d();
+      return this.photonPoseEstimator.getReferencePose().toPose2d();
     } else {
       return new Pose2d(10,10, Rotation2d.fromDegrees(180));
     }
