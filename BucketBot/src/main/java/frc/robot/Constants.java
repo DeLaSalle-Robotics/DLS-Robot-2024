@@ -105,8 +105,8 @@ public final class Constants {
                 // X: Forward/Backward
                 // Y: Left/Right
                 // Z: Up/Down
-                public static final Translation3d kCameraPosition = new Translation3d(0.0, 0.5, 0.381);
-                public static final Rotation3d kCameraRotation = new Rotation3d(Units.degreesToRadians(180),
+                public static final Translation3d kCameraPosition = new Translation3d(0.0, 0.25, 0.381);
+                public static final Rotation3d kCameraRotation = new Rotation3d(Units.degreesToRadians(0),
                                                                                 Units.degreesToRadians(30), 
                                                                                 Units.degreesToRadians(0));
                 public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(kCameraPosition, kCameraRotation);

@@ -51,7 +51,7 @@ public VisionSubsystem() {
 //Load field layout
   //AprilTagFieldLayout layout =  AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
   try {
-        layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+        layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
       } catch (IOException e) {
         e.printStackTrace();
     }
@@ -97,6 +97,9 @@ public void periodic() {
         SmartDashboard.putNumber("Target_x", targetPose.getX());
         SmartDashboard.putNumber("Target_y", targetPose.getY());
         //field2d_Vis.setRobotPose(targetPose.toPose2d()); 
+        if (fiducialId == 4 || fiducialId == 7) {
+          boolean shoot = this.shootPose(visionMeasurement);
+        }
       } 
     }
   
@@ -109,7 +112,20 @@ public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedR
   return photonPoseEstimator.update();
 }
   
-  
+public boolean shootPose(Pose3d visionMeasurement){
+double distance = visionMeasurement.getX();
+double angle = visionMeasurement.getRotation().getAngle();
+boolean distGood = false;
+boolean angleGood = false;
+if (angle > Units.degreesToRadians(57) && angle < Units.degreesToRadians(237)){
+   angleGood = true;
+} 
+if (distance < Units.inchesToMeters(65)){
+  distGood = true;
+} 
+return distGood && angleGood;
+}
+
 public Pose2d getPoseViaTag(){
     PhotonPipelineResult result = camera.getLatestResult();
     if (result.hasTargets()) {
