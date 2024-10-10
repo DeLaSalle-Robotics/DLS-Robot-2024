@@ -4,13 +4,15 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.io.IOException;
+
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import java.io.File;
-import java.io.IOException;
 import swervelib.parser.SwerveParser;
 
 /**
@@ -25,7 +27,6 @@ public class Robot extends TimedRobot
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
   private Timer disabledTimer;
 
   public Robot()
@@ -51,6 +52,7 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
+    m_robotContainer.configureLED();
   }
 
   /**
@@ -76,7 +78,7 @@ public class Robot extends TimedRobot
   @Override
   public void disabledInit()
   {
-    m_robotContainer.setMotorBrake(true);
+        m_robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
   }
@@ -84,6 +86,7 @@ public class Robot extends TimedRobot
   @Override
   public void disabledPeriodic()
   {
+    m_robotContainer.ledDisable();
     /*
     if (disabledTimer.hasElapsed(Constants.Drivebase.kWheelLockTime))
     {
@@ -108,6 +111,7 @@ public class Robot extends TimedRobot
     {
       m_autonomousCommand.schedule();
     }
+    SmartDashboard.putString("LED State", "No Note");
   }
 
   /**

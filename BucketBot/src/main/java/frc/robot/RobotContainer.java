@@ -20,7 +20,6 @@ import frc.robot.commands.Intake;
 import frc.robot.commands.LED;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.ShooterAnalog;
-import frc.robot.commands.TargetPose;
 import frc.robot.subsystems.ControllerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -134,6 +133,16 @@ public class RobotContainer {
   
   }
 
+  public void configureLED(){
+    // Set up default command for LED subsystem
+    // Not bound to any controller action, just runs all the time
+    m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_IntakeSubsystem, m_VisionSubsystem));
+    SmartDashboard.putString("LED State", "Waiting");
+    }
+
+    public void ledDisable(){
+      m_LEDSubsystem.rainbow();
+    }
   /**
    * Analog controller bindings for tele-op mode.
    */
@@ -148,10 +157,7 @@ public class RobotContainer {
     );
 
     
-    // Set up default command for LED subsystem
-    // Not bound to any controller action, just runs all the time
-    m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_IntakeSubsystem));
-    m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
+        m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
     //m_VisionSubsystem.setDefaultCommand(new TargetPose(m_VisionSubsystem));
       
   

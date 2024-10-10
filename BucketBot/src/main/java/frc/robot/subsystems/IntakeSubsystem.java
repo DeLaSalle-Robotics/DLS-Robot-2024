@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Encoder;
@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import frc.robot.Constants;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Rumble;
@@ -91,9 +90,11 @@ public class IntakeSubsystem extends SubsystemBase {
   public void setHasNote(boolean hasNote){
     m_hasNote = hasNote;
     if (hasNote){
-      SmartDashboard.putString("Note Status", "Has Note");
+      SmartDashboard.putString("Robot State", "Has Note");
+      SmartDashboard.putString("LED State", "Has Note");
     } else {
-      SmartDashboard.putString("Note Status", "Empty");
+      SmartDashboard.putString("Robot State", "Empty");
+      SmartDashboard.putString("LED State", "No Note");
     }
   }
 

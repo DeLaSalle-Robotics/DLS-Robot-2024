@@ -42,7 +42,13 @@ public class VisionSubsystem extends SubsystemBase {
 
   private final Field2d field2d_Vis = new Field2d();
 
-   private double previousPipelineTimeStamp = 0;
+  private double previousPipelineTimeStamp = 0;
+
+  private int currentTag;
+
+  private Transform3d currentPose;
+
+  private boolean verbose;
 
 // VisionSubsystem constructor
 public VisionSubsystem() {
@@ -66,7 +72,7 @@ public VisionSubsystem() {
 
   // Adding Fake ID to test posing
   SmartDashboard.putNumber("Fake ID", 3);
-
+  this.verbose = false;
 } 
 
 @Override
@@ -81,9 +87,12 @@ public void periodic() {
       var fiducialId = target.getFiducialId();
       // Get the tag pose from field layout - consider that the layout will be null if it failed to load
       Optional<Pose3d> tagPose = this.layout == null ? Optional.empty() : this.layout.getTagPose(fiducialId);
-      System.out.println("field length is: " + this.layout.getFieldLength());
-      System.out.println("ID is: " + fiducialId);
-      System.out.println("Tag Y is: " + tagPose.get().getY());
+      if (this.verbose) {
+        System.out.println("field length is: " + this.layout.getFieldLength());
+        System.out.println("ID is: " + fiducialId);
+        System.out.println("Tag Y is: " + tagPose.get().getY());
+      }
+      
       if (target.getPoseAmbiguity() <= .2 &&
       fiducialId >= 0 && tagPose.isPresent()) {
         var targetPose = tagPose.get();
@@ -96,10 +105,10 @@ public void periodic() {
         field2d_Vis.setRobotPose(visionMeasurement.toPose2d());
         SmartDashboard.putNumber("Target_x", targetPose.getX());
         SmartDashboard.putNumber("Target_y", targetPose.getY());
+        this.currentPose = camToTarget;
+        this.currentTag = fiducialId;
         //field2d_Vis.setRobotPose(targetPose.toPose2d()); 
-        if (fiducialId == 4 || fiducialId == 7) {
-          boolean shoot = this.shootPose(visionMeasurement);
-        }
+        
       } 
     }
   
@@ -107,24 +116,40 @@ public void periodic() {
   
 }
 
+public boolean InZone(){
+  if (this.verbose) {System.out.println("On Target Calc:" + Units.radiansToDegrees(Math.abs(this.currentPose.getRotation().getAngle() )));}
+  return (this.currentTag == 4 || this.currentTag == 7) && this.shootPose(this.currentPose);
+        }
+
+public boolean OnTarget(){
+  try {return (Math.abs(this.currentPose.getRotation().getAngle() - Math.PI) < Units.degreesToRadians(20));}
+  catch (NullPointerException a) { return false;}
+}
+
 public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
   this.photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
   return photonPoseEstimator.update();
 }
   
-public boolean shootPose(Pose3d visionMeasurement){
-double distance = visionMeasurement.getX();
-double angle = visionMeasurement.getRotation().getAngle();
-boolean distGood = false;
-boolean angleGood = false;
-if (angle > Units.degreesToRadians(57) && angle < Units.degreesToRadians(237)){
-   angleGood = true;
-} 
-if (distance < Units.inchesToMeters(65)){
-  distGood = true;
-} 
-return distGood && angleGood;
+public boolean shootPose(Transform3d visionMeasurement){
+    try {
+      double distance = visionMeasurement.getX();
+    double angle = visionMeasurement.getRotation().getAngle() ;
+    boolean distGood = false;
+    boolean angleGood = false;
+    if (angle > Units.degreesToRadians(57) && angle < Units.degreesToRadians(237)){
+      angleGood = true;
+    } 
+    if (distance < Units.inchesToMeters(65)){
+      distGood = true;
+    } 
+    return distGood && angleGood;}
+    catch (NullPointerException a) {
+      return false;
+    }
 }
+
+
 
 public Pose2d getPoseViaTag(){
     PhotonPipelineResult result = camera.getLatestResult();
