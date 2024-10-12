@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.LED.LED_State;
@@ -69,6 +70,7 @@ public class LED extends Command {
         case ON_TARGET -> m_LEDSubsystem.set(Color.kGreen);
         default -> m_LEDSubsystem.off();
       }
+      SmartDashboard.putString("LED State", currentState.toString());
   }
 
   // Called once the command ends or is interrupted.

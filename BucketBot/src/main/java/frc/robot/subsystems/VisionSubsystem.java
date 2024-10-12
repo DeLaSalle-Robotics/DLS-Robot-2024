@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -105,8 +106,15 @@ public void periodic() {
         field2d_Vis.setRobotPose(visionMeasurement.toPose2d());
         SmartDashboard.putNumber("Target_x", targetPose.getX());
         SmartDashboard.putNumber("Target_y", targetPose.getY());
+        SmartDashboard.putNumber("Target_Angle",Units.radiansToDegrees(visionMeasurement.getRotation().getAngle()));
         this.currentPose = camToTarget;
         this.currentTag = fiducialId;
+        List<PhotonTrackedTarget> targetList = pipelineResult.getTargets();
+        for (int i = 0; i < targetList.size(); i++){
+          if(targetList.get(i).getFiducialId()==4) {this.currentTag = 4;};
+          if(targetList.get(i).getFiducialId()==7) {this.currentTag = 7;};
+        }
+        SmartDashboard.putNumber("Target_ID", currentTag);
         //field2d_Vis.setRobotPose(targetPose.toPose2d()); 
         
       } 
@@ -166,7 +174,9 @@ public Pose2d getPoseViaTag(){
 public void takePict(){
   camera.takeOutputSnapshot();
 }
-
+public double getRotationToTarget(){
+  return this.currentPose.getRotation().getAngle();
+}
  public PhotonCamera getPhotonCamera(){
     return camera;
  }
