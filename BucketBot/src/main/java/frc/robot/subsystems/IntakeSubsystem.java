@@ -4,6 +4,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,7 +34,8 @@ public class IntakeSubsystem extends SubsystemBase {
   // Tells us whether or not the robot has a note in its intake
   private boolean m_hasNote = false;
   
-  
+  BooleanPublisher NotePub;
+
   public IntakeSubsystem(ControllerSubsystem controllerSubsystem) {
     super();
     m_ControllerSubsystem = controllerSubsystem;
@@ -44,6 +48,11 @@ public class IntakeSubsystem extends SubsystemBase {
     // Rumble feedback
     m_feedback = new Trigger(() -> this.noteDetected());
     m_feedback.onTrue(new Rumble(m_ControllerSubsystem, () -> 0.5, true));
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("datatable");
+    NotePub = table.getBooleanTopic("Note").publish();
+  
   }
 
 
@@ -79,7 +88,12 @@ public class IntakeSubsystem extends SubsystemBase {
    * @return True if a note was detected, false otherwise.
    */
   public boolean noteDetected(){
-    return (this.getEncoderRate() <= -300);
+    boolean HaveNote = this.getEncoderRate() <= -300;
+    try {
+    NotePub.set(HaveNote);}
+    catch (Exception e){
+      e.printStackTrace();}
+    return (HaveNote);
   }
 
 
@@ -89,6 +103,7 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   public void setHasNote(boolean hasNote){
     m_hasNote = hasNote;
+    NotePub.set(m_hasNote);
     if (hasNote){
       SmartDashboard.putString("Robot State", "Has Note");
       SmartDashboard.putString("LED State", "Has Note");
@@ -142,6 +157,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Encoder Rate", m_IntakeEncoder.getRate());
     // SmartDashboard.putNumber("Motor Velocity", m_IntakeMotor.getEncoder().getVelocity());
     // SmartDashboard.putNumber("Intake Temp", m_IntakeMotor.getMotorTemperature());
+    
   }
 
 

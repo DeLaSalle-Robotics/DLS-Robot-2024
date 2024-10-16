@@ -7,6 +7,9 @@ package frc.robot;
 import java.io.File;
 import java.io.IOException;
 
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -29,6 +32,11 @@ public class Robot extends TimedRobot
   private RobotContainer m_robotContainer;
   private Timer disabledTimer;
 
+  BooleanPublisher InZonePub;
+  BooleanPublisher NotePub;
+  BooleanPublisher OnTargetPub;
+  BooleanPublisher RestingPub;
+
   public Robot()
   {
     instance = this;
@@ -48,6 +56,18 @@ public class Robot extends TimedRobot
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    //Creating a NetworkTable to allow sharing of state data
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("datatable");
+    InZonePub = table.getBooleanTopic("InZone").publish();
+    NotePub = table.getBooleanTopic("Note").publish();
+    OnTargetPub = table.getBooleanTopic("OnTarget").publish();
+    RestingPub = table.getBooleanTopic("Resting").publish();
+    //Setting NetworkTable initial values
+    InZonePub.set(true);
+    NotePub.set(true);
+    OnTargetPub.set(true);
+    RestingPub.set(true);
 
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
@@ -81,6 +101,7 @@ public class Robot extends TimedRobot
         m_robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
+    RestingPub.set(true);
   }
 
   @Override
@@ -105,6 +126,7 @@ public class Robot extends TimedRobot
     m_robotContainer.setMotorBrake(false);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.initHasNote();
+    RestingPub.set(false);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)

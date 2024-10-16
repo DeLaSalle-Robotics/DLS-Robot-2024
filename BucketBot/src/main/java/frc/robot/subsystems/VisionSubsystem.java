@@ -21,6 +21,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,6 +53,10 @@ public class VisionSubsystem extends SubsystemBase {
   private Transform3d currentPose;
 
   private boolean verbose;
+  
+  //NetworkTable publishers
+  BooleanPublisher InZonePub;
+  BooleanPublisher OnTargetPub;
 
 // VisionSubsystem constructor
 public VisionSubsystem() {
@@ -74,6 +81,12 @@ public VisionSubsystem() {
   // Adding Fake ID to test posing
   SmartDashboard.putNumber("Fake ID", 3);
   this.verbose = false;
+
+  NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  NetworkTable table = inst.getTable("datatable");
+  InZonePub = table.getBooleanTopic("InZone").publish();
+  OnTargetPub = table.getBooleanTopic("OnTarget").publish();
+   
 } 
 
 @Override
@@ -116,7 +129,8 @@ public void periodic() {
         }
         SmartDashboard.putNumber("Target_ID", currentTag);
         //field2d_Vis.setRobotPose(targetPose.toPose2d()); 
-        
+        InZonePub.set(this.InZone());
+        OnTargetPub.set(this.OnTarget());
       } 
     }
   
