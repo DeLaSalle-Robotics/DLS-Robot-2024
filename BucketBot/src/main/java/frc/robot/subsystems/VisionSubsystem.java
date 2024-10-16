@@ -209,14 +209,8 @@ public boolean shootPose(Transform3d visionMeasurement){
 
 
 
-public Pose2d getPoseViaTag(){
-    PhotonPipelineResult result = camera.getLatestResult();
-    if (result.hasTargets()) {
-      PhotonTrackedTarget target = result.getBestTarget();
-      return this.photonPoseEstimator.getReferencePose().toPose2d();
-    } else {
-      return new Pose2d(10,10, Rotation2d.fromDegrees(180));
-    }
+public double getPoseViaTag(){
+    return this.currentPose.getRotation().getAngle();
   }
 
 

@@ -17,9 +17,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Intake;
-import frc.robot.commands.LED;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.ShooterAnalog;
+import frc.robot.commands.TargetPose;
 import frc.robot.commands.climber.ClimberExtenderSimple;
 import frc.robot.subsystems.ControllerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -94,7 +94,7 @@ public class RobotContainer {
   private Trigger joystick_6 = new JoystickButton(m_flightJoystick, 6);
   private Trigger joystick_7 = new JoystickButton(m_flightJoystick, 7);
   private Trigger joystick_8 = new JoystickButton(m_flightJoystick, 8);
-  // private Trigger joystick_9 = new JoystickButton(m_flightJoystick, 9);
+  private Trigger joystick_9 = new JoystickButton(m_flightJoystick, 9);
   // private Trigger joystick_10 = new JoystickButton(m_flightJoystick, 10);
   // private Trigger joystick_11 = new JoystickButton(m_flightJoystick, 11);
 
@@ -243,7 +243,10 @@ public class RobotContainer {
         () -> false
     ));
 
-    
+    //Auto Target Command
+    joystick_9.whileTrue(
+      new TargetPose(m_VisionSubsystem, m_SwerveSubsystem)
+    );
   
     
 
