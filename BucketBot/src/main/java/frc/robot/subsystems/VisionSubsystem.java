@@ -139,13 +139,49 @@ public void periodic() {
 }
 
 public boolean InZone(){
-  if (this.verbose) {System.out.println("On Target Calc:" + Units.radiansToDegrees(Math.abs(this.currentPose.getRotation().getAngle() )));}
-  return (this.currentTag == 4 || this.currentTag == 7) && this.shootPose(this.currentPose);
-        }
+  if (this.verbose) {
+    System.out.println("In Zone Calc:" + Units.radiansToDegrees(Math.abs(this.currentPose.getRotation().getAngle() )));}
+  boolean distGood = false;
+  boolean angleGood = false;
+    
+  try {
+    double distance = this.currentPose.getX();
+    double angle = this.currentPose.getRotation().getAngle();
+    if (angle > Units.degreesToRadians(57) && angle < Units.degreesToRadians(237)){
+      angleGood = true;
+    } 
+    if (distance < Units.inchesToMeters(65)){
+      distGood = true;
+    } 
+    }
+   catch (NullPointerException e) {
+    // TODO: handle exception
+  }
+
+  return (this.currentTag == 4 || this.currentTag == 7) && (distGood && angleGood);
+}
 
 public boolean OnTarget(){
-  try {return (Math.abs(this.currentPose.getRotation().getAngle() - Math.PI) < Units.degreesToRadians(20));}
-  catch (NullPointerException a) { return false;}
+  if (this.verbose) {
+    System.out.println("On Target Calc:" + Units.radiansToDegrees(Math.abs(this.currentPose.getRotation().getAngle() )));}
+  boolean distGood = false;
+  boolean angleGood = false;
+    
+  try {
+    double distance = this.currentPose.getX();
+    double angle = this.currentPose.getRotation().getAngle();
+    if (angle > Units.degreesToRadians(170) && angle < Units.degreesToRadians(190)){
+      angleGood = true;
+    } 
+    if (distance < Units.inchesToMeters(65)){
+      distGood = true;
+    } 
+    }
+   catch (NullPointerException e) {
+    // TODO: handle exception
+  }
+
+  return (this.currentTag == 4 || this.currentTag == 7) && (distGood && angleGood);
 }
 
 public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
