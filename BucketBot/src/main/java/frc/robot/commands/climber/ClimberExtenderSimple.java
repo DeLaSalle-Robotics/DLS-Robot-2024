@@ -34,16 +34,8 @@ public class ClimberExtenderSimple extends Command {
   public void execute() {
 
     // If the limit switch is hit, reset the extender encoder
-    if(m_ClimberSubsystem.getSwitchState()){
-      m_ClimberSubsystem.setExtenderLowerLimit();
-    }
-
-    // Spin extender motor with soft limits
-    m_ClimberSubsystem.spinExtender(
-      m_power.getAsDouble(), 
-      Constants.Climber.kExtenderEndpointDown,
-      Constants.Climber.kExtenderEndpointUp
-    );
+     m_ClimberSubsystem.spinExtender(
+      m_power.getAsDouble());
 
   }
 

@@ -373,6 +373,8 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return The robot's pose
    */
   public Pose2d getPose(){
+    //swerveDrive.addVisionMeasurement() - Need to pull in vision subsystem
+
     return swerveDrive.getPose();
   }
 
