@@ -1,5 +1,8 @@
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.BooleanSubscriber;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,18 +22,27 @@ public class LED extends Command {
   }
   // Command parameters
   private final LEDSubsystem m_LEDSubsystem;
-  private final IntakeSubsystem m_IntakeSubsystem;
-  private final VisionSubsystem m_VisionSubsystem;
   private LED_State currentState;
+  
+   BooleanSubscriber InZoneSub;
+    BooleanSubscriber OnTargetSub;
+    BooleanSubscriber NoteSub;
+    BooleanSubscriber RestingSub;
+
   /**
    * Control the LEDs based on what other subsystems are doing
    * @param ledSubsystem LEDSubsystem
    * @param intakeSubsystem IntakeSubsystem
    */
-  public LED(LEDSubsystem ledSubsystem, IntakeSubsystem intakeSubsystem, VisionSubsystem visionSubsystem) {
+  public LED(LEDSubsystem ledSubsystem) {
     m_LEDSubsystem = ledSubsystem;
-    m_IntakeSubsystem = intakeSubsystem;
-    m_VisionSubsystem = visionSubsystem;
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("datatable");
+    InZoneSub = table.getBooleanTopic("InZone").subscribe(false);
+    NoteSub = table.getBooleanTopic("Note").subscribe(false);
+    OnTargetSub = table.getBooleanTopic("OnTarget").subscribe(false);
+    RestingSub = table.getBooleanTopic("Resting").subscribe(false);
+
 
     addRequirements(m_LEDSubsystem);
   }
@@ -40,6 +52,7 @@ public class LED extends Command {
   @Override
   public void initialize() {
     currentState = LED_State.WAITING;
+
   }
 
   /**
@@ -58,9 +71,14 @@ public class LED extends Command {
     //String led_state = SmartDashboard.getString("LED State","None");
 
     //Reaching out to other subsystems to identify the state for LED display
-    if (m_IntakeSubsystem.hasNote()) {this.currentState = LED_State.HAVE_NOTE;}else {currentState = LED_State.NO_NOTE;}
-    if (m_VisionSubsystem.InZone() ) {this.currentState = LED_State.IN_ZONE;}
-    if (m_VisionSubsystem.OnTarget() ) {this.currentState = LED_State.ON_TARGET;}
+
+    if (NoteSub.getAsBoolean()) {this.currentState = LED_State.HAVE_NOTE;}else {currentState = LED_State.NO_NOTE;}
+    if (InZoneSub.getAsBoolean() //&& NoteSub.getAsBoolean()
+        ) {this.currentState = LED_State.IN_ZONE;}
+    if (OnTargetSub.getAsBoolean() //&& NoteSub.getAsBoolean()
+        ) {this.currentState = LED_State.ON_TARGET;}
+    if (RestingSub.getAsBoolean()) {this.currentState = LED_State.WAITING;}
+
 // Key is to have a series of methods that define the states within subsystems
     switch (currentState) {
         case HAVE_NOTE -> m_LEDSubsystem.set(Color.kBlue);

@@ -5,7 +5,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -91,6 +93,18 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setData(m_ledBuffer);
    }
 
+public Command ledRed(Color kRed) {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          this.set(kRed);
+        });
+  }
+
+
+
+
   // Called once per scheduler run
   @Override
   public void periodic() {
@@ -110,6 +124,7 @@ public class LEDSubsystem extends SubsystemBase {
         case ON_TARGET -> this.set(Color.kGreen);
         default -> this.off();
       }
+    SmartDashboard.putString("Led State", currentState.toString());
   }
 
 

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Intake;
+import frc.robot.commands.LED;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.ShooterAnalog;
 import frc.robot.commands.TargetPose;
@@ -140,7 +141,7 @@ public class RobotContainer {
     // Not bound to any controller action, just runs all the time
     
     // No LED Default command - everything is handeled in the subsystem.
-    //m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem, m_IntakeSubsystem, m_VisionSubsystem));
+    m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem));
     SmartDashboard.putString("LED State", "Waiting");
     }
 

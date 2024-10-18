@@ -137,7 +137,7 @@ public final class Constants {
                 public static final double kWinchTargetVelocity = 3.0; // cm/s
 
                 // Simple climber power constants
-                public static final double kExtenderExtendPower = 0.088;
+                public static final double kExtenderExtendPower = 0.15;
                 public static final double kExtenderRetractPower = -0.15;
                 public static final double kWinchExtendPower = 0.09;
                 public static final double kWinchRetractPower = -0.15;

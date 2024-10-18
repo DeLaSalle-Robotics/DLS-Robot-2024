@@ -38,14 +38,14 @@ public class ChairTargetCommand extends Command {
   public void execute() {
 
     // Spin winch motor with soft limits
-    double robotRotation = m_VisionSubsystem.getRobotPose().getRotation().getRadians()%Math.PI;
+    double robotRotation = m_VisionSubsystem.getPoseViaTag()%(2*Math.PI);
     if (this.RedAlliance) {
       robotRotation = robotRotation + Math.PI;
     }
     double chairRotation = m_ClimberSubsystem.getChairHeading()%Math.PI;
     double chairError = chairRotation - robotRotation;
     double maxInput = 0.2;
-    if (Math.abs(chairError) > 0.17){
+    if (Math.abs(chairError) > 0.2){
       if (chairError < 0) {chairError = -maxInput;}
       if (chairError > 0) {chairError = maxInput; }
     }

@@ -119,12 +119,12 @@ public void periodic() {
         field2d_Vis.setRobotPose(visionMeasurement.toPose2d());
         SmartDashboard.putNumber("Target_x", targetPose.getX());
         SmartDashboard.putNumber("Target_y", targetPose.getY());
-        SmartDashboard.putNumber("Target_Angle",Units.radiansToDegrees(visionMeasurement.getRotation().getAngle()));
+        SmartDashboard.putNumber("Target_Angle",Units.radiansToDegrees(visionMeasurement.getRotation().getAngle()-Math.PI));
         this.currentPose = camToTarget;
         this.currentTag = fiducialId;
         List<PhotonTrackedTarget> targetList = pipelineResult.getTargets();
         for (int i = 0; i < targetList.size(); i++){
-          if(targetList.get(i).getFiducialId()==4) {this.currentTag = 4;};
+          if(targetList.get(i).getFiducialId()==4) {this.currentTag = 4;}
           if(targetList.get(i).getFiducialId()==7) {this.currentTag = 7;};
         }
         SmartDashboard.putNumber("Target_ID", currentTag);
@@ -140,13 +140,13 @@ public void periodic() {
 
 public boolean InZone(){
   if (this.verbose) {
-    System.out.println("In Zone Calc:" + Units.radiansToDegrees(Math.abs(this.currentPose.getRotation().getAngle() )));}
+    System.out.println("In Zone Calc:" + Units.radiansToDegrees(Math.abs(this.currentPose.getRotation().getAngle() - Math.PI )));}
   boolean distGood = false;
   boolean angleGood = false;
     
   try {
-    double distance = this.currentPose.getX();
-    double angle = this.currentPose.getRotation().getAngle();
+    double distance = this.visionMeasurement.getX();
+    double angle = this.currentPose.getRotation().getAngle() - Math.PI;
     if (angle > Units.degreesToRadians(57) && angle < Units.degreesToRadians(237)){
       angleGood = true;
     } 

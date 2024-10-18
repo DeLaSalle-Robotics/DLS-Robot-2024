@@ -156,6 +156,7 @@ public class Robot extends TimedRobot
     {
       m_autonomousCommand.cancel();
     }
+    RestingPub.set(false);
 
     // Configure controller bindings
     m_robotContainer.configureAnalogTeleop();
