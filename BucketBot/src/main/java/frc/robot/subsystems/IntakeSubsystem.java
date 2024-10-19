@@ -89,10 +89,6 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   public boolean noteDetected(){
     boolean HaveNote = this.getEncoderRate() <= -300;
-    try {
-    NotePub.set(HaveNote);}
-    catch (Exception e){
-      e.printStackTrace();}
     return (HaveNote);
   }
 
