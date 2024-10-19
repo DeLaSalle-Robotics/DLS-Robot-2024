@@ -29,7 +29,7 @@ public class ClimberSubsystem extends SubsystemBase {
     m_extenderMotor.restoreFactoryDefaults();
     m_extenderMotor.setIdleMode(IdleMode.kBrake);
 
-    rotationConstant = 1;
+    rotationConstant = 84;
   }
 
   /**
