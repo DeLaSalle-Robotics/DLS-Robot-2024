@@ -141,7 +141,7 @@ public class RobotContainer {
     // Not bound to any controller action, just runs all the time
     
     // No LED Default command - everything is handeled in the subsystem.
-    m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem));
+    //m_LEDSubsystem.setDefaultCommand(new LED(m_LEDSubsystem));
     SmartDashboard.putString("LED State", "Waiting");
     }
 
