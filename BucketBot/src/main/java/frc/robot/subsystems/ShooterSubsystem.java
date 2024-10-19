@@ -5,6 +5,9 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -25,7 +28,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   final VelocityVoltage m_velocity = new VelocityVoltage(0);
   
-
+  DoublePublisher ShooterSpeedPub;
   // ShooterSubsystem constructor
   public ShooterSubsystem() {
     super();
@@ -51,6 +54,11 @@ public class ShooterSubsystem extends SubsystemBase {
     // Put these control values into Slot0 in the talonFx controller- with a 50 ms overflow limit.
     m_shooterMotor1.getConfigurator().apply(slot0Configs, 0.050);
     m_shooterMotor2.getConfigurator().apply(slot0Configs, 0.050);
+ 
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("datatable");
+    ShooterSpeedPub = table.getDoubleTopic("ShooterSpeed").publish();
+  
   }
 
 
@@ -160,6 +168,8 @@ public boolean atSpeed() {
   public void periodic() {
     SmartDashboard.putNumber("Shooter Velocity 1 (RPS)", m_shooterMotor1.getVelocity().getValueAsDouble());
     SmartDashboard.putNumber("Shooter Velocity 2 (RPS)", m_shooterMotor2.getVelocity().getValueAsDouble());
+    ShooterSpeedPub.set(m_shooterMotor1.getVelocity().getValueAsDouble());
+    
   }
 
 

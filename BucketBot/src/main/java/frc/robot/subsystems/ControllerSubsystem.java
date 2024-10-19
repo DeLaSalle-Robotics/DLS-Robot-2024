@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,6 +15,7 @@ public class ControllerSubsystem extends SubsystemBase {
 
   private final XboxController m_controller;
   private final Joystick m_flightJoystick;
+  BooleanPublisher NotePub;
   // private final GenericHID m_testController;
 
   /**
@@ -21,6 +25,10 @@ public class ControllerSubsystem extends SubsystemBase {
     super();
     m_controller = new XboxController(Constants.OperatorConstants.kDriverControllerPort);
     m_flightJoystick = new Joystick(Constants.OperatorConstants.kClimbControllerPort);
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("datatable");   
+    NotePub = table.getBooleanTopic("Note").publish();
+    
     // m_testController = new GenericHID(Constants.OperatorConstants.kTestControllerPort);
   }
 
@@ -62,6 +70,7 @@ public class ControllerSubsystem extends SubsystemBase {
    */
   public void rumble(RumbleType motor, double intensity){
     m_controller.setRumble(motor, intensity);
+    NotePub.set(true);
   }
 
 

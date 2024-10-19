@@ -109,7 +109,7 @@ public Command ledRed(Color kRed) {
   @Override
   public void periodic() {
     //Reaching out to other subsystems to identify the state for LED display
-    if (NoteSub.getAsBoolean()) {this.currentState = LED_State.HAVE_NOTE;}//else {currentState = LED_State.NO_NOTE;}
+    if (NoteSub.getAsBoolean()) {this.currentState = LED_State.HAVE_NOTE;}else {currentState = LED_State.NO_NOTE;}
     if (InZoneSub.getAsBoolean() //&& NoteSub.getAsBoolean()
         ) {this.currentState = LED_State.IN_ZONE;}
     if (OnTargetSub.getAsBoolean() //&& NoteSub.getAsBoolean()

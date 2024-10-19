@@ -214,7 +214,8 @@ public class RobotContainer {
 
     // Spin shooter forward
     joystick_3.whileTrue(new Shooter(m_ShooterSubsystem));
-    
+
+
     // Spin shooter backward
     joystick_8.whileTrue(new ShooterAnalog(
       m_ShooterSubsystem, 

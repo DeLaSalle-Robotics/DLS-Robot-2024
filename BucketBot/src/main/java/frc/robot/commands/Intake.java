@@ -5,6 +5,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -16,7 +20,8 @@ public class Intake extends Command {
 
   private boolean movingForward;
 
-
+  DoubleSubscriber ShooterSpeedSub;
+  BooleanPublisher NotePub;
   /**
    * Spin the intake at the given speed until the loose encoder detects something.
    * @param subsystem IntakeSubsystem
@@ -28,6 +33,11 @@ public class Intake extends Command {
     m_speed = speed;
     m_isFeeding = isFeeding;
     addRequirements(m_IntakeSubsystem);
+    
+  NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  NetworkTable table = inst.getTable("datatable");
+  ShooterSpeedSub = table.getDoubleTopic("ShooterSpeed").subscribe(0);
+  NotePub = table.getBooleanTopic("Note").publish();
   }
 
 
@@ -48,7 +58,9 @@ public class Intake extends Command {
   public void end(boolean interrupted) {
     // The intake stops spinning when the command ends.
     m_IntakeSubsystem.stopIntake();
-   
+    if (ShooterSpeedSub.getAsDouble() > 20){
+      NotePub.set(false);
+    }
   }
 
   // Returns true when the command should end.

@@ -1,5 +1,8 @@
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -9,7 +12,7 @@ public class Shooter extends Command {
 
   // Command parameters
   private final ShooterSubsystem m_ShooterSubsystem;
-
+  private BooleanPublisher NotePub;
   /**
    * Spin the shooter. The speeds are defined in {@link Constants}.
    * @param subsystem ShooterSubsystem
@@ -17,6 +20,10 @@ public class Shooter extends Command {
   public Shooter(ShooterSubsystem subsystem) {
     m_ShooterSubsystem = subsystem;
     addRequirements(m_ShooterSubsystem);
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("datatable");
+    NotePub = table.getBooleanTopic("Note").publish();
+  
   }
 
 
@@ -35,6 +42,7 @@ public class Shooter extends Command {
   public void end(boolean interrupted) {
     // Stop all motors
     m_ShooterSubsystem.spin(0.0);
+
   }
 
   // Returns true when the command should end.

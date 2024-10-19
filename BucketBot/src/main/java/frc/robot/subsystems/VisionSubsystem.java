@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -91,6 +93,7 @@ public VisionSubsystem() {
   SmartDashboard.putNumber("Fake ID", 3);
   this.verbose = false;
 
+  
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   NetworkTable table = inst.getTable("datatable");
   InZonePub = table.getBooleanTopic("InZone").publish();
@@ -143,23 +146,28 @@ public void periodic() {
         
         for (var tmpTarget : pipelineResult.getTargets()) {
 
-          if (tmpTarget.getFiducialId() == targetID) {
+          if (tmpTarget.getFiducialId() == 4) {
 
               // Found target Tag found, record its information
 
               this.targetYaw = tmpTarget.getYaw();
               TargetYawPub.set(this.targetYaw);
-              this.targetDist = Math.sqrt(Math.pow(tmpTarget.getBestCameraToTarget().getX() ,2) +
-                                     (Math.pow(tmpTarget.getBestCameraToTarget().getY(), 2)));
+              double targetx = tmpTarget.getBestCameraToTarget().getX();
+              double targety = tmpTarget.getBestCameraToTarget().getY();
+              this.targetDist = Math.sqrt((targetx * targetx) + (targety * targety));
+              SmartDashboard.putNumber("TargetDist", this.targetDist);
               this.targetVisible = true;
+              SmartDashboard.putNumber("TARGET X",tmpTarget.getBestCameraToTarget().getX());
+              SmartDashboard.putNumber("TARGET Y",tmpTarget.getBestCameraToTarget().getY());
               SmartDashboard.putNumber("Target_ID", currentTag);
               //field2d_Vis.setRobotPose(targetPose.toPose2d()); 
-              InZonePub.set(this.InZone());
-              OnTargetPub.set(this.OnTarget());
-          } 
+            } 
+          }
         }
       }
-    }
+      InZonePub.set(this.InZone());
+      OnTargetPub.set(this.OnTarget());
+      SmartDashboard.putNumber("Target Yaw", this.targetYaw);
 }
 
 public Pose2d getRobotPose() {
@@ -175,8 +183,9 @@ public boolean InZone(){
   boolean distGood = false;
   boolean angleGood = false;
     
+  
   try {
-    if (this.targetYaw > Units.degreesToRadians(-45) && this.targetYaw < Units.degreesToRadians(45)){
+    if (this.targetYaw > -45 && this.targetYaw < 45){
       angleGood = true;
     } 
     if (this.targetDist < Units.inchesToMeters(65)){
@@ -186,7 +195,7 @@ public boolean InZone(){
    catch (NullPointerException e) {
     // TODO: handle exception
   }
-
+  distGood = true;
   return (this.targetVisible) && (distGood && angleGood);
 }
 
@@ -197,7 +206,7 @@ public boolean OnTarget(){
   boolean angleGood = false;
     
   try {
-    if (this.targetYaw > Units.degreesToRadians(-10) && this.targetYaw < Units.degreesToRadians(10)){
+    if (this.targetYaw > -10 && this.targetYaw < 10){
       angleGood = true;
     } 
     if (this.targetDist < Units.inchesToMeters(65)){
