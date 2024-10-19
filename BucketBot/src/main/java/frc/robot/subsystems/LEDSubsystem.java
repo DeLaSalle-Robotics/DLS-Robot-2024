@@ -110,9 +110,9 @@ public Command ledRed(Color kRed) {
   public void periodic() {
     //Reaching out to other subsystems to identify the state for LED display
     if (NoteSub.getAsBoolean()) {this.currentState = LED_State.HAVE_NOTE;}else {currentState = LED_State.NO_NOTE;}
-    if (InZoneSub.getAsBoolean() //&& NoteSub.getAsBoolean()
+    if (InZoneSub.getAsBoolean() && NoteSub.getAsBoolean()
         ) {this.currentState = LED_State.IN_ZONE;}
-    if (OnTargetSub.getAsBoolean() //&& NoteSub.getAsBoolean()
+    if (OnTargetSub.getAsBoolean() && NoteSub.getAsBoolean()
         ) {this.currentState = LED_State.ON_TARGET;}
     if (RestingSub.getAsBoolean()) {this.currentState = LED_State.WAITING;}
 // Key is to have a series of methods that define the states within subsystems

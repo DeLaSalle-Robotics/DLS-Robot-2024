@@ -48,9 +48,9 @@ public class TargetPose extends Command {
   @Override
   public void execute() {
      double target = TargetYawSub.get();
-     if(Math.abs(target) > Units.degreesToRadians(10)) {
+     if(Math.abs(target) > (5)) {
       Translation2d Translation2d = new Translation2d();
-      double drive = target * 1.0; //Drive correction for auto aim.
+      double drive = - Units.degreesToRadians(target) * 100 ; //Drive correction for auto aim.
       m_SwerveSubsystem.drive(Translation2d , drive, false);
      } 
    }

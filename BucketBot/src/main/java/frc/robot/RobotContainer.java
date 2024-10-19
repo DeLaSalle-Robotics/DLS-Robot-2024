@@ -57,7 +57,7 @@ public class RobotContainer {
 
   // Xbox Controller buttons:
 
-  // private Trigger controller_A = new JoystickButton(m_controller, 1);
+   private Trigger controller_A = new JoystickButton(m_controller, 1);
   // private Trigger controller_B = new JoystickButton(m_controller, 2);
   // private Trigger controller_X = new JoystickButton(m_controller, 3);
   // private Trigger controller_Y = new JoystickButton(m_controller, 4);
@@ -249,7 +249,9 @@ public class RobotContainer {
     joystick_9.whileTrue(
       new TargetPose(m_VisionSubsystem, m_SwerveSubsystem)
     );
-  
+  controller_A.whileTrue(
+      new TargetPose(m_VisionSubsystem, m_SwerveSubsystem)
+    );
     
 
     // Move extender up

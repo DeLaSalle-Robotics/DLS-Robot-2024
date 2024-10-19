@@ -188,14 +188,14 @@ public boolean InZone(){
     if (this.targetYaw > -45 && this.targetYaw < 45){
       angleGood = true;
     } 
-    if (this.targetDist < Units.inchesToMeters(65)){
+    if (this.targetDist < 2.0){
       distGood = true;
     } 
     }
    catch (NullPointerException e) {
     // TODO: handle exception
   }
-  distGood = true;
+  
   return (this.targetVisible) && (distGood && angleGood);
 }
 
@@ -209,7 +209,7 @@ public boolean OnTarget(){
     if (this.targetYaw > -10 && this.targetYaw < 10){
       angleGood = true;
     } 
-    if (this.targetDist < Units.inchesToMeters(65)){
+    if (this.targetDist < 2.1 && this.targetDist > 1.75){
       distGood = true;
     } 
     }
