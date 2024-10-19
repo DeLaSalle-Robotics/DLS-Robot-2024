@@ -22,8 +22,11 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,12 +54,18 @@ public class VisionSubsystem extends SubsystemBase {
   private int currentTag;
 
   private Transform3d currentPose;
-
+  private Pose2d robotPose;
+  private int targetID;
+  private double targetYaw;
+  private double targetDist;
+  private boolean targetVisible;
+  private boolean RedAlliance;
   private boolean verbose;
   
   //NetworkTable publishers
   BooleanPublisher InZonePub;
   BooleanPublisher OnTargetPub;
+  DoublePublisher TargetYawPub;
 
 // VisionSubsystem constructor
 public VisionSubsystem() {
@@ -86,7 +95,15 @@ public VisionSubsystem() {
   NetworkTable table = inst.getTable("datatable");
   InZonePub = table.getBooleanTopic("InZone").publish();
   OnTargetPub = table.getBooleanTopic("OnTarget").publish();
-   
+  TargetYawPub = table.getDoubleTopic("Target_Yaw").publish();
+  //Find out what alliance we are to allow setting of the speaker target.
+  var alliance = DriverStation.getAlliance();
+  this.RedAlliance = alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+  if (RedAlliance) {
+    targetID = 7;
+  } else {
+    targetID = 4;
+  }
 } 
 
 @Override
@@ -94,8 +111,8 @@ public void periodic() {
 
   var pipelineResult = camera.getLatestResult();
   var resultTimestamp = pipelineResult.getTimestampSeconds();
-    if (resultTimestamp != previousPipelineTimeStamp && pipelineResult.hasTargets()) {
-      previousPipelineTimeStamp = resultTimestamp;
+    if (resultTimestamp != this.previousPipelineTimeStamp && pipelineResult.hasTargets()) {
+      this.previousPipelineTimeStamp = resultTimestamp;
       var target = pipelineResult.getBestTarget();
       //var fiducialId = 3; //SmartDashboard.getNumber("Fake ID", 1); 
       var fiducialId = target.getFiducialId();
@@ -107,8 +124,7 @@ public void periodic() {
         System.out.println("Tag Y is: " + tagPose.get().getY());
       }
       
-      if (target.getPoseAmbiguity() <= .2 &&
-      fiducialId >= 0 && tagPose.isPresent()) {
+      if (target.getPoseAmbiguity() <= .2 && fiducialId >= 0 && tagPose.isPresent()) {
         var targetPose = tagPose.get();
         Transform3d camToTarget = target.getBestCameraToTarget();
         Pose3d camPose = targetPose.transformBy(camToTarget.inverse());
@@ -117,40 +133,53 @@ public void periodic() {
         SmartDashboard.putNumber("Vision_x", visionMeasurement.getX());
         SmartDashboard.putNumber("Vision_y", visionMeasurement.getY());
         field2d_Vis.setRobotPose(visionMeasurement.toPose2d());
+        this.robotPose = visionMeasurement.toPose2d();
         SmartDashboard.putNumber("Target_x", targetPose.getX());
         SmartDashboard.putNumber("Target_y", targetPose.getY());
-        SmartDashboard.putNumber("Target_Angle",Units.radiansToDegrees(visionMeasurement.getRotation().getAngle()-Math.PI));
+        //Should report the angle in radians with 0 being the Blue Alliance Wall
+        SmartDashboard.putNumber("Robot_Angle",Units.radiansToDegrees(visionMeasurement.getRotation().getAngle() - Math.PI));
         this.currentPose = camToTarget;
         this.currentTag = fiducialId;
-        List<PhotonTrackedTarget> targetList = pipelineResult.getTargets();
-        for (int i = 0; i < targetList.size(); i++){
-          if(targetList.get(i).getFiducialId()==4) {this.currentTag = 4;}
-          if(targetList.get(i).getFiducialId()==7) {this.currentTag = 7;};
+        
+        for (var tmpTarget : pipelineResult.getTargets()) {
+
+          if (tmpTarget.getFiducialId() == targetID) {
+
+              // Found target Tag found, record its information
+
+              this.targetYaw = tmpTarget.getYaw();
+              TargetYawPub.set(this.targetYaw);
+              this.targetDist = Math.sqrt(Math.pow(tmpTarget.getBestCameraToTarget().getX() ,2) +
+                                     (Math.pow(tmpTarget.getBestCameraToTarget().getY(), 2)));
+              this.targetVisible = true;
+              SmartDashboard.putNumber("Target_ID", currentTag);
+              //field2d_Vis.setRobotPose(targetPose.toPose2d()); 
+              InZonePub.set(this.InZone());
+              OnTargetPub.set(this.OnTarget());
+          } 
         }
-        SmartDashboard.putNumber("Target_ID", currentTag);
-        //field2d_Vis.setRobotPose(targetPose.toPose2d()); 
-        InZonePub.set(this.InZone());
-        OnTargetPub.set(this.OnTarget());
-      } 
+      }
     }
-  
-  
-  
+}
+
+public Pose2d getRobotPose() {
+  return this.robotPose;
+}
+public double getRobotPoseTime(){
+  return this.previousPipelineTimeStamp;
 }
 
 public boolean InZone(){
   if (this.verbose) {
-    System.out.println("In Zone Calc:" + Units.radiansToDegrees(Math.abs(this.currentPose.getRotation().getAngle() - Math.PI )));}
+    System.out.println("In Zone Calc:" + Units.radiansToDegrees(Math.abs(this.currentPose.getRotation().getAngle() )));}
   boolean distGood = false;
   boolean angleGood = false;
     
   try {
-    double distance = this.visionMeasurement.getX();
-    double angle = this.currentPose.getRotation().getAngle() - Math.PI;
-    if (angle > Units.degreesToRadians(57) && angle < Units.degreesToRadians(237)){
+    if (this.targetYaw > Units.degreesToRadians(-45) && this.targetYaw < Units.degreesToRadians(45)){
       angleGood = true;
     } 
-    if (distance < Units.inchesToMeters(65)){
+    if (this.targetDist < Units.inchesToMeters(65)){
       distGood = true;
     } 
     }
@@ -158,7 +187,7 @@ public boolean InZone(){
     // TODO: handle exception
   }
 
-  return (this.currentTag == 4 || this.currentTag == 7) && (distGood && angleGood);
+  return (this.targetVisible) && (distGood && angleGood);
 }
 
 public boolean OnTarget(){
@@ -168,12 +197,10 @@ public boolean OnTarget(){
   boolean angleGood = false;
     
   try {
-    double distance = this.currentPose.getX();
-    double angle = this.currentPose.getRotation().getAngle();
-    if (angle > Units.degreesToRadians(170) && angle < Units.degreesToRadians(190)){
+    if (this.targetYaw > Units.degreesToRadians(-10) && this.targetYaw < Units.degreesToRadians(10)){
       angleGood = true;
     } 
-    if (distance < Units.inchesToMeters(65)){
+    if (this.targetDist < Units.inchesToMeters(65)){
       distGood = true;
     } 
     }
@@ -181,7 +208,7 @@ public boolean OnTarget(){
     // TODO: handle exception
   }
 
-  return (this.currentTag == 4 || this.currentTag == 7) && (distGood && angleGood);
+  return (this.targetVisible) && (distGood && angleGood);
 }
 
 public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
