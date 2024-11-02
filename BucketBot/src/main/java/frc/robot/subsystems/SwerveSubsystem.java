@@ -242,7 +242,7 @@ public class SwerveSubsystem extends SubsystemBase {
           Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()
         ),
         Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
-        (triggerValue.getAsDouble() < 0.5),
+        (triggerValue.getAsDouble() > 0.5),
         false
         );
       }
@@ -339,6 +339,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic(){
     SmartDashboard.putNumber("Robot Pose X", this.getPose().getX());
     SmartDashboard.putNumber("Robot Pose Y", this.getPose().getY());
+    SmartDashboard.putNumber("NavXHeadin", this.getHeading().getDegrees());
     m_field.setRobotPose(this.getPose());
   }
 
