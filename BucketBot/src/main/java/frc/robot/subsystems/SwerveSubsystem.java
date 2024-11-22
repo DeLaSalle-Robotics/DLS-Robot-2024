@@ -242,7 +242,7 @@ public class SwerveSubsystem extends SubsystemBase {
           Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()
         ),
         Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
-        (triggerValue.getAsDouble() > 0.5),
+        (triggerValue.getAsDouble() < 0.5),
         false
         );
       }

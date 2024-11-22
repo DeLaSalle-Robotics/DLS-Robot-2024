@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.9305889798220273,
-      "y": 2.5856964708279695
+      "x": 0.0,
+      "y": 4.25
     },
     "rotation": 0
   },
@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Backup"
+            "pathName": "Ivan Test 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Inverse Back up Center"
           }
         }
       ]

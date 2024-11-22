@@ -16,7 +16,7 @@ public final class Constants {
                 public static final int kShooterMotorID2 = 14;
 
                 // Target shooter speed for shooting into the speaker
-                public static final double kShooterSpeedRPS = 60;
+                public static final double kShooterSpeedRPS = 30;//normal is 60, reduced for testing
 
                 // Reverse shooter power
                 public static final double kShooterReversePower = 0.1;
