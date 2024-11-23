@@ -50,6 +50,7 @@ public class TargetPose extends Command {
      double target = TargetYawSub.get();
      if(Math.abs(target) > (5)) {
       double drive = - Units.degreesToRadians(target) * 2 ; //Drive correction for auto aim.
+      System.out.println("Turn num " + drive);
       m_SwerveSubsystem.driveCommand(
       () -> 0,
       () -> 0,

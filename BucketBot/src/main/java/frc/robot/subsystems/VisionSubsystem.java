@@ -165,9 +165,16 @@ public void periodic() {
           }
         }
       }
-      InZonePub.set(this.InZone());
-      OnTargetPub.set(this.OnTarget());
-      SmartDashboard.putNumber("Target Yaw", this.targetYaw);
+      if(pipelineResult.hasTargets()){
+        InZonePub.set(this.InZone());
+        OnTargetPub.set(this.OnTarget());
+        SmartDashboard.putNumber("Target Yaw", this.targetYaw);
+      }
+      else{
+        InZonePub.set(false);
+        OnTargetPub.set(false);
+        
+      }
 }
 
 public Pose2d getRobotPose() {
@@ -195,7 +202,6 @@ public boolean InZone(){
    catch (NullPointerException e) {
     // TODO: handle exception
   }
-  
   return (this.targetVisible) && (distGood && angleGood);
 }
 
